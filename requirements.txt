@@ -1,0 +1,14 @@
+gdt-core
+pyproj>=1.9.6
+numpy>=1.17.3
+scipy>=1.1.0
+matplotlib
+astropy>=5.1
+healpy>=1.12.4
+pytest
+
+Sphinx
+astropy-sphinx-theme
+nbsphinx
+ipython
+sphinx-automodapi
