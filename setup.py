@@ -27,13 +27,14 @@
 # License.
 #
 import shutil
+from pathlib import Path
+
 from setuptools import setup, find_namespace_packages
 import gdt.core as core
-from tests import tests_path
 
 if __name__ == '__main__':
     setup(
-        name="gdt-fermi",
+        name="astro-gdt-fermi",
         version=core.__version__,
         description="Gamma-ray Data Tools: Fermi Mission",
         author='Cleveland, Goldstein, Kocevski',
@@ -57,7 +58,7 @@ if __name__ == '__main__':
         include_package_data=True,
         python_requires='>=3.8',
         install_requires=[
-            'gdt-core>=2.0.0',
+            'astro-gdt>=2.0.0',
             'pyproj>=1.9.6',
             'numpy>=1.17.3',
             'scipy>=1.1.0',
@@ -66,10 +67,11 @@ if __name__ == '__main__':
             'healpy>=1.12.4',
             'cartopy>=0.21.1',
         ],
+        data_files=[('config', ['config/test_files.urls'])]
     )
 
     # Copy test_files.url
-    src = tests_path / 'test_files.urls'
+    src = Path(__file__).parent / 'config' / 'test_files.urls'
     dest = core.data_path / 'fermi-gbm' / 'test_files.urls'
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(src, dest)
