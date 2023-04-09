@@ -1,8 +1,8 @@
 .. _gbm-catalogs:
 
-*******************
-Fermi GBM Catalogs
-*******************
+***********************************************************
+Fermi GBM Catalogs (:mod:`gdt.missions.fermi.gbm.catalogs`)
+***********************************************************
 
 The HEASARC hosts two main GBM catalogs: a Trigger Catalog that contains 
 information about every GBM trigger, and a Burst Catalog that contains standard 
@@ -105,7 +105,8 @@ that is fit, for both a time-integrated spectrum and the spectrum at the peak
 flux. There is also T90, T50, flux, and fluence information on different 
 timescales and energy ranges. All in all, there are **306** different columns.
 
-For more information on working with catalogs, see :ref:`The BrowseCatalog Class`.
+For more information on working with catalogs, see 
+:external:ref:`The BrowseCatalog Class<core-heasarc-browse>`.
 
 Reference/API
 =============

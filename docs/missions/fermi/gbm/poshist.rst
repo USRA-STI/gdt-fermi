@@ -3,9 +3,9 @@
 .. |Gti| replace:: :class:`~gdt.core.data_primitives.Gti`
 .. |SpacecraftFrame| replace:: :class:`~gdt.core.coords.SpacecraftFrame`
 
-****************************************
-Fermi GBM Position/Attitude History Data
-****************************************
+********************************************************************************
+Fermi GBM Position/Attitude History Data (:mod:`gdt.missions.fermi.gbm.poshist`)
+********************************************************************************
 Probably the most critical auxiliary file GBM produces is the position history 
 (POSHIST) file. The POSHIST contains, for an entire day, the spacecraft 
 location in orbit and pointing information, sampled on a 1 second timescale. 
@@ -153,7 +153,7 @@ coordinates:
 Note that any and all of these operations can be performed on an array of 
 frames, even on the entire series of frames contained within the poshist file.
 For more details on working with the |SpacecraftFrame|, 
-see :ref:`Spacecraft Attitude, Position, and Coordinates`.
+see :external:ref:`Spacecraft Attitude, Position, and Coordinates<core-coords>`.
 
 Now all of this great, but we can also make a sky plot at a given time.  We
 can plot in either the Equatorial frame:
@@ -185,8 +185,8 @@ Or the Spacecraft Frame:
 
 .. image:: poshist_figs/poshistfig3.png
 
-See :ref:`Plotting Sky Maps, Localizations, and Wide-field Effective Area` for
-more details on these plots.
+See :external:ref:`Plotting Sky Maps, Localizations, and Wide-field Effective 
+Area<plot-sky>` for more details on these plots.
 
 Finally, we can plot a segment of the Fermi orbit and the location of Fermi at
 our desired time:

@@ -1,8 +1,8 @@
 .. _gbm-headers:
 
-**********************
-Fermi GBM FITS Headers
-**********************
+**************************************************************
+Fermi GBM FITS Headers (:mod:`gdt.missions.fermi.gbm.headers`)
+**************************************************************
 This module defines all of the FITS headers for the public data files. While
 these classes are not usually directly called by the user, we may load one up
 and see the contents and default values.  For example, here is the set of 
@@ -90,8 +90,8 @@ And here is the ``SPECTRUM`` header and default values:
     DETCHANS=                    0 / Total number of channels in each rate          
     EXTVER  =                    1 / Version of this extension format               
 
-See :ref:`Data File Headers` for more information about creating and using
-FITS headers.
+See :external:ref:`Data File Headers<core-headers>` for more information about 
+creating and using FITS headers.
     
 Reference/API
 =============

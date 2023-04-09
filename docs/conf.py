@@ -36,7 +36,13 @@ release = __version__
 extensions = ['sphinx.ext.viewcode', 'sphinx.ext.inheritance_diagram',
               'sphinx.ext.mathjax', 'sphinx.ext.napoleon', 'nbsphinx',
               'IPython.sphinxext.ipython_console_highlighting',
-              'sphinx_automodapi.automodapi']
+              'sphinx_automodapi.automodapi', 'sphinx.ext.intersphinx']
+# for external cross-references that are on the local machine, the relative
+# path must be converted to an absolute path otherwise the intersphinx generates
+# a broken link.
+intersphinx_mapping = {'gdt-core': 
+                      (os.path.abspath('../../gdt-core/docs/_build/html'), None)}
+
 napoleon_google_docstring = True
 napoleon_use_ivar = False
 napoleon_use_rtype = False

@@ -2,9 +2,9 @@
 .. |GbmDetectors| replace:: :class:`~gdt.missions.fermi.gbm.detectors.GbmDetectors`
 .. |Detectors| replace:: :class:`~gdt.core.detector.Detectors`
 
-******************************
-Fermi GBM Detector Definitions
-******************************
+************************************************************************
+Fermi GBM Detector Definitions (:mod:`gdt.missions.fermi.gbm.detectors`)
+************************************************************************
 The |GbmDetectors| class contains the naming and orientation definitions of the
 GBM detectors.
 

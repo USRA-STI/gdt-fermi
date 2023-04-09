@@ -2,9 +2,9 @@
 .. |GbmHealPix| replace:: :class:`~gdt.missions.fermi.gbm.localization.GbmHealPix`
 .. |region_probability()| replace:: :meth:`~gdt.missions.fermi.gbm.localization.GbmHealPix.region_probability`
 
-***********************
-Fermi GBM Localizations
-***********************
+********************************************************************
+Fermi GBM Localizations (:mod:`gdt.missions.fermi.gbm.localization`)
+********************************************************************
 
 As part of mission operations, GBM produces localizations for GRBs and 
 disseminates these to the community. GCN notices are sent to interested 
@@ -26,7 +26,8 @@ We can read one of these HEALPix files using the |GbmHealPix| class:
      centroid=(48.8671875, 4.181528273111476)>
 
 We can easily access some of the HEALPix-specific info (see also 
-:ref:`The HealPix Module` for more details):
+:external:ref:`The HealPix Module<core-healpix>` for more details):
+    
     >>> loc.nside
     128
     >>> loc.npix
@@ -125,8 +126,8 @@ the Earth occultation region (blue), the detector pointings (grey circles),
 Galactic Plane (gray/black line), and sun (yellow smiley-face).
 
 This is for default plotting options, but you can do a lot of customization on 
-what is plotted (see :ref:`Plotting Sky Maps, Localizations, and Wide-field 
-Effective Area` for more details).
+what is plotted (see :external:ref:`Plotting Sky Maps, Localizations, and 
+Wide-field Effective Area<plot-sky>` for more details).
 
 Reference/API
 =============

@@ -1,9 +1,9 @@
 .. _fermi-mcilwainl:
 .. |calc_mcilwain_l| replace:: :func:`~gdt.missions.fermi.mcilwainl.calc_mcilwain_l`
 
-******************************
-McIlwain L Parameter for Fermi
-******************************
+********************************************************************
+McIlwain L Parameter for Fermi (:mod:`gdt.missions.fermi.mcilwainl`)
+********************************************************************
 The function |calc_mcilwain_l| is used to estimate the McIlwain L parameter, 
 which describes a subset of the geomagnetic field lines and is correlated with
 trapped charged particle density.

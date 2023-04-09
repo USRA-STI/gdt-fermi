@@ -1,8 +1,8 @@
 .. _fermi-time:
 
-*******************
-Fermi Mission Epoch
-*******************
+*****************************************************
+Fermi Mission Epoch  (:mod:`gdt.missions.fermi.time`)
+*****************************************************
 
 The Fermi Mission epoch, also called the Fermi Mission Elapsed Time (MET) is 
 the number of seconds elapsed since January 1, 2001, 00:00:00 UTC, including 
@@ -13,7 +13,7 @@ scales.
 To use this, we simply import and create an astropy Time object with a `'fermi'`
 format:
 
-    >>> from gdt.missions.fermi.time import *
+    >>> from gdt.missions.fermi.time import Time
     >>> fermi_met = Time(697422649, format='fermi')
     >>> fermi_met
     <Time object: scale='tt' format='fermi' value=697422649.0>

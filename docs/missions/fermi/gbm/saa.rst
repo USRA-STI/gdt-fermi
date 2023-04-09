@@ -2,9 +2,9 @@
 .. |GbmSaa| replace:: :class:`~gdt.missions.fermi.gbm.saa.GbmSaa`
 .. |FermiEarthPlot| replace:: :class:`~gdt.missions.fermi.plot.FermiEarthPlot`
 
-*********************************
-Fermi GBM SAA Boundary Definition
-*********************************
+*********************************************************************
+Fermi GBM SAA Boundary Definition (:mod:`gdt.missions.fermi.gbm.saa`)
+*********************************************************************
 The South Atlantic Anomaly (SAA) region is defined by a polygon in latitude
 and longitude.  Whenever Fermi is within this region, the detectors are turned
 off and not collecting data.  We can easily retrieve the boundary values for
@@ -30,8 +30,8 @@ plotting the Fermi orbit using |FermiEarthPlot|:
 .. image:: saa_figs/saafig1.png
 
 The SAA region in this plot is marked in red.  For more details on customizing
-these plots, including the SAA region, see :ref:`Plotting Spacecraft in Earth 
-Orbit`.
+these plots, including the SAA region, see 
+:external:ref:`Plotting Spacecraft in Earth Orbit<plot-earthplot>`.
     
 Reference/API
 =============

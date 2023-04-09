@@ -8,9 +8,9 @@
 .. |PhotonEffectiveArea| replace:: :class:`~gdt.plot.drm.PhotonEffectiveArea`
 .. |ChannelEffectiveArea| replace:: :class:`~gdt.plot.drm.ChannelEffectiveArea`
 
-****************************
-Fermi GBM Detector Responses
-****************************
+*********************************************************************
+Fermi GBM Detector Responses (:mod:`gdt.missions.fermi.gbm.response`)
+*********************************************************************
 The GBM detector response files allow you to compare a theoretical photon 
 spectrum to an observed count spectrum. In short, a single detector response 
 file is only useful for its corresponding detector, for a given source position 
@@ -88,8 +88,8 @@ spectrum.  For example, we fold a |PowerLaw| photon model:
      1 contiguous segments>
 
 This returns an |EnergyBins| object containing the count spectrum.  See 
-:ref:`Instrument Responses` for more information on working with single-DRM
-responses.
+:external:ref:`Instrument Responses<core-response>` for more information on 
+working with single-DRM responses.
 
 Instead of retrieving the nearest DRM to our time of interest, we can also
 interpolate the Rsp2 object:
@@ -144,8 +144,8 @@ Or over energy channels using |ChannelEffectiveArea|:
 
 .. image:: response_figs/drmfig3.png
 
-For more details about customizing these plots, see :ref:`Plotting DRMs and 
-Effective Area`.
+For more details about customizing these plots, see 
+:external:ref:`Plotting DRMs and Effective Area<plot-drm>`.
 
 Reference/API
 =============

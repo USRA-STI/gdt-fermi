@@ -6,9 +6,9 @@
 .. |sum_detectors| replace:: :meth:`~gdt.missions.fermi.gbm.trigdat.Trigdat.sum_detectors`
 
 
-**********************
-Fermi GBM Trigger Data
-**********************
+**************************************************************
+Fermi GBM Trigger Data (:mod:`gdt.missions.fermi.gbm.trigdat`)
+**************************************************************
 TRIGDAT was designed so that it contains the minimum amount of data required 
 for rapid on-ground characterization and localization of triggers. To that 
 purpose, the TRGIDAT contains 8-channel pre-binned lightcurve data for each of 
@@ -73,7 +73,7 @@ also retrieve the sum of the detectors:
     'n9+na+nb'
     
 And then we can plot the lightcurve using the |Lightcurve| class (see 
-:ref:`Plotting Lightcurves` for more info):
+:external:ref:`Plotting Lightcurves<plot-lightcurve>` for more info):
 
     >>> import matplotlib.pyplot as plt
     >>> from gdt.plot.lightcurve import Lightcurve
@@ -117,8 +117,8 @@ can determine where the detectors were pointing at the time of the trigger:
     <SkyCoord (ICRS): (ra, dec) in deg
         [(68.87778267, 17.76359435)]>
 
-See :ref:`Fermi GBM Position/Attitude History Data` for more information about
-working with position history data.  
+See :ref:`Fermi GBM Position/Attitude History Data<gbm-poshist>` for more 
+information about working with position history data.  
 
 We can also make a sky plot:
 
@@ -137,9 +137,10 @@ Or even an orbital plot:
 
 .. image:: trigdat_figs/trigdatfig4.png
 
-See :ref:`Plotting Sky Maps, Localizations, and Wide-field Effective Area` and
-:ref:`Plotting Spacecraft in Earth Orbit`, respectively, for more details on 
-these plots.
+See :external:ref:`Plotting Sky Maps, Localizations, and Wide-field Effective 
+Area<plot-sky>` and 
+:external:ref:`Plotting Spacecraft in Earth Orbit<plot-earthplot>`, 
+respectively, for more details on these plots.
 
 Reference/API
 =============

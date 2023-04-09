@@ -1,9 +1,9 @@
 .. _gbm-tcat:
 .. |Tcat| replace:: :class:`~gdt.missions.fermi.gbm.tcat.Tcat`
 
-******************************
-Fermi GBM Trigger Catalog Data
-******************************
+*******************************************************************
+Fermi GBM Trigger Catalog Data (:mod:`gdt.missions.fermi.gbm.tcat`)
+*******************************************************************
 The Fermi Trigger CATalog (TCAT) file is a FITS file containing high-level
 information about an on-board GBM trigger and is ingested at HEASARC to 
 include basic information in the trigger catalog.  The TCAT is purely metadata,

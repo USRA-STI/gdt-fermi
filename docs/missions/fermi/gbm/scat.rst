@@ -4,9 +4,9 @@
 .. |GbmDetectorData| replace:: :class:`~gdt.missions.fermi.gbm.scat.GbmDetectorData`
 .. |Parameter| replace:: :class:`~gdt.core.data_primitives.Parameter`
 
-****************************
-Fermi GBM Spectral Fits Data
-****************************
+*****************************************************************
+Fermi GBM Spectral Fits Data (:mod:`gdt.missions.fermi.gbm.scat`)
+*****************************************************************
 GBM provides standard spectral fits for each GRB triggered on-board. These 
 spectral fits are hosted in FITS format at HEASARC as "SCat" (Spectral Catalog) 
 files. The SCat files contain the spectral fit data, including fit parameters, 

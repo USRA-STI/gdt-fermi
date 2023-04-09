@@ -5,16 +5,16 @@
 .. |EarthPlot| replace:: :class:`~gdt.plot.earthplot.EarthPlot`
 .. |GdtCmap| replace:: :class:`~gdt.plot.plot.GdtCmap`
 
-***************************
-Fermi-specific Plot Classes
-***************************
+**************************************************************
+Fermi-specific Plot Classes (:mod:`gdt.missions.fermi.plot`)
+**************************************************************
 
 There are a few Fermi-specific plot classes that extend the functionality of  
-those provided in :ref:`The Plot Package`.  These classes primarily augment
-the orbital plotting for Fermi, with a plot class for managing the McIlwain L
-heat map (|McIlwainL|), a plot class for implementing this seamlessly into an
-orbital plot (|FermiEarthplot|), and a class defining a custom Fermi plot icon
-(|FermiIcon|).
+those provided in :external:ref:`The Plot Package<plot>`.  These classes 
+primarily augment the orbital plotting for Fermi, with a plot class for 
+managing the McIlwain L heat map (|McIlwainL|), a plot class for implementing 
+this seamlessly into an orbital plot (|FermiEarthplot|), and a class defining a 
+custom Fermi plot icon (|FermiIcon|).
 
 We can initialize the |FermiEarthPlot| by calling it in the same way as the 
 base |EarthPlot| class:

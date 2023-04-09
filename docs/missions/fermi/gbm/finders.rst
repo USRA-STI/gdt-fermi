@@ -2,9 +2,9 @@
 .. |TriggerFtp| replace:: :class:`~gdt.missions.fermi.gbm.finders.TriggerFtp`
 .. |ContinuousFtp| replace:: :class:`~gdt.missions.fermi.gbm.finders.ContinuousFtp`
 
-**********************
-Fermi GBM Data Finders
-**********************
+**************************************************************
+Fermi GBM Data Finders (:mod:`gdt.missions.fermi.gbm.finders`)
+**************************************************************
 A natural question may be: "Where do I find the data I need?" Well, you're in 
 luck, because this will show you how to find the data you seek. GBM Data is 
 hosted publicly on the HEASARC FTP server via the Fermi Science Support Center, 
@@ -156,7 +156,8 @@ Now how about downloading the position history file for this time:
     glg_poshist_all_170817_v01.fit [==============================] 100.00%
 
 
-See :ref:`The FtpFinder Class` for more details on using data finders.
+See :external:ref:`The FtpFinder Class<core-heasarc-finder>` for more details 
+on using data finders.
 
 Reference/API
 =============

@@ -3,9 +3,9 @@
 .. |GbmPosHist| replace:: :class:`~gdt.missions.fermi.frame.gbm.poshist.GbmPosHist`
 .. |Quaternion| replace:: :class:`~gdt.core.coords.Quaternion`
 
-**********************
-Fermi Spacecraft Frame
-**********************
+********************************************************
+Fermi Spacecraft Frame (:mod:`gdt.missions.fermi.frame`)
+********************************************************
 
 The Fermi spacecraft frame, |FermiFrame|, is the frame that is aligned
 with the Fermi spacecraft coordinate frame, and is represented by a 

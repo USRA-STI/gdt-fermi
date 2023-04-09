@@ -8,13 +8,14 @@
 .. |Lightcurve| replace:: :class:`~gdt.plot.lightcurve.Lightcurve`
 .. |Spectrum| replace:: :class:`~gdt.plot.spectrum.Spectrum`
 
-******************
-Fermi GBM TTE Data
-******************
+******************************************************
+Fermi GBM TTE Data (:mod:`gdt.missions.fermi.gbm.tte`)
+******************************************************
 TTE (Time-Tagged Event) data is basically a time-series of "counts" where each 
 count is mapped to an energy channel. It is the temporally unbinned 
 representation of CSPEC data (128 energy channels). We can read a TTE file with
-the |GbmTte| class, much the same way we can read :ref:`Fermi GBM PHAII Data`.
+the |GbmTte| class, much the same way we can read 
+:ref:`Fermi GBM PHAII Data<gbm-phaii>`.
 
     >>> from gdt import test_data
     >>> from gdt.missions.fermi.gbm.tte import GbmTte
@@ -57,7 +58,8 @@ There is easy access for certain important properties of the data:
     128
 
 We can retrieve the time-tagged events data contained within the file, which
-is an |EventList| class (see :ref:`Event Data` for more details).
+is an |EventList| class (see 
+:external:ref:`Event Data<core-data_primitives-event>` for more details).
 
     >>> tte.data
     <EventList: 422405 events;
@@ -84,7 +86,8 @@ available to us, such as slicing the data in time or energy:
 Making a lightcurve using TTE data is slightly more complicated than it is for 
 the pre-binned data because the TTE is temporally unbinned. So first the data 
 has to be binned, and then it can be displayed. Here, we want to bin unbinned 
-data, so we choose from the :ref:`Binning Algorithms for Unbinned Data`. For
+data, so we choose from the 
+:external:ref:`Binning Algorithms for Unbinned Data<binning_unbinned>`. For
 this example, let's choose |bin_by_time|, which simply bins the TTE to the
 prescribed time resolution.  Then we can use our chosen binning algorithm to
 **convert** the TTE to a PHAII object
@@ -130,9 +133,10 @@ class:
 
 Perhaps the spectral resolution is a little bit higher than we need (i.e. if 
 studying a weak source). We can rebin the count spectrum, but remember that the 
-energy is pre-binned, so we need to use one of the :ref:`Binning Algorithms for 
-Binned Data`. Here, we will use |combine_by_factor|, which simply combines bins 
-together by an integer factor:
+energy is pre-binned, so we need to use one of the 
+:external:ref:`Binning Algorithms for Binned Data<binning_binned>`. Here, we 
+will use |combine_by_factor|, which simply combines bins together by an integer 
+factor:
 
     >>> from gdt.binning.binned import combine_by_factor
     >>> # rebin the count spectrum by a factor of 4
@@ -143,16 +147,17 @@ together by an integer factor:
 
 .. image:: tte_figs/ttefig3.png
 
-See :ref:`Plotting Lightcurves` and :ref:`Plotting Count Spectra` for more on
-how to modify these plots.
+See :external:ref:`Plotting Lightcurves<plot-lightcurve>` and 
+:external:ref:`Plotting Count Spectra<plot-spectrum>` for more on how to modify 
+these plots.
 
 Finally, we can write out a new fully-qualified GBM TTE FITS file after some 
 reduction tasks.  For example, we can write out our time-sliced data object:
 
     >>> time_sliced_tte.write('./', filename='my_first_custom_tte.fit')
     
-For more details about working with TTE data, see :ref:`Photon List and 
-Time-Tagged Event Files`.
+For more details about working with TTE data, see 
+:external:ref:`Photon List and Time-Tagged Event Files<core-tte>`.
 
     
 Reference/API

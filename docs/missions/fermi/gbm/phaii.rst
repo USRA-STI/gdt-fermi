@@ -9,9 +9,9 @@
 .. |Lightcurve| replace:: :class:`~gdt.plot.lightcurve.Lightcurve`
 .. |Spectrum| replace:: :class:`~gdt.plot.spectrum.Spectrum`
 
-********************
-Fermi GBM PHAII Data
-********************
+**********************************************************
+Fermi GBM PHAII Data (:mod:`gdt.missions.fermi.gbm.phaii`)
+**********************************************************
 The primary science data produced by GBM can be summarized as a time history of 
 spectra, which is provided temporally pre-binned (CTIME and CSPEC) or 
 temporally unbinned (TTE). These data types are produced as "snippets" for 
@@ -96,7 +96,8 @@ There is easy access for certain important properties of the data:
     8
 
 We can retrieve the time history spectra data contained within the file, which
-is a |TimeEnergyBins| class (see :ref:`2D Binned Data` for more details).
+is a |TimeEnergyBins| class (see 
+:external:ref:`2D Binned Data<core-data_primitives-2d>` for more details).
 
     >>> ctime.data
     <TimeEnergyBins: 14433 time bins;
@@ -142,7 +143,8 @@ Similarly, we can integrate over time to produce a count spectrum:
      1 contiguous segments>
 
 The resulting objects are |TimeBins| and |EnergyBins|, respectively, and see
-:ref:`1D Binned Data` for more details on how to use them.
+:external:ref:`1D Binned Data<core-data_primitives-1d>` for more details on how 
+to use them.
 
 Of course, once we have produced a lightcurve or spectrum data object, often
 we want to plot it.  For that, we use the |Lightcurve| and |Spectrum| plotting
@@ -163,7 +165,7 @@ back to 256 ms bins.
 
 So maybe the native CTIME resolution is overkill because it's hard to see the 
 signal. We can make it easier to see the signal if we bin it up (see 
-:ref:`The Binning Package` for details):
+:external:ref:`The Binning Package<binning>` for details):
 
     >>> from gbm.binning.binned import rebin_by_time
     >>> # rebin the data to 2.048 s resolution
@@ -186,7 +188,8 @@ Similarly, we can plot the count spectrum:
 
 .. image:: phaii_figs/phaiifig3.png
 
-See :ref:`Plotting Lightcurves` and :ref:`Plotting Count Spectra` for more on
+See :external:ref:`Plotting Lightcurves<plot-lightcurve>` and 
+:external:ref:`Plotting Count Spectra<plot-spectrum>` for more on
 how to modify these plots.
 
 Finally, we can write out a new fully-qualified PHAII FITS file after some 
@@ -194,7 +197,8 @@ reduction tasks.  For example, we can write out our time-sliced data object:
 
     >>> time_sliced_ctime.write('./', filename='my_first_custom_ctime.pha')
 
-For more details about working with PHAII data, see :ref:`PHAII Files`.
+For more details about working with PHAII data, see 
+:external:ref:`PHAII Files<core-phaii>`.
  
 Reference/API
 =============

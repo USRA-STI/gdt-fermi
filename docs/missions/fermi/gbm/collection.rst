@@ -2,9 +2,9 @@
 .. |GbmDetectorCollection| replace:: :class:`~gdt.missions.fermi.gbm.collection.GbmDetectorCollection`
 .. |DataCollection| replace:: :class:`~gdt.core.collection.DataCollection`
 
-**************************
-Fermi GBM Data Collections
-**************************
+**********************************************************************
+Fermi GBM Data Collections (:mod:`gdt.missions.fermi.gbm.collections`)
+**********************************************************************
 The |GbmDetectorCollection| class extends the functionality of |DataCollection|
 so that it can be used with GBM's heterogenous detector types: NaI and BGO 
 detectors.  This specialized collection class allows us to apply the same 
@@ -79,7 +79,7 @@ Or similarly slice over different energies:
       energy range (317.86954, 35982.97)>]
 
 For other details about using collections, please see the documentation on 
-:ref:`Data Collections`.
+:external:ref:`Data Collections<core-collection>`.
 
 Reference/API
 =============
