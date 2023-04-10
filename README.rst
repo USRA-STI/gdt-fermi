@@ -42,9 +42,52 @@ This should result in git-devel having the following directory structure::
 
 and both gdt-core and gdt-fermi installed in the virtual environment named venv.
 
-Namespace Packaging
--------------------
+Writing Extensions using Namespace Packaging
+--------------------------------------------
+Gamma-ray Data Tools encourages missions to write extensions using namespace packages. Please use our
+`Fermi extension <https://github.com/USRA-STI/gdt-fermi>`_ as an example of how we expect other missions to contribute
+extensions to the Gamma-ray Data Tools.
 
-GDT-Fermi can be used as an example of how we expect other missions to contribute extensions to the Gamma-ray Data Tools.
-GDT-Fermi uses namespace packaging which requires that src/gdt and src/gdt/missions to **NOT** contain a file named
-``__init__.py``. You can learn more about Namespace packages by reading `PEP-420 <https://peps.python.org/pep-0420/>`_.
+The extension package should contain a directory 'gdt' with a subdirectory 'missions' which will hold the extension code
+in a package directory named after the mission.
+
+For example, GDT-Fermi has the following directory layout::
+
+  .
+  ├── config
+  ├── dist
+  ├── docs
+  ├── src
+  │   └── gdt
+  │      └── missions
+  │          └── fermi
+  │              ├── gbm
+  │              │   └── __init__.py
+  │              ├── lat
+  │              │   └── __init__.py
+  │              └── __init__.py
+  └── tests
+    └── missions
+        └── fermi
+
+
+Since GDT-Fermi uses namespace packaging, both ``src/gdt`` and  ``src/gdt/missions`` do not contain a file named
+``__init__.py``. This is because they are Namespace packages.
+
+Notice that directory ``src/gdt/mission/fermi`` and its subdirectories contains an `__init__.py` file
+signalling to Python that those directories are regular packages.
+
+You can learn more about Namespace packages by reading `PEP-420 <https://peps.python.org/pep-0420/>`_.
+
+Helping with Documentation
+--------------------------
+
+You can contribute additions and changes to the documentation. In order to use sphinx to compile the documentation
+source files, we recommend that you install the packages contained within ``requirments.txt``.
+
+To compile the documentation, use the following command:
+
+.. code-block:: sh
+
+   command to use goes here
+
