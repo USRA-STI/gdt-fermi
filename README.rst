@@ -7,7 +7,7 @@ The GDT-Fermi is an extension to Gamma-ray Data Tools that adds functions specif
 Normal Installation
 -------------------
 
-If you don't plan to contribute code to the project, the recommended install method is installing fro PyPI using:
+If you don't plan to contribute code to the project, the recommended install method is installing from PyPI using:
 
 .. code-block:: sh
 
