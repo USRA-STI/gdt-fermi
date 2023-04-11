@@ -26,9 +26,9 @@ make lightcurve plots, but the |Trigdat| class solves this problem for you.
 
 Let's open a TRIGDAT file:
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.trigdat import Trigdat
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_trigdat_all_bn170101116_v01.fit')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_trigdat_all_bn170101116_v01.fit')
     >>> trigdat = Trigdat.open(filepath)
     >>> trigdat
     <Trigdat: glg_trigdat_all_bn170101116_v01.fit;

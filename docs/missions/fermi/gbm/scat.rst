@@ -16,9 +16,9 @@ this information can be easily accessed using the |Scat| class.
 
 We can read a SCat FITS file:
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.scat import Scat
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_scat_all_bn170817529_flnc_comp_v00.fit')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_scat_all_bn170817529_flnc_comp_v00.fit')
     >>> 
     >>> scat
     <Scat: glg_scat_all_bn170817529_flnc_comp_v00.fit;

@@ -32,9 +32,9 @@ the detector pointing is changing singificantly relative to the source).
 Similar to the science data, we can open/read a response file in the following 
 way:
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.response import GbmRsp2
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_cspec_n4_bn120415958_v00.rsp2')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_cspec_n4_bn120415958_v00.rsp2')
     >>> rsp2 = GbmRsp2.open(filepath)
     >>> rsp2
     <GbmRsp2: glg_cspec_n4_bn120415958_v00.rsp2;

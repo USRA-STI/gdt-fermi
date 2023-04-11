@@ -12,9 +12,9 @@ functions for accessing and converting the metadata into GDT objects.
 
 We can open a TCAT file:
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.tcat import Tcat
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_tcat_all_bn190222537_v01.fit')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_tcat_all_bn190222537_v01.fit')
     >>> tcat = Tcat.open(filepath)
     >>> tcat
     <Tcat: GRB190222537>

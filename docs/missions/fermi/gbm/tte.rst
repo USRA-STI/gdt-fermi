@@ -17,9 +17,9 @@ representation of CSPEC data (128 energy channels). We can read a TTE file with
 the |GbmTte| class, much the same way we can read 
 :ref:`Fermi GBM PHAII Data<gbm-phaii>`.
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.tte import GbmTte
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_tte_n9_bn090131090_v01.fit')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_tte_n9_bn090131090_v01.fit')
     >>> tte = GbmTte.open(filepath)
     >>> tte
     <GbmTte: glg_tte_n9_bn090131090_v01.fit;

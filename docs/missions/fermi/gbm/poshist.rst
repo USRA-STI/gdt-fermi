@@ -22,9 +22,9 @@ gif of the detector pointings over time.
 
 To read a POSHIST file, we open it with the |GbmPosHist| class:
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.poshist import GbmPosHist
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_poshist_all_170101_v01.fit')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_poshist_all_170101_v01.fit')
     >>> poshist = GbmPosHist.open(filepath)
     >>> poshist
     <GbmPosHist(filename="glg_poshist_all_170101_v01.fit") at 0x12b372640>

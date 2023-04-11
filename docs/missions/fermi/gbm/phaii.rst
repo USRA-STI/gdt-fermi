@@ -25,10 +25,10 @@ The CTIME and CSPEC data are temporally pre-binned data, which have 8 and 128
 energy channels respectively. These data files can be read by the |GbmPhaii|
 class (or the aliased |Ctime| and |Cspec| classes).
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.phaii import GbmPhaii
     >>> # read a ctime file
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_ctime_nb_bn120415958_v00.pha')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_ctime_nb_bn120415958_v00.pha')
     >>> ctime = GbmPhaii.open(filepath)
     >>> ctime
     <Ctime: glg_ctime_nb_bn120415958_v00.pha;

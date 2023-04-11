@@ -16,9 +16,9 @@ individual detector pointings and the geocenter location as observed by Fermi.
 
 We can read one of these HEALPix files using the |GbmHealPix| class:
 
-    >>> from gdt import test_data
+    >>> from gdt.core import data_path
     >>> from gdt.missions.fermi.gbm.localization import GbmHealPix
-    >>> filepath = test_data['fermi-gbm'].joinpath('glg_healpix_all_bn190915240_v00.fit')
+    >>> filepath = data_path.joinpath('fermi-gbm/glg_healpix_all_bn190915240_v00.fit')
     >>> loc = GbmHealPix.open(filepath)
     >>> loc
     <GbmHealPix: glg_healpix_all_bn190915240_v00.fit
