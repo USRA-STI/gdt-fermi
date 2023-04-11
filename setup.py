@@ -26,17 +26,20 @@
 # implied. See the License for the specific language governing permissions and limitations under the
 # License.
 #
-import shutil
 from pathlib import Path
 
 from setuptools import setup, find_namespace_packages
 import gdt.core as core
 
 if __name__ == '__main__':
+
+    pwd = Path(__file__).parent
+
     setup(
         name="astro-gdt-fermi",
         version=core.__version__,
         description="Gamma-ray Data Tools: Fermi Mission",
+        long_description=(pwd / "PYPI-README.rst").read_text(),
         author='Cleveland, Goldstein, Kocevski',
         url='https://github.com/USRA-STI/gdt-fermi',
         packages=find_namespace_packages(where='src', include=["*"]),
@@ -53,7 +56,8 @@ if __name__ == '__main__':
         keywords=['astronomy', 'gammaray', 'gamma-ray', 'usra'],
         package_dir={"": "src"},
         package_data={
-            'gdt.missions.fermi': ['data/McIlwainL_Coeffs.npy']
+            'gdt.missions.fermi': ['data/McIlwainL_Coeffs.npy'],
+            'gdt.data': ['fermi-gbm.urls']
         },
         include_package_data=True,
         python_requires='>=3.8',
@@ -66,12 +70,5 @@ if __name__ == '__main__':
             'astropy>=3.1',
             'healpy>=1.12.4',
             'cartopy>=0.21.1',
-        ],
-        data_files=[('config', ['config/test_files.urls'])]
+        ]
     )
-
-    # Copy test_files.url
-    src = Path(__file__).parent / 'config' / 'test_files.urls'
-    dest = core.data_path / 'fermi-gbm' / 'test_files.urls'
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(src, dest)
