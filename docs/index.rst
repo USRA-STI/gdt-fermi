@@ -29,7 +29,7 @@ suggest the following BibTex:
        author = {Adam Goldstein and William H. Cleveland and Daniel Kocevski},
        title = {Fermi Gamma-ray Data Tools: v2.0.0},
        year = 2023,
-       url = {}
+       url = {https://github.com/USRA-STI/gdt-fermi}
  }
  
 
