@@ -26,18 +26,19 @@
 # implied. See the License for the specific language governing permissions and limitations under the
 # License.
 #
+import sys
 from pathlib import Path
 
 from setuptools import setup, find_namespace_packages
-import gdt.core as core
 
 if __name__ == '__main__':
-
     pwd = Path(__file__).parent
+    sys.path.append(str(pwd / 'src'))
+    import gdt.missions.fermi as fermi
 
     setup(
         name="astro-gdt-fermi",
-        version=core.__version__,
+        version=fermi.__version__,
         description="Gamma-ray Data Tools: Fermi Mission",
         long_description=(pwd / "PYPI-README.rst").read_text(),
         author='Cleveland, Goldstein, Kocevski',
