@@ -5,3 +5,4 @@ temp
 dist
 build
 .pytest_cache
+.DS_Store
