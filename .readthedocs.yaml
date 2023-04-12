@@ -23,3 +23,5 @@ sphinx:
 python:
    install:
    - requirements: requirements.txt
+   - method: pip
+     path: git+https://github.com/USRA-STI/gdt-core.git
