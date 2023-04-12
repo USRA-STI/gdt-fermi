@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.append(os.path.abspath('..'))
+sys.path.append(os.path.abspath('../src'))
 from gdt.missions.fermi import __version__
 
 
