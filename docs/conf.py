@@ -41,7 +41,7 @@ extensions = ['sphinx.ext.viewcode', 'sphinx.ext.inheritance_diagram',
 # path must be converted to an absolute path otherwise the intersphinx generates
 # a broken link.
 intersphinx_mapping = {'gdt-core': 
-                      (os.path.abspath('../../gdt-core/docs/_build/html'), None)}
+                       ('https://astro-gdt.readthedocs.io/en/latest/', None)}
 
 napoleon_google_docstring = True
 napoleon_use_ivar = False
