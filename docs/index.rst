@@ -41,6 +41,10 @@ be found `here <https://fermi.gsfc.nasa.gov/ssc/data/access/gbm/>`_.  For
 questions, bug reports, and comments, please visit the 
 `Fermi Help Desk <https://fermi.gsfc.nasa.gov/ssc/help/>`_.
 
+.. rubric:: Acknowledgments
+
+The Fermi Gamma-ray Data Tools were partially funded by the Fermi Guest Investigator 
+program (NNH18ZDA001N) and by Cooperative Agreement 80MSFC17M0022.
 
 ***************
 Getting Started

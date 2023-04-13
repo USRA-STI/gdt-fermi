@@ -19,6 +19,7 @@ The GDT-Fermi package can be installed from PyPI using:
 .. code-block:: sh
 
     pip install astro-gdt-fermi
+    gdt-data init
 
 
 .. _download_test_data:
