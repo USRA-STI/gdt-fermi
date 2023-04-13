@@ -71,5 +71,11 @@ if __name__ == '__main__':
             'astropy>=3.1',
             'healpy>=1.12.4',
             'cartopy>=0.21.1',
-        ]
+        ],
+        project_urls={
+            'Documentation': 'https://astro-gdt-fermi.readthedocs.io/en/latest/',
+            'Source': 'https://github.com/USRA-STI/gdt-fermi',
+            'Tracker': 'https://github.com/USRA-STI/gdt-fermi/issues',
+        }
+
     )
