@@ -51,13 +51,29 @@ class GbmTte(PhotonList):
         except:
             return self.headers[0]['DETNAM']
 
-    # mark TODO: copy over relevant header keywords
     def to_phaii(self, bin_method, *args, time_range=None, energy_range=None,
                  channel_range=None, **kwargs):
         if self.trigtime is not None:
             headers = PhaiiTriggerHeaders()
         else:
             headers = PhaiiHeaders()
+        
+        # do not copy the value of these keys
+        exceptions = ['CREATOR', 'DATATYPE', 'EXTNAME', 'FILENAME', 'FILETYPE',
+                      'HDUCLAS1']
+        # copy over the key values for each header
+        for i in range(self.headers.num_headers):
+            for key, val in self.headers[i].items():
+                if key in exceptions:
+                    continue
+                try:
+                    headers[i][key] = val        
+                except:
+                    # header key is present in TTE but not in PHAII
+                    pass
+        headers['PRIMARY']['FILETYPE'] = 'PHAII'
+        headers['PRIMARY']['DATATYPE'] = 'PHAII'
+        
         return super().to_phaii(bin_method, *args, time_range=time_range, 
                                 energy_range=energy_range, 
                                 channel_range=channel_range, 

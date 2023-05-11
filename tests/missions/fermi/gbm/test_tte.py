@@ -86,6 +86,17 @@ class TestGbmTte(unittest.TestCase):
     def test_to_phaii(self):
         phaii = self.tte.to_phaii(bin_by_time, 1.024)
         self.assertEqual(phaii.data.num_times, 319)
+        self.assertEqual(phaii.detector, self.tte.detector)
+        self.assertEqual(phaii.headers[0]['FILETYPE'], 'PHAII')
+        self.assertEqual(phaii.headers[0]['DATE-OBS'], self.tte.headers[0]['DATE-OBS'])
+        self.assertEqual(phaii.headers[0]['DATE-END'], self.tte.headers[0]['DATE-END'])
+        self.assertEqual(phaii.headers[0]['TSTART'], self.tte.headers[0]['TSTART'])
+        self.assertEqual(phaii.headers[0]['TSTOP'], self.tte.headers[0]['TSTOP'])
+        self.assertEqual(phaii.headers[0]['TRIGTIME'], self.tte.headers[0]['TRIGTIME'])
+        self.assertEqual(phaii.headers[0]['OBJECT'], self.tte.headers[0]['OBJECT'])
+        self.assertEqual(phaii.headers[0]['RA_OBJ'], self.tte.headers[0]['RA_OBJ'])
+        self.assertEqual(phaii.headers[0]['DEC_OBJ'], self.tte.headers[0]['DEC_OBJ'])
+        self.assertEqual(phaii.headers[0]['ERR_RAD'], self.tte.headers[0]['ERR_RAD'])
 
     def test_slice_energy(self):
         tte2 = self.tte.slice_energy((50.0, 300.0))
