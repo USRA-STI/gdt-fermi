@@ -344,6 +344,8 @@ class FermiEarthPlot(EarthPlot):
         if self.spacecraft is not None:
             coord = self.spacecraft.coordinates
             title = 'Latitude, East Longitude: ({0}, {1})\n'.format(*coord)
-            mcl = calc_mcilwain_l(float(coord[0][:-1]), float(coord[1][:-1]))
+            lat = float(coord[0][:-1]) * (-1 if "S" in coord[0] else 1)
+            lon = float(coord[1][:-1]) * (-1 if "W" in coord[1] else 1)
+            mcl = calc_mcilwain_l(lat, lon)
             title += 'McIlwain L: {:.2f}'.format(mcl)
             self._m.set_title(title)
