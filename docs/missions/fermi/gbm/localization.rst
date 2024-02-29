@@ -112,7 +112,7 @@ We can retrieve, as attributes, various other interesting tidbits:
 Of course, since we have a HEALPix file, we can make a pretty sky map!
 
     >>> import matplotlib.pyplot as plt
-    >>> from gdt.plot.sky import EquatorialPlot
+    >>> from gdt.core.plot.sky import EquatorialPlot
     >>> # initialize
     >>> skyplot = EquatorialPlot()
     >>> # add our HEALPix localization

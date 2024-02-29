@@ -6,8 +6,8 @@
 .. |TimeBins| replace:: :class:`~gdt.core.data_primitives.TimeBins`
 .. |EnergyBins| replace:: :class:`~gdt.core.data_primitives.EnergyBins`
 .. |Phaii| replace:: :class:`~gdt.core.phaii.Phaii`
-.. |Lightcurve| replace:: :class:`~gdt.plot.lightcurve.Lightcurve`
-.. |Spectrum| replace:: :class:`~gdt.plot.spectrum.Spectrum`
+.. |Lightcurve| replace:: :class:`~gdt.core.plot.lightcurve.Lightcurve`
+.. |Spectrum| replace:: :class:`~gdt.core.plot.spectrum.Spectrum`
 
 **********************************************************
 Fermi GBM PHAII Data (:mod:`gdt.missions.fermi.gbm.phaii`)
@@ -151,7 +151,7 @@ we want to plot it.  For that, we use the |Lightcurve| and |Spectrum| plotting
 classes:
     
     >>> import matplotlib.pyplot as plt
-    >>> from gdt.plot.lightcurve import Lightcurve
+    >>> from gdt.core.plot.lightcurve import Lightcurve
     >>> lcplot = Lightcurve(data=lightcurve)
     >>> plt.show()
 
@@ -167,7 +167,7 @@ So maybe the native CTIME resolution is overkill because it's hard to see the
 signal. We can make it easier to see the signal if we bin it up (see 
 :external:ref:`The Binning Package<binning>` for details):
 
-    >>> from gbm.binning.binned import rebin_by_time
+    >>> from gdt.core.binning.binned import rebin_by_time
     >>> # rebin the data to 2.048 s resolution
     >>> rebinned_ctime = ctime.rebin_time(rebin_by_time, 2.048)
     >>> lcplot = Lightcurve(data=rebinned_ctime.to_lightcurve())
@@ -182,7 +182,7 @@ GRB signal in the lightcurve.
 
 Similarly, we can plot the count spectrum:
 
-    >>> from gdt.plot.spectrum import Spectrum
+    >>> from gdt.core.plot.spectrum import Spectrum
     >>> specplot = Spectrum(data=spectrum)
     >>> plt.show()
 

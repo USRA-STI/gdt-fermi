@@ -20,7 +20,7 @@ City):
 
     >>> from gdt.missions.fermi.mcilwainl import *
     >>> # note that we must specify East Longitude
-    >>> calc_mcilwain_l(-100.0, 20.0)
+    >>> calc_mcilwain_l(20.0, -100.0)
     1.44546112
 
 Reference/API

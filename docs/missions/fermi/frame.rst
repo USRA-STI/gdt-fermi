@@ -1,6 +1,6 @@
 .. _fermi-frame:
 .. |FermiFrame| replace:: :class:`~gdt.missions.fermi.frame.FermiFrame`
-.. |GbmPosHist| replace:: :class:`~gdt.missions.fermi.frame.gbm.poshist.GbmPosHist`
+.. |GbmPosHist| replace:: :class:`~gdt.missions.fermi.gbm.poshist.GbmPosHist`
 .. |Quaternion| replace:: :class:`~gdt.core.coords.Quaternion`
 
 ********************************************************
