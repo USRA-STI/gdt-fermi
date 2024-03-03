@@ -35,9 +35,10 @@ from astropy.coordinates import get_sun, SkyCoord
 from astropy.coordinates.representation import CartesianRepresentation
 from astropy.units import Quantity
 
-from gdt.core.coords import SpacecraftFrame, Quaternion
+from gdt.core.coords import Quaternion
 from gdt.core.file import FitsFileContextManager
 from gdt.core.healpix import HealPixLocalization
+from ..frame import *
 from ..time import Time
 from .detectors import GbmDetectors
 from .headers import HealpixHeaders
@@ -147,10 +148,13 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         lores_array = np.zeros(lores_npix)
         lores_array[idx] = probs
         prob_array = hp.get_interp_val(lores_array, theta, phi)
-
+        
+        quat = Quaternion(chi2grid.quaternion)
+        scpos = CartesianRepresentation(chi2grid.scpos, unit='m')
+        
         obj = cls.from_data(prob_array, trigtime=chi2grid.trigtime, 
                             headers=headers, filename=filename, 
-                            scpos=chi2grid.scpos, quaternion=chi2grid.quaternion)
+                            scpos=scpos, quaternion=quat)
         return obj
 
     @classmethod
