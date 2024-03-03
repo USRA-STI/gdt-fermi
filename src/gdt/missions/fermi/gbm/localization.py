@@ -235,7 +235,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                                      frame='gcrs')
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
         
-        obj._build_headers(obj.trigtime, obj.nside)
+        obj._headers = obj._build_headers(obj.trigtime, obj.nside)
         
         return obj
 
