@@ -195,7 +195,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                 raise TypeError('quaternion must be a Quaternion object')
             
         if scpos is not None:
-            if no isinstance(scpos, CartesianRepresentation):
+            if not isinstance(scpos, CartesianRepresentation):
                 raise TypeError('scpos must be a CartesianRepresentation object')
         
         # if we have a trigtime, calculate sun position
