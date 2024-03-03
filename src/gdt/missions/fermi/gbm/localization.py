@@ -209,7 +209,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if (trigtime is not None) and (scpos is not None) and \
            (quaternion is not None):
             obj._scpos = scpos
-            obj._quat = quat
+            obj._quat = quaternion
             
             obj._frame = FermiFrame(obstime=Time(trigtime, format='fermi'),
                                     quaternion=obj._quat, obsgeoloc=scpos,
