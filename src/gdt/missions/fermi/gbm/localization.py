@@ -323,9 +323,9 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             (:class:`GbmHealPix`)
         """
         # ignore comment length warnings
-        warnings.filterwarnings("ignore", category=UserWarning)
-        
-        obj = super().open(file_path, **kwargs)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=UserWarning)
+            obj = super().open(file_path, **kwargs)
 
         # get the headers
         hdrs = [hdu.header for hdu in obj.hdulist]
@@ -352,12 +352,14 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             scpos_comment = headers[1]['COMMENT'][0]
             scpos = scpos_comment.split('[')[1].split(']')[0]
             scpos = np.array([float(el) for el in scpos.split()])
+            scpos = CartesianRepresentation(scpos, unit='m')
         except:
             scpos = None
         try:
             quat_comment = headers[1]['COMMENT'][1]
             quat = quat_comment.split('[')[1].split(']')[0]
             quat = np.array([float(el) for el in quat.split()])
+            quat = Quaternion(quat)
         except:
             quat = None
         
