@@ -235,6 +235,8 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                                      frame='gcrs')
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
         
+        obj._build_headers(self.trigtime, self.nside)
+        
         return obj
 
     @classmethod
@@ -548,7 +550,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         return prob
 
     def _build_hdulist(self):
-
+                
         # create FITS and primary header
         hdulist = fits.HDUList()
         primary_hdu = fits.PrimaryHDU(header=self.headers['PRIMARY'])
@@ -592,14 +594,14 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
         if self.scpos is not None:
             headers['HEALPIX']['COMMENT'][0] = 'SCPOS: ' + \
-                                               np.array2string(self.scpos)
+                                               np.array2string(self.scpos.xyz.value)
             headers['HEALPIX']['GEO_RA'] = self.geo_location.ra.value          
             headers['HEALPIX']['GEO_DEC'] = self.geo_location.dec.value          
             headers['HEALPIX']['GEO_RAD'] = self.geo_radius.value         
 
         if self.quaternion is not None:
-            headers['HEALPIX']['COMMENT'][1] = 'QUAT: ' + \
-                                               np.array2string(self.quaternion)       
+            quat = np.append(self.quaternion.xyz, self.quaternion.w)
+            headers['HEALPIX']['COMMENT'][1] = 'QUAT: ' + np.array2string(quat)       
             for det in GbmDetectors:
                 pointing = getattr(self, det.name.lower()+'_pointing')
                 headers['HEALPIX'][det.name.upper()+'_RA'] = pointing.ra.value
