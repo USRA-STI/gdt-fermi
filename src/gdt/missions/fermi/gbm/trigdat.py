@@ -1246,8 +1246,14 @@ class FswLocation:
         obj._fluence = rec_array['FLUENCE']
         obj._sigma = rec_array['SIGMA']
         obj._rates = rec_array['LOCRATES']
-        obj._timescale = rec_array['TRIG_TS']
-        obj._azzen = (rec_array['TR_SCAZ'], rec_array['TR_SCZEN'])
+        try:
+            obj._timescale = rec_array['TRIG_TS']
+        except KeyError:
+            pass
+        try:
+            obj._azzen = (rec_array['TR_SCAZ'], rec_array['TR_SCZEN'])
+        except KeyError:
+            pass
         return obj
     
     def to_recarray(self):
