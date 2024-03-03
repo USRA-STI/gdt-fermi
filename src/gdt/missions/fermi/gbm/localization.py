@@ -166,7 +166,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             headers (:class:`~gdt.core.headers.FileHeaders`, optional):
                 The file headers
             filename (str, optional): The filename
-            quaternion (np.array, optional): 
+            quaternion (:class:`~gdt.core.coords.Quaternion`, optional): 
                 The associated spacecraft quaternion used to determine the 
                 detector pointings in equatorial coordinates
             scpos (np.array, optional): 
@@ -182,30 +182,22 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if headers is not None:
             if not isinstance(headers, HealpixHeaders):
                 raise TypeError('headers must be a HealpixHeaders object')
+        else:
+            headers = HealpixHeaders()
         obj._headers = headers
         
         if quaternion is not None:
-            try:
-                iter(quaternion)
-                quaternion = np.asarray(quaternion)
-            except:
-                raise TypeError('quaternion must be an array')
-            if quaternion.size != 4:
-                raise ValueError('quaternion must be a 4-element array')
+            if not isinstance(quaternion, Quaternion):
+                raise TypeError('quaternion must be a Quaternion object')
             
         if scpos is not None:
-            try:
-                iter(scpos)
-                scpos = np.asarray(scpos)
-            except:
-                raise TypeError('scpos must be an array')
-            if scpos.size != 3:
-                raise ValueError('scpos must be a 3-element array')
+            if no isinstance(scpos, CartesianRepresentation):
+                raise TypeError('scpos must be a CartesianRepresentation object')
         
         # if we have a trigtime, calculate sun position
         if trigtime is not None:
             obj._sun_loc = get_sun(Time(trigtime, format='fermi'))
-        elif obj._headers is not None:
+        else:
             obj._sun_loc = SkyCoord(obj._headers[1]['SUN_RA'], 
                                     obj._headers[1]['SUN_DEC'], unit='deg',
                                     frame='gcrs')
@@ -213,12 +205,11 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if (trigtime is not None) and (scpos is not None) and \
            (quaternion is not None):
             obj._scpos = scpos
-            obj._quat = Quaternion(quaternion)
+            obj._quat = quat
             
-            obj._frame = SpacecraftFrame(obstime=Time(trigtime, format='fermi'),
-                                         quaternion=obj._quat,
-                             obsgeoloc=CartesianRepresentation(scpos, unit='m'),
-                             detectors=GbmDetectors)
+            obj._frame = FermiFrame(obstime=Time(trigtime, format='fermi'),
+                                    quaternion=obj._quat, obsgeoloc=scpos,
+                                    detectors=GbmDetectors)
             
             obj._geo_loc = obj._frame.geocenter
             obj._geo_rad = obj._frame.earth_angular_radius
@@ -227,21 +218,19 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                 det_coord = SkyCoord(*pointing, frame=obj._frame).gcrs[0]
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
         else:
-            if obj._headers is not None:
-                
-                obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'], 
-                                        obj._headers[1]['GEO_DEC'], unit='deg',
-                                        frame='gcrs')
-                
-                for det in GbmDetectors:
-                    ra_key = det.name.upper() + '_RA'
-                    dec_key = det.name.upper() + '_DEC'
-                    det_coord = SkyCoord(obj._headers[1][ra_key], 
-                                         obj._headers[1][dec_key], unit='deg', 
-                                         frame='gcrs')
-                    setattr(obj, det.name.lower() + '_pointing', det_coord)
-                                
-
+            
+            obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'], 
+                                    obj._headers[1]['GEO_DEC'], unit='deg',
+                                    frame='gcrs')
+            
+            for det in GbmDetectors:
+                ra_key = det.name.upper() + '_RA'
+                dec_key = det.name.upper() + '_DEC'
+                det_coord = SkyCoord(obj._headers[1][ra_key], 
+                                     obj._headers[1][dec_key], unit='deg', 
+                                     frame='gcrs')
+                setattr(obj, det.name.lower() + '_pointing', det_coord)
+        
         return obj
 
     @classmethod
