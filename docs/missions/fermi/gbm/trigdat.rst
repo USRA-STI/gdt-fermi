@@ -1,7 +1,7 @@
 .. _gbm-trigdat:
 .. |Trigdat| replace:: :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat`
 .. |GbmPhaii| replace:: :class:`~gdt.missions.fermi.gbm.phaii.GbmPhaii`
-.. |Lightcurve| replace:: :class:`~gdt.plot.lightcurve.Lightcurve`
+.. |Lightcurve| replace:: :class:`~gdt.core.plot.lightcurve.Lightcurve`
 .. |to_phaii| replace:: :meth:`~gdt.missions.fermi.gbm.trigdat.Trigdat.to_phaii`
 .. |sum_detectors| replace:: :meth:`~gdt.missions.fermi.gbm.trigdat.Trigdat.sum_detectors`
 
@@ -122,7 +122,7 @@ information about working with position history data.
 
 We can also make a sky plot:
 
-    >>> from gdt.plot.sky import EquatorialPlot
+    >>> from gdt.core.plot.sky import EquatorialPlot
     >>> eqplot = EquatorialPlot()
     >>> eqplot.add_frame(trigdat.poshist.at(time))
 

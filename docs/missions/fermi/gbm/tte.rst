@@ -2,11 +2,11 @@
 .. |GbmTte| replace:: :class:`~gdt.missions.fermi.gbm.tte.GbmTte`
 .. |EventList| replace:: :class:`~gdt.core.data_primitives.EventList`
 .. |PhotonList| replace:: :class:`~gdt.core.tte.PhotonList`
-.. |bin_by_time| replace:: :class:`~gdt.binning.unbinned.bin_by_time`
-.. |combine_by_factor| replace:: :class:`~gdt.binning.binned.combine_by_factor`
+.. |bin_by_time| replace:: :func:`~gdt.core.binning.unbinned.bin_by_time`
+.. |combine_by_factor| replace:: :func:`~gdt.core.binning.binned.combine_by_factor`
 .. |GbmPhaii| replace:: :class:`~gdt.missions.fermi.gbm.phaii.GbmPhaii`
-.. |Lightcurve| replace:: :class:`~gdt.plot.lightcurve.Lightcurve`
-.. |Spectrum| replace:: :class:`~gdt.plot.spectrum.Spectrum`
+.. |Lightcurve| replace:: :class:`~gdt.core.plot.lightcurve.Lightcurve`
+.. |Spectrum| replace:: :class:`~gdt.core.plot.spectrum.Spectrum`
 
 ******************************************************
 Fermi GBM TTE Data (:mod:`gdt.missions.fermi.gbm.tte`)
@@ -92,7 +92,7 @@ this example, let's choose |bin_by_time|, which simply bins the TTE to the
 prescribed time resolution.  Then we can use our chosen binning algorithm to
 **convert** the TTE to a PHAII object
 
-    >>> from gdt.binning.unbinned import bin_by_time
+    >>> from gdt.core.binning.unbinned import bin_by_time
     >>> phaii = tte.to_phaii(bin_by_time, 1.024, time_ref=0.0)
     >>> phaii
     <GbmPhaii: 
@@ -107,7 +107,7 @@ CTIME or CSPEC data.  For example, we can plot the lightcurve using the
 |Lightcurve| class:
 
     >>> import matplotlib.pyplot as plt
-    >>> from gdt.plot.lightcurve import Lightcurve
+    >>> from gdt.core.plot.lightcurve import Lightcurve
     >>> lcplot = Lightcurve(data=phaii.to_lightcurve())
     >>> plt.show()
     
@@ -123,7 +123,7 @@ TTE is already necessarily pre-binned in energy. So we can make a spectrum plot
 directly from the TTE object without any extra steps using the |Spectrum| 
 class:
 
-    >>> from gdt.plot.spectrum import Spectrum
+    >>> from gdt.core.plot.spectrum import Spectrum
     >>> # integrate over time from 0 - 10 s
     >>> spectrum = tte.to_spectrum(time_range=(0.0, 10.0))
     >>> specplot = Spectrum(data=spectrum)
@@ -138,7 +138,7 @@ energy is pre-binned, so we need to use one of the
 will use |combine_by_factor|, which simply combines bins together by an integer 
 factor:
 
-    >>> from gdt.binning.binned import combine_by_factor
+    >>> from gdt.core.binning.binned import combine_by_factor
     >>> # rebin the count spectrum by a factor of 4
     >>> rebinned_energy = tte.rebin_energy(combine_by_factor, 4)
     >>> rebinned_spectrum = rebinned_energy.to_spectrum(time_range=(0.0, 10.0))

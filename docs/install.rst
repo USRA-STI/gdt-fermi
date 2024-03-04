@@ -71,9 +71,12 @@ or delete all of the data with:
 
 Quickstart
 ----------
-To load the GDT-Fermi package within your python environment, simply::
+You can load Fermi and instrument modules with the following examples::
     
-    >>> import gdt.missions.fermi as fermi
+    >>> # import the Fermi epoch
+    >>> from gdt.missions.fermi.time import Time
+    >>> # import the data interface for CSPEC data
+    >>> from gdt.missions.fermi.gbm.phaii import Cspec
 
 
 How to Uninstall

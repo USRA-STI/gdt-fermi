@@ -159,7 +159,7 @@ Now all of this great, but we can also make a sky plot at a given time.  We
 can plot in either the Equatorial frame:
     
     >>> from matplotlib.pyplot as plt
-    >>> from gdt.plot.sky import EquatorialPlot
+    >>> from gdt.core.plot.sky import EquatorialPlot
     >>> eqplot = EquatorialPlot()
     >>> eqplot.add_frame(one_frame)
     >>> plt.show()
@@ -169,7 +169,7 @@ can plot in either the Equatorial frame:
 
 Or the Galactic Frame:
 
-    >>> from gdt.plot.sky import GalacticPlot
+    >>> from gdt.core.plot.sky import GalacticPlot
     >>> galplot = GalacticPlot()
     >>> galplot.add_frame(one_frame)
     >>> plt.show()
@@ -178,7 +178,7 @@ Or the Galactic Frame:
 
 Or the Spacecraft Frame:
 
-    >>> from gdt.plot.sky import SpacecraftPlot
+    >>> from gdt.core.plot.sky import SpacecraftPlot
     >>> scplot = SpacecraftPlot()
     >>> scplot.add_frame(one_frame)
     >>> plt.show()

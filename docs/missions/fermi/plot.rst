@@ -2,8 +2,8 @@
 .. |McIlwainL| replace:: :class:`~gdt.missions.fermi.plot.McIlwainL`
 .. |FermiEarthPlot| replace:: :class:`~gdt.missions.fermi.plot.FermiEarthPlot`
 .. |FermiIcon| replace:: :class:`~gdt.missions.fermi.plot.FermiIcon`
-.. |EarthPlot| replace:: :class:`~gdt.plot.earthplot.EarthPlot`
-.. |GdtCmap| replace:: :class:`~gdt.plot.plot.GdtCmap`
+.. |EarthPlot| replace:: :class:`~gdt.core.plot.earthplot.EarthPlot`
+.. |GdtCmap| replace:: :class:`~gdt.core.plot.plot.GdtCmap`
 
 **************************************************************
 Fermi-specific Plot Classes (:mod:`gdt.missions.fermi.plot`)
@@ -20,6 +20,7 @@ We can initialize the |FermiEarthPlot| by calling it in the same way as the
 base |EarthPlot| class:
 
     >>> import matplotlib.pyplot as plt
+    >>> from gdt.missions.fermi.plot import FermiEarthPlot
     >>> earthplot = FermiEarthPlot(interactive=True)
     >>> plt.show()
 
@@ -53,6 +54,7 @@ We can also change the number of contours, but to do so, we must initialize
 a new |McIlwainL| plot object and specify the contours on initialization:
 
     >>> import numpy as np
+    >>> from gdt.missions.fermi.plot import McIlwain
     >>> # don't create mcilwain heatmap, we will do this manually
     >>> earthplot = FermiEarthPlot(interactive=True, mcilwain=False)
     >>> # 50 contour levels
@@ -69,7 +71,8 @@ a new |McIlwainL| plot object and specify the contours on initialization:
 The |FermiIcon| is a custom plot marker in the shape of Fermi.  Although 
 typically used as a plot marker in |FermiEarthPlot|, we can view it up close:
 
-    >>> from gdt.plot.plot import GdtPlot
+    >>> from gdt.core.plot.plot import GdtPlot
+    >>> from gdt.missions.fermi.plot import FermiIcon
     >>> plot = GdtPlot()
     >>> icon = FermiIcon(0.0, 0.0, plot.ax)
     >>> plot.xlim = (-15.0, 15.0)
@@ -83,8 +86,8 @@ We can add the |FermiIcon| to the |FermiEarthPlot| by giving it the East
 longitude and latitude of the position and the plot axes:
 
     >>> earthplot = FermiEarthPlot(interactive=True)
-    >>> # East longitude 80.88, latitude -4.62
-    >>> icon = FermiIcon(80.88, -4.62, earthplot.geoaxes)
+    >>> # latitude -4.62, East longitude 80.88
+    >>> icon = FermiIcon(-4.62, 80.88, earthplot.geoaxes)
     >>> plt.show()
 
 .. image:: figs/fermifig2.png

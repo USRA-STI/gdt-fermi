@@ -2,11 +2,11 @@
 .. |GbmRsp| replace:: :class:`~gdt.missions.fermi.gbm.response.GbmRsp`
 .. |GbmRsp2| replace:: :class:`~gdt.missions.fermi.gbm.response.GbmRsp2`
 .. |ResponseMatrix| replace:: :class:`~gdt.core.data_primitives.ResponseMatrix`
-.. |PowerLaw| replace:: :class:`~gdt.spectra.functions.PowerLaw`
+.. |PowerLaw| replace:: :class:`~gdt.core.spectra.functions.PowerLaw`
 .. |EnergyBins| replace:: :class:`~gdt.core.data_primitives.EnergyBins`
-.. |ResponsePlot| replace:: :class:`~gdt.plot.drm.ResponsePlot`
-.. |PhotonEffectiveArea| replace:: :class:`~gdt.plot.drm.PhotonEffectiveArea`
-.. |ChannelEffectiveArea| replace:: :class:`~gdt.plot.drm.ChannelEffectiveArea`
+.. |ResponsePlot| replace:: :class:`~gdt.core.plot.drm.ResponsePlot`
+.. |PhotonEffectiveArea| replace:: :class:`~gdt.core.plot.drm.PhotonEffectiveArea`
+.. |ChannelEffectiveArea| replace:: :class:`~gdt.core.plot.drm.ChannelEffectiveArea`
 
 *********************************************************************
 Fermi GBM Detector Responses (:mod:`gdt.missions.fermi.gbm.response`)
@@ -79,7 +79,7 @@ directly, which is a |ResponseMatrix| object:
 We can fold a photon model through the response matrix to get out a count 
 spectrum.  For example, we fold a |PowerLaw| photon model:
 
-    >>> from gdt.spectra.functions import PowerLaw
+    >>> from gdt.core.spectra.functions import PowerLaw
     >>> pl = PowerLaw()
     >>> # power law with amplitude=0.01, index=-2.0
     >>> rsp.fold_spectrum(pl.fit_eval, (0.01, -2.0))
@@ -104,7 +104,7 @@ What does a DRM actually look like? We can make a plot of one using the
 |ResponsePlot|:
 
     >>> import matplotlib.pyplot as plt
-    >>> from gdt.plot.drm import ResponsePlot
+    >>> from gdt.core.plot.drm import ResponsePlot
     >>> drmplot = ResponsePlot(rsp_interp.drm)
     >>> drmplot.xlim = (5.0, 1000.0)
     >>> drmplot.ylim = (5.0, 1000.0)
@@ -130,7 +130,7 @@ angle from the detector normal.
 We can also make a plot of the effective area integrated over photon energies 
 using |PhotonEffectiveArea|:
 
-    >>> from gdt.plot.drm import PhotonEffectiveArea,
+    >>> from gdt.core.plot.drm import PhotonEffectiveArea,
     >>> effarea_plot = PhotonEffectiveArea(rsp_interp.drm)
     >>> plt.show()
 
@@ -138,7 +138,7 @@ using |PhotonEffectiveArea|:
 
 Or over energy channels using |ChannelEffectiveArea|:
 
-    >>> from gdt.plot.drm import ChannelEffectiveArea
+    >>> from gdt.core.plot.drm import ChannelEffectiveArea
     >>> effarea_plot = ChannelEffectiveArea(rsp_interp.drm)
     >>> plt.show()
 
