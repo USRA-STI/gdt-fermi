@@ -101,7 +101,8 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
     @property
     def scpos(self):
-        """(np.array): The spacecraft position in Earth inertial coordinates"""
+        """(astropy.coordinates.CartesianRepresentation): 
+           The spacecraft position in Earth inertial coordinates"""
         return self._scpos
 
     @property
@@ -187,7 +188,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             if not isinstance(headers, HealpixHeaders):
                 raise TypeError('headers must be a HealpixHeaders object')
         else:
-            headers = HealpixHeaders()
+            headers = cls._none_default_headers()
         obj._headers = headers
         
         if quaternion is not None:
@@ -201,10 +202,12 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         # if we have a trigtime, calculate sun position
         if trigtime is not None:
             obj._sun_loc = get_sun(Time(trigtime, format='fermi'))
-        else:
+        elif obj._headers[1]['SUN_RA'] is not None:
             obj._sun_loc = SkyCoord(obj._headers[1]['SUN_RA'], 
                                     obj._headers[1]['SUN_DEC'], unit='deg',
                                     frame='gcrs')
+        else:
+            obj._sun_loc = None
         
         if (trigtime is not None) and (scpos is not None) and \
            (quaternion is not None):
@@ -221,11 +224,12 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                 pointing = (det.azimuth, det.elevation)
                 det_coord = SkyCoord(*pointing, frame=obj._frame).gcrs[0]
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
-        else:
+        elif obj._headers[1]['GEO_RA'] is not None:
             
             obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'], 
                                     obj._headers[1]['GEO_DEC'], unit='deg',
                                     frame='gcrs')
+            obj._geo_rad = Quantity(obj._headers[1]['GEO_RAD'], unit='deg')
             
             for det in GbmDetectors:
                 ra_key = det.name.upper() + '_RA'
@@ -276,7 +280,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             headers = healpix1.headers
         else:
             headers = healpix2.headers
-
+        
         obj = super().multiply(healpix1, healpix2, primary=primary, 
                                output_nside=output_nside)   
 
@@ -625,6 +629,46 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         geo_mask = (ang <= self.geo_radius)
 
         return mask, geo_mask
+
+    @staticmethod
+    def _none_default_headers():
+        hdr = HealpixHeaders()
+        hdr[0]['TRIGTIME'] = None
+        hdr[1]['SUN_RA'] = None
+        hdr[1]['SUN_DEC'] = None
+        hdr[1]['GEO_RA'] = None
+        hdr[1]['GEO_DEC'] = None
+        hdr[1]['GEO_RAD'] = None
+        hdr[1]['N0_RA'] = None
+        hdr[1]['N0_DEC'] = None
+        hdr[1]['N1_RA'] = None
+        hdr[1]['N1_DEC'] = None
+        hdr[1]['N2_RA'] = None
+        hdr[1]['N2_DEC'] = None
+        hdr[1]['N3_RA'] = None
+        hdr[1]['N3_DEC'] = None
+        hdr[1]['N4_RA'] = None
+        hdr[1]['N4_DEC'] = None
+        hdr[1]['N5_RA'] = None
+        hdr[1]['N5_DEC'] = None
+        hdr[1]['N6_RA'] = None
+        hdr[1]['N6_DEC'] = None
+        hdr[1]['N7_RA'] = None
+        hdr[1]['N7_DEC'] = None
+        hdr[1]['N8_RA'] = None
+        hdr[1]['N8_DEC'] = None
+        hdr[1]['N9_RA'] = None
+        hdr[1]['N9_DEC'] = None
+        hdr[1]['NA_RA'] = None
+        hdr[1]['NA_DEC'] = None
+        hdr[1]['NB_RA'] = None
+        hdr[1]['NB_DEC'] = None
+        hdr[1]['B0_RA'] = None
+        hdr[1]['B0_DEC'] = None
+        hdr[1]['B1_RA'] = None
+        hdr[1]['B1_DEC'] = None
+
+        return hdr
 
     def __repr__(self):
         s = '<{0}: {1}\n'.format(self.__class__.__name__, self.filename)
