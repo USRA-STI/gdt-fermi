@@ -687,6 +687,12 @@ class Trigdat(FitsFileContextManager):
         Returns:
             np.array: Indices of idx2 spliced into idx1
 		"""
+        # if there is no idx1, then we only have to return idx2 and v.v.
+        if idx1.size == 0:
+            return idx2
+        if idx2.size == 0:
+            return idx1
+
         # bin edges for both selections
         start_times1 = self._data['TIME'][idx1]
         end_times1 = self._data['ENDTIME'][idx1]
@@ -694,15 +700,15 @@ class Trigdat(FitsFileContextManager):
         end_times2 = self._data['ENDTIME'][idx2]
 
         # find where bracketing timescale ends and inserted timescale begins
-        start_idx = (np.where(end_times1 >= start_times2[0]))[0][0]
+        mask = end_times1 >= start_times2[0]
+        start_idx =  (np.where(mask))[0][0]
         idx = np.concatenate((idx1[0:start_idx], idx2))
 
         # find wehere inserted timescale ends and bracketing timescale begins again
         mask = start_times1 >= end_times2[-1]
-        if mask.sum():
-            end_idx = (np.where(mask))[0][0]
-            idx = np.concatenate((idx, idx1[end_idx:]))
-
+        end_idx = (np.where(mask))[0][0]
+        idx = np.concatenate((idx, idx1[end_idx:]))
+                
         return idx
 
     def _gti_from_times(self, tstarts, tstops):
