@@ -152,7 +152,9 @@ class Trigdat(FitsFileContextManager):
         obj._trigtime = obj._headers[0]['TRIGTIME']
         
         # store trigrate, maxrates, backrates, and fsw location
-        obj._trigrates = MaxRates.from_recarray(obj.hdulist['TRIGRATE'].data[0])
+        trigrate_data =  obj.hdulist['TRIGRATE'].data
+        if trigrate_data.size > 0:
+            obj._trigrates = MaxRates.from_recarray(trigrate_data[0])
         obj._maxrates = [MaxRates.from_recarray(maxrate) for maxrate in
                          obj.hdulist['MAXRATES'].data]
         obj._backrates = BackRates.from_recarray(obj.hdulist['BCKRATES'].data[0])
