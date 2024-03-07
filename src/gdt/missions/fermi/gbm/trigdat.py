@@ -696,8 +696,10 @@ class Trigdat(FitsFileContextManager):
         idx = np.concatenate((idx1[0:start_idx], idx2))
 
         # find wehere inserted timescale ends and bracketing timescale begins again
-        end_idx = (np.where(start_times1 >= end_times2[-1]))[0][0]
-        idx = np.concatenate((idx, idx1[end_idx:]))
+        mask = start_times1 >= end_times2[-1]
+        if mask.sum():
+            end_idx = (np.where(mask))[0][0]
+            idx = np.concatenate((idx, idx1[end_idx:]))
 
         return idx
 
