@@ -609,3 +609,28 @@ class TestFswLocation(unittest.TestCase):
             self.assertTupleEqual(fswloc.top_classification, self.fswloc.top_classification)
 
             trigdat.close()
+
+    def test_missing_trigger_fields(self):
+        with fits.open(trigdat_file) as trigfile:
+            data = trigfile['OB_CALC'].data
+        
+        # without TRIG_TS, TR_SCAZ, TR_SCZEN
+        new_data = fits.FITS_rec.from_columns([data.columns['TIME'],
+                                               data.columns['RA'],
+                                               data.columns['DEC'],
+                                               data.columns['STATERR'],
+                                               data.columns['LOCALG'],
+                                               data.columns['EVTCLASS'],
+                                               data.columns['RELIABLT'],
+                                               data.columns['INTNSITY'],
+                                               data.columns['HDRATIO'],
+                                               data.columns['FLUENCE'],
+                                               data.columns['SIGMA'],
+                                               data.columns['LOCRATES']])
+        
+        for row in new_data:
+            loc = FswLocation.from_recarray(row)
+        
+            assert loc.timescale is None 
+            assert loc.location_sc[0] is None
+            assert loc.location_sc[1] is None
