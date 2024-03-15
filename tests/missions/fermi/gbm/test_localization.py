@@ -289,6 +289,9 @@ class TestGbmHealPixFromFile(unittest.TestCase):
             self.assertEqual(hpx.headers[1], self.hpx.headers[1])
             hpx.close()
 
+    def test_repr_html(self):
+        self.assertIsNotNone(self.hpx.hdulist)
+        self.assertIsNotNone(self.hpx._repr_html_())
 
 @unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
 class TestGbmHealPixNoFrame(unittest.TestCase):
