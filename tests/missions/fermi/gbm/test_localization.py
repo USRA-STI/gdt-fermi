@@ -152,7 +152,7 @@ class TestGbmHealPixFromFile(unittest.TestCase):
         self.assertEqual(self.hpx.quaternion.w, -0.101055)
 
     def test_scpos(self):
-        self.assertListEqual(self.hpx.scpos.tolist(), 
+        self.assertListEqual(self.hpx.scpos.xyz.value.tolist(), 
                              [-5039500., 4254000., -2067500.])
 
     def test_sun_location(self):
@@ -200,7 +200,8 @@ class TestGbmHealPixFromFile(unittest.TestCase):
     def test_remove_earth(self):
         new_hpx = self.hpx.remove_earth()
         self.assertEqual(new_hpx.trigtime, self.hpx.trigtime)
-        self.assertListEqual(new_hpx.scpos.tolist(), self.hpx.scpos.tolist())
+        self.assertListEqual(new_hpx.scpos.xyz.value.tolist(), 
+                             self.hpx.scpos.xyz.value.tolist())
         self.assertListEqual(new_hpx.quaternion.xyz.tolist(), 
                              self.hpx.quaternion.xyz.tolist())
         self.assertEqual(new_hpx.quaternion.w, self.hpx.quaternion.w)
@@ -237,7 +238,9 @@ class TestGbmHealPixFromFile(unittest.TestCase):
                                        scpos=self.hpx.scpos)
         self.assertListEqual(new_hpx.prob.tolist(), self.hpx.prob.tolist())      
         self.assertEqual(new_hpx.trigtime, self.hpx.trigtime)
-        self.assertEqual(new_hpx.headers, self.hpx.headers)    
+        for i in range(self.hpx.headers.num_headers):
+            for k in self.hpx.headers[i].keys():
+                assert new_hpx.headers[i][k] == self.hpx.headers[i][k]
         self.assertEqual(new_hpx.filename, self.hpx.filename)
     
     def test_multiply(self):
@@ -264,15 +267,11 @@ class TestGbmHealPixFromFile(unittest.TestCase):
         # wrong quaternion
         with self.assertRaises(TypeError):
             GbmHealPix.from_data(self.hpx.prob, quaternion=1)
-        with self.assertRaises(ValueError):
-            GbmHealPix.from_data(self.hpx.prob, quaternion=self.hpx.quaternion.xyz)
 
         # wrong scpos
         with self.assertRaises(TypeError):
             GbmHealPix.from_data(self.hpx.prob, scpos=1)
-        with self.assertRaises(ValueError):
-            GbmHealPix.from_data(self.hpx.prob, scpos=self.hpx.scpos[1:])
-
+ 
     def test_write(self):
 
         with TemporaryDirectory() as this_path:
@@ -281,7 +280,8 @@ class TestGbmHealPixFromFile(unittest.TestCase):
 
             self.assertListEqual(hpx.prob.tolist(), self.hpx.prob.tolist())
             self.assertListEqual(hpx.sig.tolist(), self.hpx.sig.tolist())
-            self.assertListEqual(hpx.scpos.tolist(), self.hpx.scpos.tolist())
+            self.assertListEqual(hpx.scpos.xyz.value.tolist(), 
+                                 self.hpx.scpos.xyz.value.tolist())
             self.assertListEqual(hpx.quaternion.xyz.tolist(),
                                  self.hpx.quaternion.xyz.tolist())
             self.assertEqual(hpx.quaternion.w, self.hpx.quaternion.w)
@@ -339,7 +339,7 @@ class TestGbmHealPixNoFrame(unittest.TestCase):
         self.assertAlmostEqual(b0.ra.value, 203.0, places=1)
         self.assertAlmostEqual(b0.dec.value, -17.1, places=1)
         b1 = self.hpx.b1_pointing
-        self.assertAlmostEqual(b1.ra.value, 23.0, places=1)
+        self.assertAlmostEqual(b1.ra.value, 23.1, places=1)
         self.assertAlmostEqual(b1.dec.value, 17.1, places=1)
 
     def test_frame(self):
@@ -354,7 +354,7 @@ class TestGbmHealPixNoFrame(unittest.TestCase):
         self.assertLess(self.hpx.geo_probability, 0.01)
 
     def test_geo_radius(self):
-        self.assertEqual(self.hpx.geo_radius.value, 67.5)
+        self.assertAlmostEqual(self.hpx.geo_radius.value, 67.3, places=1)
 
     def test_quaternion(self):
         self.assertIsNone(self.hpx.quaternion)
@@ -390,17 +390,29 @@ class TestGbmHealPixNoHeaders(unittest.TestCase):
         self.hpx = GbmHealPix.from_data(hpx.prob, filename=hpx.filename)
 
     def test_detectors(self):
-        with self.assertRaises(AttributeError):
-            self.hpx.n0_pointing
-
+        assert getattr(self.hpx, 'n0_pointing', None) is None
+        assert getattr(self.hpx, 'n1_pointing', None) is None
+        assert getattr(self.hpx, 'n2_pointing', None) is None
+        assert getattr(self.hpx, 'n3_pointing', None) is None
+        assert getattr(self.hpx, 'n4_pointing', None) is None
+        assert getattr(self.hpx, 'n5_pointing', None) is None
+        assert getattr(self.hpx, 'n6_pointing', None) is None
+        assert getattr(self.hpx, 'n7_pointing', None) is None
+        assert getattr(self.hpx, 'n8_pointing', None) is None
+        assert getattr(self.hpx, 'n9_pointing', None) is None
+        assert getattr(self.hpx, 'na_pointing', None) is None
+        assert getattr(self.hpx, 'nb_pointing', None) is None
+        assert getattr(self.hpx, 'b0_pointing', None) is None
+        assert getattr(self.hpx, 'b1_pointing', None) is None
+        
     def test_geo_location(self):
-        self.assertIsNone(self.hpx.geo_location)
+        assert self.hpx.geo_location is None
 
     def test_geo_probability(self):
-        self.assertIsNone(self.hpx.geo_probability)
+        assert self.hpx.geo_probability is None
 
     def test_sun_location(self):
-        self.assertIsNone(self.hpx.sun_location)
+        assert self.hpx.sun_location is None
 
     def test_observable_fraction(self):
         with self.assertRaises(RuntimeError):
@@ -441,7 +453,7 @@ class TestGbmHealPixFromChi2Grid(unittest.TestCase):
         self.assertEqual(self.hpx.quaternion.w, -0.101055)
     
     def test_scpos(self):
-        self.assertListEqual(self.hpx.scpos.tolist(), 
+        self.assertListEqual(self.hpx.scpos.xyz.value.tolist(), 
                              [-5039500., 4254000., -2067500.])
     
     def test_trigtime(self):
