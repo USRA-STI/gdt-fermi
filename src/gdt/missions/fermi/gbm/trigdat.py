@@ -152,7 +152,9 @@ class Trigdat(FitsFileContextManager):
         obj._trigtime = obj._headers[0]['TRIGTIME']
         
         # store trigrate, maxrates, backrates, and fsw location
-        obj._trigrates = MaxRates.from_recarray(obj.hdulist['TRIGRATE'].data[0])
+        trigrate_data =  obj.hdulist['TRIGRATE'].data
+        if trigrate_data.size > 0:
+            obj._trigrates = MaxRates.from_recarray(trigrate_data[0])
         obj._maxrates = [MaxRates.from_recarray(maxrate) for maxrate in
                          obj.hdulist['MAXRATES'].data]
         obj._backrates = BackRates.from_recarray(obj.hdulist['BCKRATES'].data[0])
@@ -685,6 +687,12 @@ class Trigdat(FitsFileContextManager):
         Returns:
             np.array: Indices of idx2 spliced into idx1
 		"""
+        # if there is no idx1, then we only have to return idx2 and v.v.
+        if idx1.size == 0:
+            return idx2
+        if idx2.size == 0:
+            return idx1
+
         # bin edges for both selections
         start_times1 = self._data['TIME'][idx1]
         end_times1 = self._data['ENDTIME'][idx1]
@@ -692,13 +700,17 @@ class Trigdat(FitsFileContextManager):
         end_times2 = self._data['ENDTIME'][idx2]
 
         # find where bracketing timescale ends and inserted timescale begins
-        start_idx = (np.where(end_times1 >= start_times2[0]))[0][0]
-        idx = np.concatenate((idx1[0:start_idx], idx2))
+        if mask.sum():
+            mask = end_times1 >= start_times2[0]
+            start_idx =  (np.where(mask))[0][0]
+            idx = np.concatenate((idx1[0:start_idx], idx2))
 
-        # find wehere inserted timescale ends and bracketing timescale begins again
-        end_idx = (np.where(start_times1 >= end_times2[-1]))[0][0]
-        idx = np.concatenate((idx, idx1[end_idx:]))
-
+        # find where inserted timescale ends and bracketing timescale begins again
+        mask = start_times1 >= end_times2[-1]
+        if mask.sum():
+            end_idx = (np.where(mask))[0][0]
+            idx = np.concatenate((idx, idx1[end_idx:]))
+                
         return idx
 
     def _gti_from_times(self, tstarts, tstops):
@@ -1246,8 +1258,14 @@ class FswLocation:
         obj._fluence = rec_array['FLUENCE']
         obj._sigma = rec_array['SIGMA']
         obj._rates = rec_array['LOCRATES']
-        obj._timescale = rec_array['TRIG_TS']
-        obj._azzen = (rec_array['TR_SCAZ'], rec_array['TR_SCZEN'])
+        try:
+            obj._timescale = rec_array['TRIG_TS']
+        except KeyError:
+            pass
+        try:
+            obj._azzen = (rec_array['TR_SCAZ'], rec_array['TR_SCZEN'])
+        except KeyError:
+            pass
         return obj
     
     def to_recarray(self):

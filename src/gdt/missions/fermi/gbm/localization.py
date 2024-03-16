@@ -35,9 +35,10 @@ from astropy.coordinates import get_sun, SkyCoord
 from astropy.coordinates.representation import CartesianRepresentation
 from astropy.units import Quantity
 
-from gdt.core.coords import SpacecraftFrame, Quaternion
+from gdt.core.coords import Quaternion
 from gdt.core.file import FitsFileContextManager
 from gdt.core.healpix import HealPixLocalization
+from ..frame import *
 from ..time import Time
 from .detectors import GbmDetectors
 from .headers import HealpixHeaders
@@ -100,7 +101,8 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
     @property
     def scpos(self):
-        """(np.array): The spacecraft position in Earth inertial coordinates"""
+        """(astropy.coordinates.CartesianRepresentation): 
+           The spacecraft position in Earth inertial coordinates"""
         return self._scpos
 
     @property
@@ -147,10 +149,13 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         lores_array = np.zeros(lores_npix)
         lores_array[idx] = probs
         prob_array = hp.get_interp_val(lores_array, theta, phi)
-
+        
+        quat = Quaternion(chi2grid.quaternion)
+        scpos = CartesianRepresentation(chi2grid.scpos, unit='m')
+        
         obj = cls.from_data(prob_array, trigtime=chi2grid.trigtime, 
                             headers=headers, filename=filename, 
-                            scpos=chi2grid.scpos, quaternion=chi2grid.quaternion)
+                            scpos=scpos, quaternion=quat)
         return obj
 
     @classmethod
@@ -166,7 +171,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             headers (:class:`~gdt.core.headers.FileHeaders`, optional):
                 The file headers
             filename (str, optional): The filename
-            quaternion (np.array, optional): 
+            quaternion (:class:`~gdt.core.coords.Quaternion`, optional): 
                 The associated spacecraft quaternion used to determine the 
                 detector pointings in equatorial coordinates
             scpos (np.array, optional): 
@@ -182,43 +187,36 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if headers is not None:
             if not isinstance(headers, HealpixHeaders):
                 raise TypeError('headers must be a HealpixHeaders object')
+        else:
+            headers = cls._none_default_headers()
         obj._headers = headers
         
         if quaternion is not None:
-            try:
-                iter(quaternion)
-                quaternion = np.asarray(quaternion)
-            except:
-                raise TypeError('quaternion must be an array')
-            if quaternion.size != 4:
-                raise ValueError('quaternion must be a 4-element array')
+            if not isinstance(quaternion, Quaternion):
+                raise TypeError('quaternion must be a Quaternion object')
             
         if scpos is not None:
-            try:
-                iter(scpos)
-                scpos = np.asarray(scpos)
-            except:
-                raise TypeError('scpos must be an array')
-            if scpos.size != 3:
-                raise ValueError('scpos must be a 3-element array')
+            if not isinstance(scpos, CartesianRepresentation):
+                raise TypeError('scpos must be a CartesianRepresentation object')
         
         # if we have a trigtime, calculate sun position
         if trigtime is not None:
             obj._sun_loc = get_sun(Time(trigtime, format='fermi'))
-        elif obj._headers is not None:
+        elif obj._headers[1]['SUN_RA'] is not None:
             obj._sun_loc = SkyCoord(obj._headers[1]['SUN_RA'], 
                                     obj._headers[1]['SUN_DEC'], unit='deg',
                                     frame='gcrs')
+        else:
+            obj._sun_loc = None
         
         if (trigtime is not None) and (scpos is not None) and \
            (quaternion is not None):
             obj._scpos = scpos
-            obj._quat = Quaternion(quaternion)
+            obj._quat = quaternion
             
-            obj._frame = SpacecraftFrame(obstime=Time(trigtime, format='fermi'),
-                                         quaternion=obj._quat,
-                             obsgeoloc=CartesianRepresentation(scpos, unit='m'),
-                             detectors=GbmDetectors)
+            obj._frame = FermiFrame(obstime=Time(trigtime, format='fermi'),
+                                    quaternion=obj._quat, obsgeoloc=scpos,
+                                    detectors=GbmDetectors)
             
             obj._geo_loc = obj._frame.geocenter
             obj._geo_rad = obj._frame.earth_angular_radius
@@ -226,22 +224,23 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                 pointing = (det.azimuth, det.elevation)
                 det_coord = SkyCoord(*pointing, frame=obj._frame).gcrs[0]
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
-        else:
-            if obj._headers is not None:
-                
-                obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'], 
-                                        obj._headers[1]['GEO_DEC'], unit='deg',
-                                        frame='gcrs')
-                
-                for det in GbmDetectors:
-                    ra_key = det.name.upper() + '_RA'
-                    dec_key = det.name.upper() + '_DEC'
-                    det_coord = SkyCoord(obj._headers[1][ra_key], 
-                                         obj._headers[1][dec_key], unit='deg', 
-                                         frame='gcrs')
-                    setattr(obj, det.name.lower() + '_pointing', det_coord)
-                                
-
+        elif obj._headers[1]['GEO_RA'] is not None:
+            
+            obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'], 
+                                    obj._headers[1]['GEO_DEC'], unit='deg',
+                                    frame='gcrs')
+            obj._geo_rad = Quantity(obj._headers[1]['GEO_RAD'], unit='deg')
+            
+            for det in GbmDetectors:
+                ra_key = det.name.upper() + '_RA'
+                dec_key = det.name.upper() + '_DEC'
+                det_coord = SkyCoord(obj._headers[1][ra_key], 
+                                     obj._headers[1][dec_key], unit='deg', 
+                                     frame='gcrs')
+                setattr(obj, det.name.lower() + '_pointing', det_coord)
+        
+        obj._headers = obj._build_headers(obj.trigtime, obj.nside)
+        
         return obj
 
     @classmethod
@@ -281,7 +280,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             headers = healpix1.headers
         else:
             headers = healpix2.headers
-
+        
         obj = super().multiply(healpix1, healpix2, primary=primary, 
                                output_nside=output_nside)   
 
@@ -328,9 +327,9 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             (:class:`GbmHealPix`)
         """
         # ignore comment length warnings
-        warnings.filterwarnings("ignore", category=UserWarning)
-        
-        obj = super().open(file_path, **kwargs)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=UserWarning)
+            obj = super().open(file_path, **kwargs)
 
         # get the headers
         hdrs = [hdu.header for hdu in obj.hdulist]
@@ -357,12 +356,14 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             scpos_comment = headers[1]['COMMENT'][0]
             scpos = scpos_comment.split('[')[1].split(']')[0]
             scpos = np.array([float(el) for el in scpos.split()])
+            scpos = CartesianRepresentation(scpos, unit='m')
         except:
             scpos = None
         try:
             quat_comment = headers[1]['COMMENT'][1]
             quat = quat_comment.split('[')[1].split(']')[0]
             quat = np.array([float(el) for el in quat.split()])
+            quat = Quaternion(quat)
         except:
             quat = None
         
@@ -555,7 +556,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         return prob
 
     def _build_hdulist(self):
-
+                
         # create FITS and primary header
         hdulist = fits.HDUList()
         primary_hdu = fits.PrimaryHDU(header=self.headers['PRIMARY'])
@@ -599,14 +600,14 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
         if self.scpos is not None:
             headers['HEALPIX']['COMMENT'][0] = 'SCPOS: ' + \
-                                               np.array2string(self.scpos)
+                                               np.array2string(self.scpos.xyz.value)
             headers['HEALPIX']['GEO_RA'] = self.geo_location.ra.value          
             headers['HEALPIX']['GEO_DEC'] = self.geo_location.dec.value          
             headers['HEALPIX']['GEO_RAD'] = self.geo_radius.value         
 
         if self.quaternion is not None:
-            headers['HEALPIX']['COMMENT'][1] = 'QUAT: ' + \
-                                               np.array2string(self.quaternion)       
+            quat = np.append(self.quaternion.xyz, self.quaternion.w)
+            headers['HEALPIX']['COMMENT'][1] = 'QUAT: ' + np.array2string(quat)       
             for det in GbmDetectors:
                 pointing = getattr(self, det.name.lower()+'_pointing')
                 headers['HEALPIX'][det.name.upper()+'_RA'] = pointing.ra.value
@@ -628,6 +629,46 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         geo_mask = (ang <= self.geo_radius)
 
         return mask, geo_mask
+
+    @staticmethod
+    def _none_default_headers():
+        hdr = HealpixHeaders()
+        hdr[0]['TRIGTIME'] = None
+        hdr[1]['SUN_RA'] = None
+        hdr[1]['SUN_DEC'] = None
+        hdr[1]['GEO_RA'] = None
+        hdr[1]['GEO_DEC'] = None
+        hdr[1]['GEO_RAD'] = None
+        hdr[1]['N0_RA'] = None
+        hdr[1]['N0_DEC'] = None
+        hdr[1]['N1_RA'] = None
+        hdr[1]['N1_DEC'] = None
+        hdr[1]['N2_RA'] = None
+        hdr[1]['N2_DEC'] = None
+        hdr[1]['N3_RA'] = None
+        hdr[1]['N3_DEC'] = None
+        hdr[1]['N4_RA'] = None
+        hdr[1]['N4_DEC'] = None
+        hdr[1]['N5_RA'] = None
+        hdr[1]['N5_DEC'] = None
+        hdr[1]['N6_RA'] = None
+        hdr[1]['N6_DEC'] = None
+        hdr[1]['N7_RA'] = None
+        hdr[1]['N7_DEC'] = None
+        hdr[1]['N8_RA'] = None
+        hdr[1]['N8_DEC'] = None
+        hdr[1]['N9_RA'] = None
+        hdr[1]['N9_DEC'] = None
+        hdr[1]['NA_RA'] = None
+        hdr[1]['NA_DEC'] = None
+        hdr[1]['NB_RA'] = None
+        hdr[1]['NB_DEC'] = None
+        hdr[1]['B0_RA'] = None
+        hdr[1]['B0_DEC'] = None
+        hdr[1]['B1_RA'] = None
+        hdr[1]['B1_DEC'] = None
+
+        return hdr
 
     def __repr__(self):
         s = '<{0}: {1}\n'.format(self.__class__.__name__, self.filename)
