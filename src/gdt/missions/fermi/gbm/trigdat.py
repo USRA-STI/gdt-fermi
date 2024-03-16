@@ -157,7 +157,11 @@ class Trigdat(FitsFileContextManager):
             obj._trigrates = MaxRates.from_recarray(trigrate_data[0])
         obj._maxrates = [MaxRates.from_recarray(maxrate) for maxrate in
                          obj.hdulist['MAXRATES'].data]
-        obj._backrates = BackRates.from_recarray(obj.hdulist['BCKRATES'].data[0])
+        
+        try:
+            obj._backrates = BackRates.from_recarray(obj.hdulist['BCKRATES'].data[0])
+        except:
+            warnings.warn('No BCKRATES data in this file.', RuntimeWarning)      
         obj._fsw_locations = [FswLocation.from_recarray(ob_calc) \
                               for ob_calc in obj.hdulist['OB_CALC'].data]
         
