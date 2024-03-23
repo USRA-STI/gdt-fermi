@@ -278,11 +278,16 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
         if primary == 0:
             headers = healpix1.headers
+            quat = healpix1.quaternion
+            scpos = healpix1.scpos
         else:
             headers = healpix2.headers
+            quat = healpix2.quaternion
+            scpos = healpix2.scpos
         
         obj = super().multiply(healpix1, healpix2, primary=primary, 
-                               output_nside=output_nside)   
+                               output_nside=output_nside, quaternion=quat,
+                               scpos=scpos)   
 
         return obj 
 
