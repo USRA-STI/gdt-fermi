@@ -244,14 +244,29 @@ class TestGbmHealPixFromFile(unittest.TestCase):
         self.assertEqual(new_hpx.filename, self.hpx.filename)
     
     def test_multiply(self):
-        hpx = GbmHealPix.multiply(self.hpx, self.hpx.remove_earth())
+        hpx_no_earth = self.hpx.remove_earth()
+        
+        hpx = GbmHealPix.multiply(self.hpx, hpx_no_earth)
         self.assertEqual(hpx.nside, 128)
-
-        hpx = GbmHealPix.multiply(self.hpx, self.hpx.remove_earth(), output_nside=64)
+        
+        hpx = GbmHealPix.multiply(self.hpx, hpx_no_earth, output_nside=64)
         self.assertEqual(hpx.nside, 64)
 
-        hpx = GbmHealPix.multiply(self.hpx, self.hpx.remove_earth(), primary=1)
+        hpx = GbmHealPix.multiply(self.hpx, hpx_no_earth, primary=0)
         self.assertEqual(hpx.nside, 128)
+        self.assertListEqual(hpx.quaternion.xyz.tolist(), 
+                             self.hpx.quaternion.xyz.tolist())
+        assert hpx.quaternion.w == self.hpx.quaternion.w
+        self.assertListEqual(hpx.scpos.xyz.value.tolist(), 
+                             self.hpx.scpos.xyz.value.tolist())
+
+        hpx = GbmHealPix.multiply(self.hpx, hpx_no_earth, primary=1)
+        self.assertEqual(hpx.nside, 128)
+        self.assertListEqual(hpx.quaternion.xyz.tolist(), 
+                             hpx_no_earth.quaternion.xyz.tolist())
+        assert hpx.quaternion.w == hpx_no_earth.quaternion.w
+        self.assertListEqual(hpx.scpos.xyz.value.tolist(), 
+                             hpx_no_earth.scpos.xyz.value.tolist())
         
         # the primary map is not a GbmHealPix
         with self.assertRaises(TypeError):
