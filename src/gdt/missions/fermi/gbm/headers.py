@@ -96,9 +96,9 @@ class GbmHeader(Header):
     def __setitem__(self, key, val):
         if not isinstance(key, tuple):
             if key.upper() == 'TSTART':
-                self['DATE-OBS'] = Time(val, format='fermi').iso
+                self['DATE-OBS'] = Time(val, format='fermi').isot
             elif key.upper() == 'TSTOP':
-                self['DATE-END'] = Time(val, format='fermi').iso
+                self['DATE-END'] = Time(val, format='fermi').isot
             else:
                 pass
 
