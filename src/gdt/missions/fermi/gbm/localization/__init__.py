@@ -38,17 +38,19 @@ from astropy.units import Quantity
 from gdt.core.coords import Quaternion
 from gdt.core.file import FitsFileContextManager
 from gdt.core.healpix import HealPixLocalization
-from ..frame import *
-from ..time import Time
-from .detectors import GbmDetectors
-from .headers import HealpixHeaders
+from gdt.missions.fermi.frame import *
+from gdt.missions.fermi.time import Time
+from gdt.missions.fermi.gbm.detectors import GbmDetectors
+from gdt.missions.fermi.gbm.headers import HealpixHeaders
 
 __all__ = ['GbmHealPix', 'Chi2Grid', 'ga_model', 'gbuts_o3_model', 'hitl_model',
            'robo_ba_model', 'untargeted_search_model']
 
+
 class GbmHealPix(HealPixLocalization, FitsFileContextManager):
     """Class for GBM HEALPix localization files.
     """
+
     def __init__(self):
         HealPixLocalization.__init__(self)
         FitsFileContextManager.__init__(self)
@@ -64,10 +66,10 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         """(:class:`~gdt.core.coords.SpacecraftFrame`): The spacecraft frame at
         the time of the localization"""
         return self._frame
-    
+
     @property
     def geo_location(self):
-        """(astropy.coordinates.SkyCoord): The geocenter location at 
+        """(astropy.coordinates.SkyCoord): The geocenter location at
         :attr:`trigtime`"""
         return self._geo_loc
 
@@ -83,7 +85,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
     def geo_radius(self):
         """(astropy.units.Quantity): The apparent angular radius of the Earth at
         :attr:`trigtime`.
-        
+
         Note:
             If a :attr:`scpos` isn't set, then an average 67.5 deg is returned
         """
@@ -95,40 +97,40 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
     @property
     def quaternion(self):
-        """(:class:`~gdt.core.coords.Quaternion`): The spacecraft attitude 
+        """(:class:`~gdt.core.coords.Quaternion`): The spacecraft attitude
         quaternion"""
         return self._quat
 
     @property
     def scpos(self):
-        """(astropy.coordinates.CartesianRepresentation): 
+        """(astropy.coordinates.CartesianRepresentation):
            The spacecraft position in Earth inertial coordinates"""
         return self._scpos
 
     @property
     def sun_location(self):
-        """(astropy.coordinates.SkyCoord): The Sun location at 
+        """(astropy.coordinates.SkyCoord): The Sun location at
         :attr:`trigtime`"""
         return self._sun_loc
 
     @classmethod
     def from_chi2grid(cls, chi2grid, nside=128, headers=None, filename=None):
         """Create a GbmHealPix object from a :class:`Chi2Grid` object.
-        
+
         Args:
-            chi2grid (:class:`Chi2Grid`): The chi2grid object containing the 
+            chi2grid (:class:`Chi2Grid`): The chi2grid object containing the
                                          chi-squared/log-likelihood info.
             nside (int, optional): The nside resolution to use. Default is 128.
             headers (:class:`~gdt.core.headers.FileHeaders`, optional):
                 The file headers
             filename (str, optional): The filename
-                    
-        Returns:        
+
+        Returns:
             (:class:`GbmHealPix`)
         """
         if not isinstance(chi2grid, Chi2Grid):
             raise TypeError('chi2grid must be a Chi2Grid object')
-        
+
         # fill up a low-resolution healpix map with significance
         lores_nside = 64
         lores_npix = hp.nside2npix(lores_nside)
@@ -149,12 +151,12 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         lores_array = np.zeros(lores_npix)
         lores_array[idx] = probs
         prob_array = hp.get_interp_val(lores_array, theta, phi)
-        
+
         quat = Quaternion(chi2grid.quaternion)
         scpos = CartesianRepresentation(chi2grid.scpos, unit='m')
-        
-        obj = cls.from_data(prob_array, trigtime=chi2grid.trigtime, 
-                            headers=headers, filename=filename, 
+
+        obj = cls.from_data(prob_array, trigtime=chi2grid.trigtime,
+                            headers=headers, filename=filename,
                             scpos=scpos, quaternion=quat)
         return obj
 
@@ -164,22 +166,22 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         """Create a GbmHealPix object from a healpix array.
 
         Args:
-            prob_arr (np.array): 
+            prob_arr (np.array):
                 The HEALPix array containing the probability/pixel
-            trigtime (float, optional): 
+            trigtime (float, optional):
                 The time corresponding to the localization
             headers (:class:`~gdt.core.headers.FileHeaders`, optional):
                 The file headers
             filename (str, optional): The filename
-            quaternion (:class:`~gdt.core.coords.Quaternion`, optional): 
-                The associated spacecraft quaternion used to determine the 
+            quaternion (:class:`~gdt.core.coords.Quaternion`, optional):
+                The associated spacecraft quaternion used to determine the
                 detector pointings in equatorial coordinates
-            scpos (np.array, optional): 
-                The associated spacecraft position in Earth inertial coordinates 
-                used to determine the geocenter location in equatorial 
+            scpos (np.array, optional):
+                The associated spacecraft position in Earth inertial coordinates
+                used to determine the geocenter location in equatorial
                 coordinates
-            
-        Returns:        
+
+        Returns:
             (:class:`GbmHealPix`)
         """
         obj = super().from_data(prob_arr, trigtime=trigtime, filename=filename)
@@ -190,34 +192,34 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         else:
             headers = cls._none_default_headers()
         obj._headers = headers
-        
+
         if quaternion is not None:
             if not isinstance(quaternion, Quaternion):
                 raise TypeError('quaternion must be a Quaternion object')
-            
+
         if scpos is not None:
             if not isinstance(scpos, CartesianRepresentation):
                 raise TypeError('scpos must be a CartesianRepresentation object')
-        
+
         # if we have a trigtime, calculate sun position
         if trigtime is not None:
             obj._sun_loc = get_sun(Time(trigtime, format='fermi'))
         elif obj._headers[1]['SUN_RA'] is not None:
-            obj._sun_loc = SkyCoord(obj._headers[1]['SUN_RA'], 
+            obj._sun_loc = SkyCoord(obj._headers[1]['SUN_RA'],
                                     obj._headers[1]['SUN_DEC'], unit='deg',
                                     frame='gcrs')
         else:
             obj._sun_loc = None
-        
+
         if (trigtime is not None) and (scpos is not None) and \
-           (quaternion is not None):
+                (quaternion is not None):
             obj._scpos = scpos
             obj._quat = quaternion
-            
+
             obj._frame = FermiFrame(obstime=Time(trigtime, format='fermi'),
                                     quaternion=obj._quat, obsgeoloc=scpos,
                                     detectors=GbmDetectors)
-            
+
             obj._geo_loc = obj._frame.geocenter
             obj._geo_rad = obj._frame.earth_angular_radius
             for det in obj._frame.detectors:
@@ -225,43 +227,43 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                 det_coord = SkyCoord(*pointing, frame=obj._frame).gcrs[0]
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
         elif obj._headers[1]['GEO_RA'] is not None:
-            
-            obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'], 
+
+            obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'],
                                     obj._headers[1]['GEO_DEC'], unit='deg',
                                     frame='gcrs')
             obj._geo_rad = Quantity(obj._headers[1]['GEO_RAD'], unit='deg')
-            
+
             for det in GbmDetectors:
                 ra_key = det.name.upper() + '_RA'
                 dec_key = det.name.upper() + '_DEC'
-                det_coord = SkyCoord(obj._headers[1][ra_key], 
-                                     obj._headers[1][dec_key], unit='deg', 
+                det_coord = SkyCoord(obj._headers[1][ra_key],
+                                     obj._headers[1][dec_key], unit='deg',
                                      frame='gcrs')
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
-        
+
         obj._headers = obj._build_headers(obj.trigtime, obj.nside)
-        
+
         return obj
 
     @classmethod
     def multiply(cls, healpix1, healpix2, primary=0, output_nside=128):
         """Multiply two GbmHealPix maps and return a new map.
-        
+
         Note:
-            Either ``healpix1`` *or* ``healpix2`` can be a non-GbmHealPix 
-            object, however at least one of them must be a GbmHealPix object 
-            **and** the ``primary`` argument must be set to the appropriate 
+            Either ``healpix1`` *or* ``healpix2`` can be a non-GbmHealPix
+            object, however at least one of them must be a GbmHealPix object
+            **and** the ``primary`` argument must be set to the appropriate
             GbmHealPix object otherwise a TypeError will be raised.
 
         Args:
-            healpix1 (:class:`~.gdt.core.healpix.HealPix` or :class:`GbmHealPix`): 
+            healpix1 (:class:`~.gdt.core.healpix.HealPix` or :class:`GbmHealPix`):
                 One of the HEALPix maps to multiply
-            healpix2 (:class:`~.gdt.core.healpix.HealPix` or :class:`GbmHealPix`): 
+            healpix2 (:class:`~.gdt.core.healpix.HealPix` or :class:`GbmHealPix`):
                 The other HEALPix map to multiply
-            primary (int, optional): If 0, use the first map header information, 
-                                     or if 1, use the second map header 
+            primary (int, optional): If 0, use the first map header information,
+                                     or if 1, use the second map header
                                      information. Default is 1.
-            output_nside (int, optional): The nside of the multiplied map. 
+            output_nside (int, optional): The nside of the multiplied map.
                                           Default is 128.
         Returns
             :class:`GbmHealPix`: The multiplied map
@@ -269,12 +271,12 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
         if primary == 0:
             if not isinstance(healpix1, cls):
-                 raise TypeError('Primary HealPix (healpix1) is not of class {}. '
-                'Perhaps try setting healpix2 as the primary'.format(cls.__name__))
+                raise TypeError('Primary HealPix (healpix1) is not of class {}. '
+                                'Perhaps try setting healpix2 as the primary'.format(cls.__name__))
         else:
             if not isinstance(healpix2, cls):
                 raise TypeError('Primary HealPix (healpix2) is not of class {}. '
-                'Perhaps try setting healpix1 as the primary'.format(cls.__name__))
+                                'Perhaps try setting healpix1 as the primary'.format(cls.__name__))
 
         if primary == 0:
             headers = healpix1.headers
@@ -284,26 +286,26 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             headers = healpix2.headers
             quat = healpix2.quaternion
             scpos = healpix2.scpos
-        
-        obj = super().multiply(healpix1, healpix2, primary=primary, 
-                               output_nside=output_nside, quaternion=quat,
-                               scpos=scpos)   
 
-        return obj 
+        obj = super().multiply(healpix1, healpix2, primary=primary,
+                               output_nside=output_nside, quaternion=quat,
+                               scpos=scpos)
+
+        return obj
 
     def observable_fraction(self, healpix):
-        """The observable fraction of a healpix probability region on the sky. 
+        """The observable fraction of a healpix probability region on the sky.
         Non-observable regions are ones that are behind the Earth.
-        
+
         Args:
-            healpix (:class:`HealPix`): The healpix region for which to 
+            healpix (:class:`HealPix`): The healpix region for which to
                                         calculate the observable fraction.
-        Returns:        
+        Returns:
             (float)
         """
         if self.geo_location is None:
             raise RuntimeError('Location of geocenter is not known')
-        
+
         # speed things up a bit by only considering pixels with non-zero prob
         prob_mask = (healpix.prob > 0.0)
         # get ra, dec coords for pixels and calculate angle from geocenter
@@ -324,11 +326,11 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
     @classmethod
     def open(cls, file_path, **kwargs):
         """Open a GBM HEALPix FITS file and return the GbmHealPix object
-        
+
         Args:
             file_path (str): The file path of the FITS file
-        
-        Returns:        
+
+        Returns:
             (:class:`GbmHealPix`)
         """
         # ignore comment length warnings
@@ -346,9 +348,9 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             hdrs[1]['COMMENT'] = ''
             hdrs[1]['COMMENT'] = ''
         headers = HealpixHeaders.from_headers(hdrs)
-   
+
         trigtime = headers['PRIMARY']['TRIGTIME']
-            
+
         # quaternion and scpos are stored as comments
         try:
             headers[1]['COMMENT'][0] = obj.hdulist[1].header['COMMENT'][0]
@@ -356,7 +358,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         except:
             headers[1]['COMMENT'][0] = ''
             headers[1]['COMMENT'][1] = ''
-        
+
         try:
             scpos_comment = headers[1]['COMMENT'][0]
             scpos = scpos_comment.split('[')[1].split(']')[0]
@@ -371,7 +373,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             quat = Quaternion(quat)
         except:
             quat = None
-        
+
         # get the probability and significance arrays
         prob = obj.column(1, 'PROBABILITY').flatten()
         sig = obj.column(1, 'SIGNIFICANCE').flatten()
@@ -380,50 +382,50 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             idx = hp.ring2nest(hp.npix2nside(npix), np.arange(npix))
             prob = prob[idx]
             sig = sig[idx]
-        
+
         obj.close()
-        
+
         obj = cls.from_data(prob, trigtime=trigtime, quaternion=quat,
                             scpos=scpos, filename=obj.filename,
                             headers=headers)
         obj._sig = sig
-        
+
         return obj
-        
+
     def region_probability(self, healpix, prior=0.5):
         r"""The probability that the localization is associated with
-        the localization region from another map.  This is calculated 
-        against the null hypothesis that the two maps represent 
+        the localization region from another map.  This is calculated
+        against the null hypothesis that the two maps represent
         unassociated sources:
-        
-        :math:`P(A | \mathcal{I}) = 
+
+        :math:`P(A | \mathcal{I}) =
         \frac{P(\mathcal{I} | A) \ P(A)}
         {P(\mathcal{I} | A) \ P(A) + P(\mathcal{I} | \neg A) \ P(\neg A)}`
-        
+
         where
-        
-        * :math:`P(\mathcal{I} | A)` is the integral over the overlap of the two 
+
+        * :math:`P(\mathcal{I} | A)` is the integral over the overlap of the two
           maps once the Earth occultation has been removed for *this* map.
         * :math:`P(\mathcal{I} | \neg A)` is the integral over the overlap of
-          *this* map with a uniform distribution on the sky (i.e. the probability 
+          *this* map with a uniform distribution on the sky (i.e. the probability
           the localization is associated with a random point on the sky)
-        * :math:`P(A)` is the prior probability that *this* localization is 
+        * :math:`P(A)` is the prior probability that *this* localization is
           associated with the *other* HEALPix map.
 
-        Note: 
+        Note:
             The localization region of *this* map overlapping the Earth will be
             removed and the remaining unocculted region is used for the
             calculation.  The *other* map is assumed to have no exclusionary
             region.
-        
+
         Args:
-            healpix (:class:`~gdt.core.healpix.HealPixLocalization`): 
+            healpix (:class:`~gdt.core.healpix.HealPixLocalization`):
                 The healpix map for which to calculate the spatial association.
             prior (float, optional): The prior probability that the localization
-                                     is associated with the source. Default is 
+                                     is associated with the source. Default is
                                      0.5.
-        
-        Returns:  
+
+        Returns:
             (float)
         """
         if (prior < 0.0) or (prior > 1.0):
@@ -444,7 +446,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         probmap1[prob_mask] = temp
         probmap1 = self._assert_prob(probmap1)
 
-        # ensure maps are the same resolution and convert uniform prob/sr to 
+        # ensure maps are the same resolution and convert uniform prob/sr to
         # prob/pixel
         probmap2 = np.copy(healpix.prob)
         if self.nside > healpix.nside:
@@ -466,7 +468,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
         # since we have an exhaustive and complete list of possibilities, we can
         # easily calculate the probability
-        prob = (alt_hyp * prior) / ((alt_hyp*prior) + (null_hyp*(1.0-prior)))
+        prob = (alt_hyp * prior) / ((alt_hyp * prior) + (null_hyp * (1.0 - prior)))
         return prob
 
     def remove_earth(self):
@@ -474,11 +476,11 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         The remaining probability on the sky is renormalized.
 
         Note:
-            The :attr:`geo_location` attribute must be available to use this 
+            The :attr:`geo_location` attribute must be available to use this
             function.
 
-        
-        Returns: 
+
+        Returns:
             (:class:`GbmHealPix`)
         """
         if self.geo_location is None:
@@ -494,49 +496,49 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         new_prob[prob_mask] = temp
         # renormalize
         new_prob = self._assert_prob(new_prob)
-        obj = type(self).from_data(new_prob, trigtime=self.trigtime, 
+        obj = type(self).from_data(new_prob, trigtime=self.trigtime,
                                    headers=self.headers, scpos=self.scpos,
-                                   filename=self.filename, 
+                                   filename=self.filename,
                                    quaternion=self.quaternion)
         return obj
 
     def source_probability(self, ra, dec, prior=0.5):
         r"""The probability that the GbmHealPix localization is associated with
         a known point location.  This is calculated against the null hypothesis
-        that the localization originates from an unassociated random source 
-        that has equal probability of origination anywhere in the sky: 
-        
-        :math:`P(A | \mathcal{I}) = 
+        that the localization originates from an unassociated random source
+        that has equal probability of origination anywhere in the sky:
+
+        :math:`P(A | \mathcal{I}) =
         \frac{P(\mathcal{I} | A) \ P(A)}
         {P(\mathcal{I} | A) \ P(A) + P(\mathcal{I} | \neg A) \ P(\neg A)}`
-        
+
         where
-        
+
         * :math:`P(\mathcal{I} | A)` is the probability of the localization at
           the point source once the Earth occultation has been removed
-        * :math:`P(\mathcal{I} | \neg A)` is the probability per pixel assuming 
-          a uniform distribution on the sky (i.e. the probability the 
+        * :math:`P(\mathcal{I} | \neg A)` is the probability per pixel assuming
+          a uniform distribution on the sky (i.e. the probability the
           localization is associated with a random point on the sky)
-        * :math:`P(A)` is the prior probability that the localization is 
+        * :math:`P(A)` is the prior probability that the localization is
           associated with the point source
-        
-        Note: 
+
+        Note:
             If the point source is behind the Earth, then it is assumed that
-            GBM could not observe it, therefore the probability will be zero. 
-        
+            GBM could not observe it, therefore the probability will be zero.
+
         Args:
             ra (float): The RA of the known source location
             dec (float): The Dec of the known source location
             prior (float, optional): The prior probability that the localization
-                                     is associated with the source. Default is 
+                                     is associated with the source. Default is
                                      0.5.
-        
-        Returns:        
+
+        Returns:
             (float)
         """
         if (prior < 0.0) or (prior > 1.0):
             raise ValueError('Prior probability must be within 0-1, inclusive')
-        
+
         # convert uniform prob/sr to prob/pixel
         u = 1.0 / (4.0 * np.pi)
         u *= hp.nside2resol(self.nside) ** 2
@@ -546,7 +548,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             p = self.remove_earth().probability(ra, dec, per_pixel=True)
         except:
             p = self.probability(ra, dec, per_pixel=True)
-        
+
         # if we know the location of the earth and it's behind the earth,
         # then we obviously couldn't have seen it
         if self.geo_location is not None:
@@ -557,24 +559,24 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 
         # null hypothesis is that they are not associated, therefore the sky map
         # is result of some source that has uniform probability on the sky
-        prob = (p*prior) / ((p*prior) + (u*(1.0-prior)))
+        prob = (p * prior) / ((p * prior) + (u * (1.0 - prior)))
         return prob
 
     def _build_hdulist(self):
-                
+
         # create FITS and primary header
         hdulist = fits.HDUList()
         primary_hdu = fits.PrimaryHDU(header=self.headers['PRIMARY'])
         for key, val in self.headers['PRIMARY'].items():
             primary_hdu.header[key] = val
         hdulist.append(primary_hdu)
-        
+
         # the healpix extension
         prob_arr = hp.reorder(self.prob, r2n=True).reshape(-1, 1024)
-        prob_col = fits.Column(name='PROBABILITY', format='1024E', 
+        prob_col = fits.Column(name='PROBABILITY', format='1024E',
                                array=prob_arr)
         sig_arr = hp.reorder(self.sig, r2n=True).reshape(-1, 1024)
-        sig_col = fits.Column(name='SIGNIFICANCE', format='1024E', 
+        sig_col = fits.Column(name='SIGNIFICANCE', format='1024E',
                               array=sig_arr)
         hpx_hdu = fits.BinTableHDU.from_columns([prob_col, sig_col],
                                                 header=self.headers['HEALPIX'])
@@ -586,19 +588,19 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                 continue
             hpx_hdu.header[key] = val
         hdulist.append(hpx_hdu)
-        hpx_hdu.header.comments['TTYPE1'] = 'Differential probability per pixel' 
-        hpx_hdu.header.comments['TTYPE2'] = 'Integrated probability' 
-        
+        hpx_hdu.header.comments['TTYPE1'] = 'Differential probability per pixel'
+        hpx_hdu.header.comments['TTYPE2'] = 'Integrated probability'
+
         return hdulist
 
     def _build_headers(self, trigtime, nside):
-        
+
         headers = self.headers.copy()
         headers['PRIMARY']['TRIGTIME'] = trigtime
         headers['HEALPIX']['NSIDE'] = nside
         headers['HEALPIX']['LASTPIX'] = hp.nside2npix(nside)
         headers['HEALPIX']['OBJECT'] = 'FULLSKY'
-        
+
         if self.trigtime is not None:
             headers['HEALPIX']['SUN_RA'] = self.sun_location.ra.value
             headers['HEALPIX']['SUN_DEC'] = self.sun_location.dec.value
@@ -606,27 +608,27 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if self.scpos is not None:
             headers['HEALPIX']['COMMENT'][0] = 'SCPOS: ' + \
                                                np.array2string(self.scpos.xyz.value)
-            headers['HEALPIX']['GEO_RA'] = self.geo_location.ra.value          
-            headers['HEALPIX']['GEO_DEC'] = self.geo_location.dec.value          
-            headers['HEALPIX']['GEO_RAD'] = self.geo_radius.value         
+            headers['HEALPIX']['GEO_RA'] = self.geo_location.ra.value
+            headers['HEALPIX']['GEO_DEC'] = self.geo_location.dec.value
+            headers['HEALPIX']['GEO_RAD'] = self.geo_radius.value
 
         if self.quaternion is not None:
             quat = np.append(self.quaternion.xyz, self.quaternion.w)
-            headers['HEALPIX']['COMMENT'][1] = 'QUAT: ' + np.array2string(quat)       
+            headers['HEALPIX']['COMMENT'][1] = 'QUAT: ' + np.array2string(quat)
             for det in GbmDetectors:
-                pointing = getattr(self, det.name.lower()+'_pointing')
-                headers['HEALPIX'][det.name.upper()+'_RA'] = pointing.ra.value
-                headers['HEALPIX'][det.name.upper()+'_DEC'] = pointing.dec.value
-                        
+                pointing = getattr(self, det.name.lower() + '_pointing')
+                headers['HEALPIX'][det.name.upper() + '_RA'] = pointing.ra.value
+                headers['HEALPIX'][det.name.upper() + '_DEC'] = pointing.dec.value
+
         return headers
-        
+
     def _earth_mask(self):
         # speed things up a bit by only considering pixels with non-zero prob
         mask = (self.prob > 0.0)
         # get ra, dec coords for pixels and calculate angle from geocenter
         theta, phi = hp.pix2ang(self.nside, np.arange(self.npix))
-        pts = SkyCoord(self._phi_to_ra(phi)[mask], 
-                       self._theta_to_dec(theta)[mask], frame='icrs', 
+        pts = SkyCoord(self._phi_to_ra(phi)[mask],
+                       self._theta_to_dec(theta)[mask], frame='icrs',
                        unit='deg')
         ang = self.geo_location.separation(pts)
 
@@ -685,6 +687,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
 class Chi2Grid():
     """Class for the GBM legacy internal Chi2Grid localization files/objects.
     """
+
     def __init__(self):
         self._az = np.array([])
         self._zen = np.array([])
@@ -719,6 +722,7 @@ class Chi2Grid():
     def quaternion(self):
         """(np.array): The spacecraft attitude quaternion"""
         return self._quaternion
+
     @quaternion.setter
     def quaternion(self, val):
         if len(val) != 4:
@@ -734,6 +738,7 @@ class Chi2Grid():
     def scpos(self):
         """(np.array): The spacecraft position in Earth inertial coordinates"""
         return self._scpos
+
     @scpos.setter
     def scpos(self, val):
         if len(val) != 3:
@@ -750,6 +755,7 @@ class Chi2Grid():
     def trigtime(self):
         """(float): The trigger time"""
         return self._trigtime
+
     @trigtime.setter
     def trigtime(self, val):
         try:
@@ -766,11 +772,11 @@ class Chi2Grid():
     @classmethod
     def open(cls, filename):
         """Read a chi2grid file and create a Chi2Grid object
-        
+
         Args:
             filename (str): The filename of the chi2grid file
-        
-        Returns:        
+
+        Returns:
            :class:`Chi2Grid`: The Chi2Grid object
         """
         with open(filename, 'r') as f:
@@ -798,15 +804,15 @@ class Chi2Grid():
     @classmethod
     def from_data(cls, az, zen, ra, dec, chisq):
         """Create a Chi2Grid object from arrays
-        
+
         Args:
             az (np.array): The azimuth grid points
             zen (np.array): The zenith grid points
             ra (np.array): The RA grid points
             dec (np.array): The Dec grid points
             chisq (np.array): The chi-squared values at each grid point
-        
-        Returns:        
+
+        Returns:
             :class:`Chi2Grid`: The Chi2Grid object
         """
         az = np.asarray(az, dtype=float).flatten()
@@ -814,12 +820,12 @@ class Chi2Grid():
         ra = np.asarray(ra, dtype=float).flatten()
         dec = np.asarray(dec, dtype=float).flatten()
         chisq = np.asarray(chisq, dtype=float).flatten()
-        
+
         numpts = az.size
         if (zen.size != numpts) or (ra.size != numpts) or (dec.size != numpts) \
-           or (chisq.size != numpts):
+                or (chisq.size != numpts):
             raise ValueError('All inputs must have same size')
-        
+
         obj = cls()
         obj._az = az
         obj._zen = zen
@@ -834,9 +840,9 @@ class Chi2Grid():
 def ga_model():
     """The localization systematic model for the Ground-Automated localization:
     A mixture of a 3.72 deg Gaussian (80.4% weight) and a 13.7 deg Gaussian.
-    
+
     References:
-        `Connaughton, V. et al. 2015, ApJ, 216, 32 
+        `Connaughton, V. et al. 2015, ApJ, 216, 32
         <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
     """
     sigma1 = np.deg2rad(3.72)
@@ -848,9 +854,9 @@ def ga_model():
 def gbuts_o3_model():
     """The localization systematic model for the targeted search during O3:
     a 2.7 deg Gaussian.
-    
+
     References:
-        `Goldstein, A. et al. 2019, arXiv: 1903.12597 
+        `Goldstein, A. et al. 2019, arXiv: 1903.12597
         <https://arxiv.org/abs/1903.12597>`_
     """
     sigma = np.deg2rad(2.7)
@@ -860,14 +866,14 @@ def gbuts_o3_model():
 def hitl_model(az):
     """The localization systematic model for the human-in-the loop localization:
     A mixture of a 4.17 deg Gaussian (91.8% weight) and a 15.3 deg Gaussian
-    for a centroid between azimuth 292.5 - 67.5 or azimuth 112.5 - 247.5, 
-    otherwise a mixture of a 2.31 deg Gaussian (88.4% weight) and a 
+    for a centroid between azimuth 292.5 - 67.5 or azimuth 112.5 - 247.5,
+    otherwise a mixture of a 2.31 deg Gaussian (88.4% weight) and a
     13.2 deg Gaussian.
-    
+
     References:
-        `Connaughton, V. et al. 2015, ApJ, 216, 32 
+        `Connaughton, V. et al. 2015, ApJ, 216, 32
         <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
-    
+
     Args:
         az (float): The localization centroid in spacecraft azimuth
     """
@@ -885,13 +891,13 @@ def hitl_model(az):
 def robo_ba_model(grb_type):
     """The localization systematic model for the RoboBA localization:
     A mixture of a 1.86 deg Gaussian (57.9% weight) and a 4.14 deg Gaussian
-    for a "long" GRB, and a mixture of a 2.55 deg Gaussian (39.0% weight) and a 
+    for a "long" GRB, and a mixture of a 2.55 deg Gaussian (39.0% weight) and a
     4.43 deg Gaussian for a "short" GRB.
-    
+
     References:
-        `Goldstein, A. et al. 2020, ApJ, 895, 40 
+        `Goldstein, A. et al. 2020, ApJ, 895, 40
         <https://iopscience.iop.org/article/10.3847/1538-4357/ab8bdb>`_
-    
+
     Args:
         grb_type (str): The type of GRB, either 'long' or 'short'
     """
