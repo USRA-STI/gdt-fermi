@@ -37,34 +37,35 @@ from astropy.time.utils import day_frac
 
 __all__ = ['FermiSecTime', 'GbmBurstNumber', 'Time']
 
+
 class FermiSecTime(TimeFromEpoch):
     """Represents the number of seconds elapsed since Jan 1, 2001, 00:00:00 UTC,
     including leap seconds
     """
     name = 'fermi'
     """(str): Name of the mission"""
-    
-    unit = 1.0 / 86400 
+
+    unit = 1.0 / 86400
     """(float): unit in days"""
-    
+
     epoch_val = '2001-01-01 00:01:04.184'
     """(str): The epoch in Terrestrial Time"""
-    
+
     epoch_val2 = None
-    
+
     epoch_scale = 'tt'
     """(str): The scale of :attr:`epoch_val`"""
-    
+
     epoch_format = 'iso'
     """(str): Format of :attr:`epoch_val`"""
 
 
 class GbmBurstNumber(TimeUnique):
     """Represent date as Fermi GBM burst number"""
-    
+
     name = 'gbm_bn'
     """(str): The name of the time format"""
-    
+
     bn_pattern = re.compile(r'^(?P<year>\d\d)(?P<month>\d\d)(?P<day>\d\d)(?P<frac>\d\d\d)$', re.I | re.S)
 
     second_corrections = [
@@ -157,6 +158,6 @@ class GbmBurstNumber(TimeUnique):
             frac = min(int(round(day_secs / 86400 * 1000)), 999)
             out[...] = f'{iy - 2000:02d}{im:02d}{iday:02d}{frac:03d}'
 
-        return self.mask_if_needed(iterator.operands[-1])
+        return iterator.operands[-1]
 
     value = property(to_value)
