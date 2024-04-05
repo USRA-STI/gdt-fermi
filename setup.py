@@ -58,8 +58,23 @@ if __name__ == '__main__':
         package_dir={"": "src"},
         package_data={
             'gdt.missions.fermi': ['data/McIlwainL_Coeffs.npy'],
-            'gdt.data': ['fermi-gbm.urls']
+            'gdt.data': ['fermi-gbm.urls'],
+            'gdt.missions.fermi.gbm.localization.dol.data': [
+                'alocdat_comp.npy',
+                'band_1deg_5_50_soft.npy',
+                'band_1deg_50_300_hard.npy',
+                'band_1deg_50_300_norm.npy',
+                'band_1deg_50_300_soft.npy',
+                'comp_1deg_50_300_hard.npy',
+                'comp_1deg_50_300_norm.npy',
+                'comp_1deg_50_300_soft.npy',
+                'earth_points.npy',
+            ],
         },
+        scripts=[
+            'scripts/dol4.exe',
+            'scripts/dol_source_angles.py'
+        ],
         include_package_data=True,
         python_requires='>=3.8',
         install_requires=[
