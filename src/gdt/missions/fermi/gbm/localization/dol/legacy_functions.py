@@ -51,7 +51,7 @@ legacy_tenergies = np.array([
 #############
 
 def arctan2(x, y):
-    r""" Compute arctan2. Account for special case of small x,y
+    """ Compute arctan2. Account for special case of small x,y
 
     Parameters
     ----------
@@ -86,7 +86,7 @@ def arctan2(x, y):
 # END arctan2()
 
 def choose_energy_data(ndet, nen, crange, mrates, brates, energies):
-    r""" Function to choose energy bins
+    """ Function to choose energy bins
 
     Parameters
     ----------
@@ -139,7 +139,7 @@ def choose_energy_data(ndet, nen, crange, mrates, brates, energies):
 # END choose_energy_data()
 
 def get_geocenter(sc_quat, sc_pos, verbose=False):
-    r""" Get Earth center and spacecraft direction cosine matrix.
+    """ Get Earth center and spacecraft direction cosine matrix.
 
     Transform from "Compendium of Co-ordinate Transformations"
     B Shivakumar et al. National Aerospace Laboratories.
@@ -226,7 +226,7 @@ def get_geocenter(sc_quat, sc_pos, verbose=False):
 # END get_geocenter()
 
 def read_table(path, ndet, npoints):
-    r""" Read database table with detector response for each point on the sky.
+    """ Read database table with detector response for each point on the sky.
 
     NOTE: This method can read from newer numpy files and older text files.
 
@@ -274,7 +274,7 @@ def read_table(path, ndet, npoints):
 # END read_table()
 
 def ang_to_cart_dec(ra, dec):
-    r""" Convert right ascension and declination to Cartesian coordinates.
+    """ Convert right ascension and declination to Cartesian coordinates.
 
     Parameters
     ----------
@@ -308,7 +308,7 @@ def ang_to_cart_dec(ra, dec):
 # END ang_to_cart_dec()
 
 def ang_to_cart_zen(az, zen):
-    r""" Convert azimuth and zenith to Cartesian coordinates.
+    """ Convert azimuth and zenith to Cartesian coordinates.
 
     Parameters
     ----------
@@ -342,7 +342,7 @@ def ang_to_cart_zen(az, zen):
 # END ang_to_cart_zen()
 
 def j2000_to_sc(scx, scy, scz, pos):
-    r""" Convert from j2000 position to space craft azimuth and zenith.
+    """ Convert from j2000 position to space craft azimuth and zenith.
 
     NOTE: Based on sc direction cosines derived from quaternion,
     and a given  j2000 position(x,y,z), return azimuth and zenith angle 
@@ -383,7 +383,7 @@ def j2000_to_sc(scx, scy, scz, pos):
 # END j2000_to_sc()
 
 def sc_to_j2000(scx, scy, scz, pos):
-    r""" Convert Cartesian source position from space craft frame
+    """ Convert Cartesian source position from space craft frame
     to right ascension and declination in Earth-centered frame.
 
     NOTE: Based on sc direction cosines derived from quaternion,
@@ -446,7 +446,7 @@ def sc_to_j2000(scx, scy, scz, pos):
 # END sc_to_j2000()
 
 def get_occult(sc_pos, npoints, points_array):
-    r""" Get list of points occulted by the Earth.
+    """ Get list of points occulted by the Earth.
 
     Parameters
     ----------
@@ -476,7 +476,7 @@ def get_occult(sc_pos, npoints, points_array):
 # END get_occult()
 
 def get_good_angle(input_xyz1, input_xyz2):
-    r""" Given 2 Cartesian (unit or not) vectors, return angle between them.
+    """ Given 2 Cartesian (unit or not) vectors, return angle between them.
 
     Parameters
     ----------
@@ -517,7 +517,7 @@ def get_good_angle(input_xyz1, input_xyz2):
 def compute_scat(npoints, rgrid, cenergies, geodir,
                  nai_az, nai_zen, nai_unit_vec, back_unit_vec,
                  front_only=False):
-    r""" Function to compute response of NaI detectors over a selected set
+    """ Function to compute response of NaI detectors over a selected set
     of energy channels. NOTE: Output of this function must be multiplied by
     a spectral shape in order to provide expected detector rates.
 
@@ -609,7 +609,7 @@ def compute_scat(npoints, rgrid, cenergies, geodir,
 
 def read_earthpoints(geodir, nai_unit_vec, back_unit_vec, scat_geom,
                      path=__data_dir__ + 'earth_points.npy'):
-    r""" Read array of position vectors used to compute
+    """ Read array of position vectors used to compute
     scattering of photons off Earth's atmosphere.
 
     NOTE: This method can read from newer numpy files and older text files.
@@ -672,7 +672,7 @@ def read_earthpoints(geodir, nai_unit_vec, back_unit_vec, scat_geom,
 # END read_earthpoints()
 
 def read_scatter_data(path=__data_dir__ + 'alocdat_comp.npy'):
-    r""" Read atmospheric scattering matrix.
+    """ Read atmospheric scattering matrix.
 
     NOTE: This method can read from newer numpy files and older text files.
 
@@ -701,11 +701,11 @@ def read_scatter_data(path=__data_dir__ + 'alocdat_comp.npy'):
 def get_scattered_rates(rcart, gperp, gpmag, elev, earthpoints, response_res,
                         grid_points, scatterdata, scat_geom,
                         nai_az, nai_zen, nai_unit_vec, back_unit_vec):
-    r"""Calculate amount of scattering given geometry.
+    """Calculate amount of scattering given geometry.
 
     Parameters
     ----------
-    rgrid : np.array((2, npoints), float32)
+    rcart : np.array((2, npoints), float32)
         Grid of (az, zen) positions on the sky
     gperp : np.ndarray(3, 12), float32)
         Direction perpendicular to line between
@@ -823,7 +823,7 @@ def get_scattered_rates(rcart, gperp, gpmag, elev, earthpoints, response_res,
 # END get_scattered_rates()
 
 def dot(x, y):
-    r""" Dot product of two vectors
+    """ Dot product of two vectors
 
     Parameters
     ----------
@@ -841,7 +841,7 @@ def dot(x, y):
 
 
 def crossprod(x, y):
-    r""" Cross product of two vectors
+    """ Cross product of two vectors
 
     Parameters
     ----------
@@ -888,7 +888,7 @@ def all_idx(idx, axis=0):
 # END all_idx()
 
 def interpolatex(int_size, inter_array, apply_array, bit_along):
-    r""" Interpolate between 2 values by weighting by distance between 2 pts.
+    """ Interpolate between 2 values by weighting by distance between 2 pts.
 
     Parameters
     ----------
@@ -923,7 +923,7 @@ def interpolatex(int_size, inter_array, apply_array, bit_along):
 # END interpolatex()
 
 def initialize_det_geometry(verbose=False):
-    r""" Contains geometry from rmk of 07/07
+    """ Contains geometry from rmk of 07/07
     Given nai el & az, calculate unit vectors in SC frame of each NaI
     Tested 08/14/07 -- produces correct unit vector angles
     as per geometry from rmk of 07/07.
@@ -980,7 +980,7 @@ def initialize_det_geometry(verbose=False):
 # END initialize_det_geometry()
 
 def get_spec(spec, energies, mid_energies, erange):
-    r""" Get spectral shape in each energy bin
+    """ Get spectral shape in each energy bin
 
     Parameters
     ----------
@@ -1050,7 +1050,7 @@ def get_spec(spec, energies, mid_energies, erange):
 
 def add_scat(npoints, rgrid, front_scattered_rates, back_scattered_rates,
              cenergies, spec):
-    r""" Add scattering data for each spectrum 
+    """ Add scattering data for each spectrum 
 
     Parameters
     ----------
@@ -1115,14 +1115,14 @@ def add_scat(npoints, rgrid, front_scattered_rates, back_scattered_rates,
 
 def find_best_location(ndet, vpoints, udet, usedet, loctable_entries,
                        sduration, c_mrates, c_brates, visible, verbose=False):
-    r""" Calculate chi2 for each visible location and find minimum.
+    """ Calculate chi2 for each visible location and find minimum.
     Algorithm for normalization from MSB memo of Jul 27 2005
 
     Parameters
     ----------
     ndet : int
         Number of detectors
-    npoints : int32
+    vpoints : int32
         Number of points in the sky grid
     udet : int32
         Length os usedet arg
@@ -1291,7 +1291,7 @@ def find_best_location(ndet, vpoints, udet, usedet, loctable_entries,
 # END find_best_location()
 
 def get_det_geometry(input_az, input_zen, nai_az, nai_zen):
-    r""" Get detector geometry relative to source.
+    """ Get detector geometry relative to source.
 
     Based on  geometry provided by T. Morse, calculate
     angles to detectors from calling az and zen.
@@ -1325,7 +1325,7 @@ def get_det_geometry(input_az, input_zen, nai_az, nai_zen):
 # END get_det_geometry()
 
 def eq2000_to_gal_r(ra2000, dec2000):
-    r""" Function to convert from equatorial (ra, dec) coordinates in J2000
+    """ Function to convert from equatorial (ra, dec) coordinates in J2000
     epoch to Galactic coordinates (lii, bii)
 
     Parameters
@@ -1461,7 +1461,7 @@ def eq2000_to_gal_r(ra2000, dec2000):
 # END eq2000_to_gal_r()
 
 def get_etog_matrix():
-    r""" Function to calculate equatorial (ra, dec) to Galactic (lii, bii)
+    """ Function to calculate equatorial (ra, dec) to Galactic (lii, bii)
     coordinate rotation matrix.
 
     Returns
@@ -1574,14 +1574,14 @@ def get_etog_matrix():
 # END get_etog_matrix()
 
 class ETOG(object):
-    r""" Definition of ETOG class which allows caching of ETOG value """
+    """ Definition of ETOG class which allows caching of ETOG value """
 
     # global etog matrix shared by all class instances.
     # This way we only need to make the matrix once.
     _etog = None
 
     def __init__(self):
-        r""" Construct etog matrix if it isn't already cached """
+        """ Construct etog matrix if it isn't already cached """
         if self._etog is None:
             self._etog = get_etog_matrix()
 
@@ -1643,7 +1643,7 @@ class ETOG(object):
 #   enough).
 
 def sun_loc(sc_time_sec):
-    r""" Compute the location of the sun in equatorial (ra, dec) coordinates
+    """ Compute the location of the sun in equatorial (ra, dec) coordinates
 
     NOTE: We calculate JulianDay as an offset from the Julian Day of the
     GLAST Epoch: JD_OF_GLAST_EPOCH is defined in gbm_central.h -- comments
@@ -1651,7 +1651,7 @@ def sun_loc(sc_time_sec):
 
     Parameters
     ----------
-    sc_time : int64
+    sc_time_sec : int64
         Spacecraft time in MET seconds
 
     Returns
@@ -1743,7 +1743,7 @@ def sun_loc(sc_time_sec):
 
 def deadtime_correct(crange, mrates, brates, sduration, bgduration,
                      energies, verbose=False):
-    r""" Compute deadtime corrected rates
+    """ Compute deadtime corrected rates
 
     Parameters
     ----------

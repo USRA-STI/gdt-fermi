@@ -91,11 +91,14 @@ Data Types
    missions/fermi/gbm/phaii
    missions/fermi/gbm/tte
    missions/fermi/gbm/response
-   missions/fermi/gbm/localization
+   missions/fermi/gbm/localization/localization
+   missions/fermi/gbm/localization/dol/dol
    missions/fermi/gbm/trigdat
    missions/fermi/gbm/poshist
    missions/fermi/gbm/scat
    missions/fermi/gbm/tcat
+
+
 
 Data Finders and Catalogs
 -------------------------

@@ -119,7 +119,7 @@ Of course, since we have a HEALPix file, we can make a pretty sky map!
     >>> skyplot.add_localization(loc)
     >>> plt.show()
     
-.. image:: localization_figs/locfig1.png
+.. image:: ../localization_figs/locfig1.png
 
 By default, the plot shows the localization (purple gradient and black contours),
 the Earth occultation region (blue), the detector pointings (grey circles), 
@@ -128,6 +128,20 @@ Galactic Plane (gray/black line), and sun (yellow smiley-face).
 This is for default plotting options, but you can do a lot of customization on 
 what is plotted (see :external:ref:`Plotting Sky Maps, Localizations, and 
 Wide-field Effective Area<plot-sky>` for more details).
+
+Daughter of Locburst (DoL)
+==========================
+
+We now include a python port of the original Fortran code used by Fermi-GBM to perform the localizations
+required to create the HEALPix files.
+
+You can read more about it below:
+
+.. toctree::
+   :maxdepth: 1
+
+   dol/dol
+
 
 Reference/API
 =============
