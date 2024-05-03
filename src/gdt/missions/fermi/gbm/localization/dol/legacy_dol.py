@@ -30,6 +30,7 @@ import numpy as np
 
 from . import legacy_spectral_models
 from .legacy_functions import *
+from .. import GbmHealPix, Chi2Grid
 
 
 class legacy_DoL(object):
@@ -458,6 +459,31 @@ class legacy_DoL(object):
         f.close()
 
     # END write_summary()
+
+    def to_GbmHealPix(self, loc, frame, grid_nearest=True, **kwargs):
+
+        # get chi-squared values from best localization fit and spacecraft coord
+        chi2 = loc["best"]["chi2"]
+        az, zen = self.sky_grid
+
+        # wrap at 2 pi to facilitate simple grid interpolation onto healpix map
+        mask = (az == 0.0)
+        az = np.concatenate([az, np.full(mask.sum(), 2 * np.pi)])
+        zen = np.concatenate([zen, zen[mask]])
+        chi2 = np.concatenate([chi2, chi2[mask]])
+
+        # calculate correponding ra, dec with legacy method
+        pos = ang_to_cart_zen(az, zen)
+        ra, dec = sc_to_j2000(loc["scx"], loc["scy"], loc["scz"], pos)
+
+        c2g = Chi2Grid.from_data(*np.degrees([az, zen, ra, dec]), chi2)
+        c2g._quaternion = frame.quaternion
+        c2g._scpos = frame.obsgeoloc.xyz.value
+        c2g._trigtime = frame.obstime.fermi
+
+        return GbmHealPix.from_chi2grid(c2g, grid_nearest=grid_nearest, **kwargs)
+
+    # END to_GbmHealPix()
 
     @property
     def locrates(self):
