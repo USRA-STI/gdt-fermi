@@ -132,8 +132,15 @@ Wide-field Effective Area<plot-sky>` for more details).
 Daughter of Locburst (DoL)
 ==========================
 
-We now include a python port of the original Fortran code used by Fermi-GBM to perform the localizations
-required to create the HEALPix files.
+We now include a python port of the original Fortran code used by Fermi-GBM to perform the 
+ground localizations required to create HEALPix formatted localization files. This code is
+known as the Daughter of Locburst (DoL) because it is based on the original Locburst algorithm
+from BATSE [1]. A description of the DoL method is provided in [2].
+
+References
+[1] Pendelton, G. et al. 1999, ApJ, 512, 362
+[2] Connaughton, V. et al. 2015, ApJ, 216, 32
+
 
 You can read more about it below:
 
@@ -148,5 +155,4 @@ Reference/API
 
 .. automodapi:: gdt.missions.fermi.gbm.localization
    :inherited-members:
-
 
