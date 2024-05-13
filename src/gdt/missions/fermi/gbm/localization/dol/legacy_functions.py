@@ -26,7 +26,7 @@
 import numpy as np
 
 from . import __data_dir__
-from .legacy_spectral_models import legacy_band, legacy_comp, legacy_pl
+from . import legacy_spectral_models
 
 #############
 # CONSTANTS #
@@ -986,9 +986,9 @@ def get_spec(spec, energies, mid_energies, erange):
     ----------
     spec : str
         Spectrum definition string formatted like so:
-            comp function - "comp,index=-1.15,epeak=350.0"
-            band function - "band,alpha=-1.0,beta=-2.3,epeak=230.0"
-              pl function - "pl,index=-2"
+        comp function - "comp,index=-1.15,epeak=350.0"
+        band function - "band,alpha=-1.0,beta=-2.3,epeak=230.0"
+        pl   function - "pl,index=-2"
     energies : np.ndarray(float32, nen + 1)
         End points of energy bins
     mid_energies : np.ndarray(float32, nen)
@@ -1003,7 +1003,9 @@ def get_spec(spec, energies, mid_energies, erange):
         Array with normalized photon counts in each energy bin for spec
     """
     # list of available spectral functions
-    spec_func = {"pl": legacy_pl, "comp": legacy_comp, "band": legacy_band}
+    spec_func = {"pl": legacy_spectral_models.legacy_pl,
+                 "comp": legacy_spectral_models.legacy_comp,
+                 "band": legacy_spectral_models.legacy_band}
 
     # list of parameters required by each spectral definition
     required_param = {
@@ -1068,9 +1070,9 @@ def add_scat(npoints, rgrid, front_scattered_rates, back_scattered_rates,
         Array with first and last index of chosen energy channel range
     spec : str
         Spectrum definition string formatted like so:
-            comp function - "comp,index=-1.15,epeak=350.0"
-            band function - "band,alpha=-1.0,beta=-2.3,epeak=230.0"
-              pl function - "pl,index=-2"
+        comp function - "comp,index=-1.15,epeak=350.0"
+        band function - "band,alpha=-1.0,beta=-2.3,epeak=230.0"
+        pl   function - "pl,index=-2"
 
     Returns
     -------
