@@ -1,8 +1,9 @@
 .. _dol:
 
 **************************************************************************************
-Fermi GBM Localizations using the DoL (:mod:`gdt.missions.fermi.gbm.localization.dol`)
+Fermi GBM Localizations using the DoL
 **************************************************************************************
+(:mod:`gdt.missions.fermi.gbm.localization.dol`)
 
 The ``dol`` package provides modules capable of creating the same legacy ground localizations
 that are produced by the GBM Science Team. These python modules exactly

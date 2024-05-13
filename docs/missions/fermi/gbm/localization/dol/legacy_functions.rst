@@ -1,10 +1,11 @@
 .. _gbm-dol-legacy-functions:
 
 ********************************************************************************************************************
-DoL Legacy Functions (:mod:`gdt.missions.fermi.gbm.localization.dol.legacy_functions`)
+DoL Legacy Functions
 ********************************************************************************************************************
+(:mod:`gdt.missions.fermi.gbm.localization.dol.legacy_functions`)
 
-The methods provided in this package handle the core functionality needed
+The methods provided in this module handle the core functionality needed
 to operate the legacy DoL localization algorithm in a way that replicates
 the original Fortran code. These include legacy angular operations
 as well as coordinate conversions that would typically be handled by
@@ -22,10 +23,10 @@ where :math:`M_i` is the measured counts and :math:`E_i`
 is the expected counts in detector :math:`i`. This assumes the measured counts
 follow a Gaussian distribution with symmetric variance :math:`E_i`, which is
 true for GBM given that typical backgrounds alone provide a few hundred measured
-counts in each detector during most GRB emission timescales.
+counts across 50-300 keV in each detector during most GRB emission timescales.
 
-The expected counts :math:`E_i` are determined from the sum of the background
-:math:`B_i` and source :math:`S_i` expectations for each detector
+The expected counts :math:`E_i` are determined from the sum of the source
+:math:`S_i` and background :math:`B_i` expectations for each detector
 
 .. math::
 
@@ -39,7 +40,7 @@ The expected counts :math:`E_i` are determined from the sum of the background
     S_i = f \times R_i
 
 
-The best-fit source flux :math:`f` is found by minimizing the :math:`\chi^2`. This
+The best-fit source flux :math:`f` is found by minimizing :math:`\chi^2`. This
 is done by analytically setting the derivative of :math:`\chi^2` equal
 to zero and solving for :math:`f`
 

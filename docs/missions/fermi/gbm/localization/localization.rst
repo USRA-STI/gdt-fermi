@@ -3,8 +3,9 @@
 .. |region_probability()| replace:: :meth:`~gdt.missions.fermi.gbm.localization.GbmHealPix.region_probability`
 
 ********************************************************************
-Fermi GBM Localizations (:mod:`gdt.missions.fermi.gbm.localization`)
+Fermi GBM Localizations
 ********************************************************************
+(:mod:`gdt.missions.fermi.gbm.localization`)
 
 As part of mission operations, GBM produces localizations for GRBs and 
 disseminates these to the community. GCN notices are sent to interested 
@@ -146,7 +147,7 @@ from BATSE :ref:`[1]<dol_pubs>`. A description of the DoL method is provided in 
 |    `[2] Connaughton, V. et al. 2015, ApJ, 216, 32 <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
 
 
-You can read more about it below:
+You can read more about the DoL implementation in GDT below:
 
 .. toctree::
    :maxdepth: 1
