@@ -102,6 +102,8 @@ creating a new lightcurve with the source period highlighted.
 Note that each detector has a set of eight counts values, corresponding
 to the eight energy bins in the :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` file.
 
+.. _dol-example-background:
+
 Next we will need an estimate for the background counts within the source window.
 Since the background is fairly linear at times outside our window,
 we use a first order polynomial fit to estimate the background.
