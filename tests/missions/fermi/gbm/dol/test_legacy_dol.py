@@ -32,8 +32,13 @@ import unittest
 import tempfile
 import numpy as np
 
-from . import __test_ref_dir__, __test_args_dir__
+from gdt.core.coords import Quaternion
+from gdt.missions.fermi.time import Time
+from gdt.missions.fermi.frame import FermiFrame
+from gdt.missions.fermi.gbm.localization.dol.legacy_dol import legacy_DoL
+from astropy.coordinates.representation import CartesianRepresentation
 
+from . import __test_ref_dir__, __test_args_dir__
 
 class TestLegacyDol(unittest.TestCase):
     r""" Tests legacy functions for consistency
@@ -239,6 +244,30 @@ class TestLegacyDol(unittest.TestCase):
         output = ["dol_576160056.977.txt", "chi2grid_bn576160056.977_v00.dat"]
         self.assertTrue(self.compare(args, output))
 
+    def test_to_GbmHealPix(self):
+
+        args_path = os.path.join(__test_args_dir__, "576160056.977.npy")
+        args = args = np.load(args_path, allow_pickle=True, encoding='bytes').item()
+
+        dol = legacy_DoL()
+        loc = dol.eval(
+            args['crange'], args['mrates'], args['brates'],
+            args['sduration'], args['bgduration'], args['sc_pos'], args['sc_quat'],
+            args['energies'], args['fra'], args['fdec'], args['sc_time'], scat_opt=1)
+
+        frame = FermiFrame(
+            obstime=Time(args['sc_time'], format='fermi'),
+            obsgeoloc=CartesianRepresentation(*args['sc_pos'], unit='km'),
+            quaternion=Quaternion(args['sc_quat'], scalar_first=False))
+
+        healpix = dol.to_GbmHealPix(loc, frame)
+
+        for i, p in [(178067, 3.4297927e-06),
+                     ( 32104, 5.1333986e-06),
+                     ( 77421, 4.1037010e-06),
+                     (193711, 3.3427739e-06),
+                     (113747, 3.4839798e-06)]:
+            self.assertTrue(np.isclose(healpix.prob[i], p, rtol=0.01))
 
 # END class TestLegacyDol
 
