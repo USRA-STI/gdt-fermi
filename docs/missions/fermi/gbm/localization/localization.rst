@@ -136,16 +136,7 @@ Daughter of Locburst (DoL)
 We now include a python port of the original Fortran code used by Fermi-GBM to perform the 
 ground localizations required to create HEALPix formatted localization files. This code is
 known as the Daughter of Locburst (DoL) because it is based on the original Locburst algorithm
-from BATSE :ref:`[1]<dol_pubs>`. A description of the DoL method is provided in :ref:`[2]<dol_pubs>`.
-
-
-
-.. _dol_pubs:
-
-| References:
-|    `[1] Pendelton, G. et al. 1999, ApJ, 512, 362 <https://iopscience.iop.org/article/10.1086/306735>`_
-|    `[2] Connaughton, V. et al. 2015, ApJ, 216, 32 <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
-
+from BATSE [1]_. A description of the DoL method is provided in [2]_.
 
 You can read more about the DoL implementation in GDT below:
 
@@ -154,6 +145,12 @@ You can read more about the DoL implementation in GDT below:
 
    dol/dol
 
+References:
+"""""""""""
+
+.. [1] `Pendelton, G. et al. 1999, ApJ, 512, 362 <https://iopscience.iop.org/article/10.1086/306735>`_
+
+.. [2] `Connaughton, V. et al. 2015, ApJ, 216, 32 <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
 
 Reference/API
 =============

@@ -5,7 +5,7 @@ Fermi GBM Localizations using the DoL
 **************************************************************************************
 (:mod:`gdt.missions.fermi.gbm.localization.dol`)
 
-The ``dol`` package provides modules capable of creating the same legacy ground localizations
+The ``dol`` provides modules capable of creating the same legacy ground localizations
 that are produced by the GBM Science Team. These python modules exactly
 replicate the operations of the original Fortran code.
 
@@ -208,7 +208,7 @@ variables defined:
 You are now ready to perform the ground localization. Do this with
 
     >>> from gdt.missions.fermi.gbm.localization.dol.legacy_dol import legacy_DoL
-    >>> dol = legacy_DoL(verbose=False)
+    >>> dol = legacy_DoL()
     >>> loc = dol.eval(crange, np.array(src_counts), np.array(bg_counts),
     ...                avg_src_exposure, avg_bg_exposure,
     ...                scpos, quaternion, energies, ra, dec, int(tcenter),
@@ -250,10 +250,10 @@ This map can be plotted with
 .. image:: ../../localization_figs/stat_loc.png
 
 where the purple contours mark the 90% and 50% containment areas defined by the statistical uncertainty
-of the observed counts. We can apply the systematic uncertainty defined in :ref:`[1]<pubs>` for human-in-the-loop
+of the observed counts. We can apply the systematic uncertainty defined for human-in-the-loop
 (HITL) ground localizations by convolving the statistical map with :meth:`~gdt.missions.fermi.gbm.localization.hitl_model`.
 This method applies a core + tail model with two Gaussian smoothings whose widths are determined by the best-fit azimuth value in degrees.
-See :ref:`[1]<pubs>` for more details on the derivation of this systematic.
+See [1]_ for more details on the derivation of this systematic.
 
     >>> from gdt.missions.fermi.gbm.localization import hitl_model
     >>> az = np.degrees(loc["best"]["az"])
@@ -269,7 +269,24 @@ avoid smearing the region blocked by the Earth into visible parts of the sky.
 
 .. image:: ../../localization_figs/sys_loc.png
 
-.. _pubs:
+Note About Localizing Non-GRB Transients
+========================================
 
-| References:
-|    `[1] Connaughton, V. et al. 2015, ApJ, 216, 32 <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
+Transients with softer spectra than GRBs, such as Soft Gamma-ray Repeaters (SGRs) and
+Solar Flares, typically benefit from localizations performed over a 5-50 keV
+energy range instead of the default 50-300 keV range. This can be done by using
+the 5-50 keV response file prepared only for the default soft spectrum.
+
+    >>> from gdt.missions.fermi.gbm.localization.dol import legacy_spectral_models
+    >>> spec = [("Soft_5_50:", legacy_spectral_models.band_soft)]
+    >>> rsp_files = [legacy_spectral_models.band_soft_5_50]
+    >>> from gdt.missions.fermi.gbm.localization.dol.legacy_dol import legacy_DoL
+    >>> dol = legacy_DoL(spec=spec, locrates=rsp_files)
+
+The user will also need to provide detector counts to the :meth:`~gdt.missions.fermi.gbm.localization.dol.legacy_dol.legacy_Dol.eval` method calculated over the 5-50 keV energy range, typically given as energy bin indices [1, 2] for :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` files to avoid background
+instabilities in the lowest energy bin (index 0).
+
+References:
+"""""""""""
+
+.. [1] `Connaughton, V. et al. 2015, ApJ, 216, 32 <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
