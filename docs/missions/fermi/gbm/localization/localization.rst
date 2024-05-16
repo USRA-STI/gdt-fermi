@@ -3,8 +3,9 @@
 .. |region_probability()| replace:: :meth:`~gdt.missions.fermi.gbm.localization.GbmHealPix.region_probability`
 
 ********************************************************************
-Fermi GBM Localizations (:mod:`gdt.missions.fermi.gbm.localization`)
+Fermi GBM Localizations
 ********************************************************************
+(:mod:`gdt.missions.fermi.gbm.localization`)
 
 As part of mission operations, GBM produces localizations for GRBs and 
 disseminates these to the community. GCN notices are sent to interested 
@@ -132,21 +133,28 @@ Wide-field Effective Area<plot-sky>` for more details).
 Daughter of Locburst (DoL)
 ==========================
 
-We now include a python port of the original Fortran code used by Fermi-GBM to perform the localizations
-required to create the HEALPix files.
+We now include a python port of the original Fortran code used by Fermi-GBM to perform the 
+ground localizations required to create HEALPix formatted localization files. This code is
+known as the Daughter of Locburst (DoL) because it is based on the original Locburst algorithm
+from BATSE [1]_. A description of the DoL method is provided in [2]_.
 
-You can read more about it below:
+You can read more about the DoL implementation in GDT below:
 
 .. toctree::
    :maxdepth: 1
 
    dol/dol
 
+References:
+"""""""""""
+
+.. [1] `Pendelton, G. et al. 1999, ApJ, 512, 362 <https://iopscience.iop.org/article/10.1086/306735>`_
+
+.. [2] `Connaughton, V. et al. 2015, ApJ, 216, 32 <https://iopscience.iop.org/article/10.1088/0067-0049/216/2/32>`_
 
 Reference/API
 =============
 
 .. automodapi:: gdt.missions.fermi.gbm.localization
    :inherited-members:
-
 

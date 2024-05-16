@@ -30,8 +30,9 @@ import warnings
 import astropy.io.fits as fits
 import numpy as np
 from scipy.stats import chi2
+import scipy.interpolate
 import healpy as hp
-from astropy.coordinates import get_sun, SkyCoord
+from astropy.coordinates import get_sun, SkyCoord, angular_separation
 from astropy.coordinates.representation import CartesianRepresentation
 from astropy.units import Quantity
 
@@ -114,7 +115,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         return self._sun_loc
 
     @classmethod
-    def from_chi2grid(cls, chi2grid, nside=128, headers=None, filename=None):
+    def from_chi2grid(cls, chi2grid, nside=128, headers=None, filename=None, exact_nearest=False, grid_nearest=False):
         """Create a GbmHealPix object from a :class:`Chi2Grid` object.
 
         Args:
@@ -124,6 +125,11 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             headers (:class:`~gdt.core.headers.FileHeaders`, optional):
                 The file headers
             filename (str, optional): The filename
+            exact_nearest (bool): Use exact nearest pixel interpolation when True.
+                                  This method is slow O(minute) due to
+                                  angular difference calculation.
+            grid_nearest (bool): Use approximate nearest pixel interpolation when True.
+                                 This method is fast O(second) by using 2D grid.
 
         Returns:
             (:class:`GbmHealPix`)
@@ -131,25 +137,37 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if not isinstance(chi2grid, Chi2Grid):
             raise TypeError('chi2grid must be a Chi2Grid object')
 
-        # fill up a low-resolution healpix map with significance
+        # convert chisq map to probability map assuming Wilk's theorem applies
+        loglike = -chi2grid.chisq / 2.0
+        probs = np.exp(loglike - np.max(loglike))
+
+        # fill a low-resolution healpix map with probability values
         lores_nside = 64
         lores_npix = hp.nside2npix(lores_nside)
-        lores_array = np.zeros((lores_npix))
+        lores_array = np.zeros(lores_npix)
         theta = cls._dec_to_theta(chi2grid.dec)
         phi = cls._ra_to_phi(chi2grid.ra)
-        idx = hp.ang2pix(lores_nside, theta, phi)
-        lores_array[idx] = chi2grid.significance
+        if exact_nearest:
+            # exact nearest pixel method using angular difference (slow)
+            lores_pix = np.arange(lores_npix)
+            proj_theta, proj_phi = hp.pix2ang(lores_nside, lores_pix)
+            idx = [angular_separation(proj_phi[i], 0.5 * np.pi - proj_theta[i],
+                                      phi, 0.5 * np.pi - theta).argmin() for i in lores_pix]
+            lores_array = probs[idx]
+        elif grid_nearest:
+            # approximate nearest pixel method using 2D grid (fast)
+            lores_pix = np.arange(lores_npix)
+            proj_theta, proj_phi = hp.pix2ang(lores_nside, lores_pix)
+            lores_array = scipy.interpolate.griddata((phi, theta), probs, (proj_phi, proj_theta), method='nearest')
+        else:
+            # basic healpix conversion (can result in missing pixels)
+            idx = hp.ang2pix(lores_nside, theta, phi)
+            lores_array[idx] = probs
 
         # upscale to high-resolution
         hires_nside = nside
         hires_npix = hp.nside2npix(hires_nside)
         theta, phi = hp.pix2ang(hires_nside, np.arange(hires_npix))
-
-        # convert chisq map to probability map
-        loglike = -chi2grid.chisq / 2.0
-        probs = np.exp(loglike - np.max(loglike))
-        lores_array = np.zeros(lores_npix)
-        lores_array[idx] = probs
         prob_array = hp.get_interp_val(lores_array, theta, phi)
 
         quat = Quaternion(chi2grid.quaternion)

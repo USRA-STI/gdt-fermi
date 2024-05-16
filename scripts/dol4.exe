@@ -36,7 +36,7 @@ ndet = legacy_DoL.default_ndet
 ldet = legacy_DoL.default_ldet
 
 # build command to run legacy dol module
-cmd = sys.executable + " -m dol.legacy_dol"
+cmd = sys.executable + " -m gdt.missions.fermi.gbm.localization.dol.legacy_dol"
 
 # add command line options
 opts = [{'opt': ' --crange', 'narg': 2},

@@ -28,9 +28,12 @@ import sys
 import argparse
 import numpy as np
 
-from . import legacy_spectral_models
-from .legacy_functions import *
+from . import legacy_spectral_models, legacy_functions
+#from .legacy_functions import *
+from ... import localization
+#GbmHealPix, Chi2Grid
 
+legacy_dtorad = legacy_functions.legacy_dtorad
 
 class legacy_DoL(object):
     r""" The legacy DoL localization code for Fermi GBM with float32 support
@@ -145,7 +148,7 @@ class legacy_DoL(object):
             self.usedet = usedet.astype('bool')
 
         self.nai_az, self.nai_zen, self.nai_unit_vec, self.back_unit_vec = \
-            initialize_det_geometry(self.verbose)
+            legacy_functions.initialize_det_geometry(self.verbose)
 
         self.initialize_sky_grid(self.locrates[0])
 
@@ -207,34 +210,34 @@ class legacy_DoL(object):
 
         # information about the initial provided location
         ini = {"ra": fra / legacy_dtorad, "dec": fdec / legacy_dtorad}
-        ini["pos"] = ang_to_cart_dec(ini["ra"], ini["dec"])
-        ini["az"], ini["zen"] = j2000_to_sc(scx, scy, scz, ini["pos"])
-        ini["xyz"] = ang_to_cart_zen(ini["az"], ini["zen"])
+        ini["pos"] = legacy_functions.ang_to_cart_dec(ini["ra"], ini["dec"])
+        ini["az"], ini["zen"] = legacy_functions.j2000_to_sc(scx, scy, scz, ini["pos"])
+        ini["xyz"] = legacy_functions.ang_to_cart_zen(ini["az"], ini["zen"])
         loc["initial"] = ini
 
         # information about the best estimated location
         best = loc["best"]
-        best["pos"] = ang_to_cart_zen(best["az"], best["zen"])
-        best["ra"], best["dec"] = sc_to_j2000(scx, scy, scz, best["pos"])
-        best["xyz"] = ang_to_cart_dec(best["ra"], best["dec"])
-        best["lii"], best["bii"] = eq2000_to_gal_r(best["ra"], best["dec"])
+        best["pos"] = legacy_functions.ang_to_cart_zen(best["az"], best["zen"])
+        best["ra"], best["dec"] = legacy_functions.sc_to_j2000(scx, scy, scz, best["pos"])
+        best["xyz"] = legacy_functions.ang_to_cart_dec(best["ra"], best["dec"])
+        best["lii"], best["bii"] = legacy_functions.eq2000_to_gal_r(best["ra"], best["dec"])
 
         # information about the sun
-        sun = {k: v for k, v in zip(["ra", "dec"], sun_loc(sc_time))}
-        sun["xyz"] = ang_to_cart_dec(sun["ra"], sun["dec"])
-        sun["angle"] = get_good_angle(sun["xyz"], best["xyz"])
+        sun = {k: v for k, v in zip(["ra", "dec"], legacy_functions.sun_loc(sc_time))}
+        sun["xyz"] = legacy_functions.ang_to_cart_dec(sun["ra"], sun["dec"])
+        sun["angle"] = legacy_functions.get_good_angle(sun["xyz"], best["xyz"])
         loc["sun"] = sun
 
         # information about the Earth center
         geo = loc["geo"]
-        geo["angle"] = get_good_angle(-loc["sc_pos"], best["xyz"])
+        geo["angle"] = legacy_functions.get_good_angle(-loc["sc_pos"], best["xyz"])
 
         # compute angles between detectors and initial, best, geo locations
-        loc["det_ang_initial"] = get_det_geometry(
+        loc["det_ang_initial"] = legacy_functions.get_det_geometry(
             ini["az"], ini["zen"], self.nai_az, self.nai_zen)
-        loc["det_ang_best"] = get_det_geometry(
+        loc["det_ang_best"] = legacy_functions.get_det_geometry(
             best["az"], best["zen"], self.nai_az, self.nai_zen)
-        loc["det_ang_geo"] = get_det_geometry(
+        loc["det_ang_geo"] = legacy_functions.get_det_geometry(
             geo["az"], geo["zen"], self.nai_az, self.nai_zen)
 
         maxdet = loc["maxdet"]
@@ -294,12 +297,12 @@ class legacy_DoL(object):
         """
         # correct rates for detector deadtimes
         c_mrates, c_brates, cenergies, usedet, maxdet, signif, deadtime = \
-            deadtime_correct(crange, mrates, brates, sduration,
-                             bgduration, energies, self.verbose)
+            legacy_functions.deadtime_correct(crange, mrates, brates, sduration,
+                                              bgduration, energies, self.verbose)
 
         # determine location of Earth center
         geodir, geo_az, geo_zen, scx, scy, scz = \
-            get_geocenter(sc_quat, sc_pos, self.verbose)
+            legacy_functions.get_geocenter(sc_quat, sc_pos, self.verbose)
 
         if self.verbose:
             print(" geocenter az and zen")
@@ -315,7 +318,7 @@ class legacy_DoL(object):
 
             # compute scattering matrix when requested
             if (scat_opt == 1) & (crange[1] > 2) and (scattered_rates is None):
-                scattered_rates, _ = compute_scat(
+                scattered_rates, _ = legacy_functions.compute_scat(
                     self.npoints, self.sky_grid, cenergies, geodir,
                     self.nai_az, self.nai_zen, self.nai_unit_vec,
                     self.back_unit_vec, front_only=True)
@@ -325,14 +328,14 @@ class legacy_DoL(object):
                 loctable_entries = self.locrates[ispec]
             else:
                 # include scattering effect in predicted detector rates
-                atm_scattered_rates = add_scat(self.npoints,
-                                               self.sky_grid, scattered_rates, None, cenergies, spec)
+                atm_scattered_rates = legacy_functions.add_scat(
+                    self.npoints, self.sky_grid, scattered_rates, None, cenergies, spec)
                 loctable_entries = np.int32(
                     np.float32(self.locrates[ispec]) + atm_scattered_rates)
 
             # find best guess for source location based on chi-square metric
             gindex, chi2, nchi2, rchi2, guess_az, guess_zen, guess_loc_err, \
-                loc_reliable = find_best_location(
+                loc_reliable = legacy_functions.find_best_location(
                 self.ndet, self.npoints, usedet.size, usedet,
                 loctable_entries, sduration, c_mrates, c_brates,
                 None, self.verbose)
@@ -397,11 +400,11 @@ class legacy_DoL(object):
             Grid of chi2 values on the sky
         """
         # cartesian position vectors of every point on the sky
-        pos = ang_to_cart_zen(self.sky_grid[0], self.sky_grid[1])
+        pos = legacy_functions.ang_to_cart_zen(self.sky_grid[0], self.sky_grid[1])
         # convert position vectors to ra & dec grid
-        j2000grid = np.array(sc_to_j2000(scx, scy, scz, pos))
+        j2000grid = np.array(legacy_functions.sc_to_j2000(scx, scy, scz, pos))
         # determine which points are visible
-        visible = get_occult(sc_pos, self.npoints, j2000grid)
+        visible = legacy_functions.get_occult(sc_pos, self.npoints, j2000grid)
 
         # open file and write values
         f = open(path, 'w')
@@ -459,6 +462,31 @@ class legacy_DoL(object):
 
     # END write_summary()
 
+    def to_GbmHealPix(self, loc, frame, grid_nearest=True, **kwargs):
+
+        # get chi-squared values from best localization fit and spacecraft coord
+        chi2 = loc["best"]["chi2"]
+        az, zen = self.sky_grid
+
+        # wrap at 2 pi to facilitate simple grid interpolation onto healpix map
+        mask = (az == 0.0)
+        az = np.concatenate([az, np.full(mask.sum(), 2 * np.pi)])
+        zen = np.concatenate([zen, zen[mask]])
+        chi2 = np.concatenate([chi2, chi2[mask]])
+
+        # calculate correponding ra, dec with legacy method
+        pos = legacy_functions.ang_to_cart_zen(az, zen)
+        ra, dec = legacy_functions.sc_to_j2000(loc["scx"], loc["scy"], loc["scz"], pos)
+
+        c2g = localization.Chi2Grid.from_data(*np.degrees([az, zen, ra, dec]), chi2)
+        c2g._quaternion = frame.quaternion
+        c2g._scpos = frame.obsgeoloc.xyz.value
+        c2g._trigtime = frame.obstime.fermi
+
+        return localization.GbmHealPix.from_chi2grid(c2g, grid_nearest=grid_nearest, **kwargs)
+
+    # END to_GbmHealPix()
+
     @property
     def locrates(self):
         r""" Function to return value of locrates property
@@ -489,7 +517,7 @@ class legacy_DoL(object):
             if path[-4:] != ".npy":
                 raise ValueError("%s does not have .npy extension" % path)
 
-            table, idb_no = read_table(path, None, None)
+            table, idb_no = legacy_functions.read_table(path, None, None)
 
             if self._idb_no is None:
                 self._idb_no = idb_no
@@ -511,7 +539,7 @@ class legacy_DoL(object):
             Table from locrates file 
         """
         self.npoints = loctable.shape[1]
-        self.sky_grid = loctable[0:2] / legacy_arcmin2rad
+        self.sky_grid = loctable[0:2] / legacy_functions.legacy_arcmin2rad
         self.sky_grid = self.sky_grid.astype(np.float32)
 
     # END initialize_sky_grid()
@@ -538,20 +566,20 @@ class legacy_DoL(object):
         print(" This position Az, Zen: {0:.17} {1:.17}".format(
             best["az"] * legacy_dtorad, best["zen"] * legacy_dtorad))
 
-        good_ang = get_good_angle(best["xyz"], initial["pos"])
+        good_ang = legacy_functions.get_good_angle(best["xyz"], initial["pos"])
         print(" J2000: {0:.9}".format(good_ang))
-        good_ang = get_good_angle(best["pos"], initial["xyz"])
+        good_ang = legacy_functions.get_good_angle(best["pos"], initial["xyz"])
         print(" SC: {0:.9}".format(good_ang))
-        good_ang = get_good_angle(-loc["sc_pos"], initial["pos"])
+        good_ang = legacy_functions.get_good_angle(-loc["sc_pos"], initial["pos"])
         print(" J2000: dist from source to geocenter (initial) {0:.9}".format(good_ang))
         geo_ang = loc["geo"]["angle"]
         print(" J2000: dist from source to geocenter (this prog) {0:.9}".format(geo_ang))
-        norm_vec = initial["pos"] / np.sqrt(dot(initial["pos"], initial["pos"]))
+        norm_vec = initial["pos"] / np.sqrt(legacy_functions.dot(initial["pos"], initial["pos"]))
         print(" J2000: dist from source to z-axis (initial) {0:.17}".format(
-            legacy_dtorad * np.arccos(dot(loc["scz"], norm_vec))))
-        norm_vec = best["xyz"] / np.sqrt(dot(best["xyz"], best["xyz"]))
+            legacy_dtorad * np.arccos(legacy_functions.dot(loc["scz"], norm_vec))))
+        norm_vec = best["xyz"] / np.sqrt(legacy_functions.dot(best["xyz"], best["xyz"]))
         print(" J2000: dist from source to z-axis (this prog) {0:.17}".format(
-            legacy_dtorad * np.arccos(dot(loc["scz"], norm_vec))))
+            legacy_dtorad * np.arccos(legacy_functions.dot(loc["scz"], norm_vec))))
 
         # angles of detectors to earth given geo az and zen
         print(" Detector Earth angles:")
@@ -649,30 +677,30 @@ def main():
     p = argparse.ArgumentParser(description="Calculates localization error.",
                                 formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--crange", type=np.int32, nargs=2,
-                   help="Description")
+                   help="Energy bin range to use for localization")
     p.add_argument("--mrates", type=np.int32, nargs=ndet * nen,
-                   help="Description")
+                   help="Measured counts for all detectors and energy bins")
     p.add_argument("--brates", type=np.int32, nargs=ndet * nen,
-                   help="Description")
+                   help="Estimated background counts for all detectors and energy bins")
     p.add_argument("--sduration", type=np.float32,
-                   help="Description")
+                   help="Source exposure timescale in seconds")
     p.add_argument("--bgduration", type=np.float32,
-                   help="Description")
+                   help="Background exposure timescale in seconds")
     p.add_argument("--sc_pos", type=np.float32, nargs=3,
-                   help="Description")
+                   help="Spacecraft position [x, y, x] in km to Earth center")
     p.add_argument("--sc_quat", type=np.float64, nargs=4,
-                   help="Description")
+                   help="Spacecraft rotation in quaternion format with scalar last")
     p.add_argument("--energies", type=np.float32, nargs=nen + 1,
-                   help="Description")
+                   help="Energy bin boundaries")
     p.add_argument("--fra", type=np.float32,
-                   help="Description")
+                   help="Initial right ascension from flight software in degrees")
     p.add_argument("--fdec", type=np.float32,
-                   help="Description")
+                   help="Initial declination from flight software in degrees")
     p.add_argument("--sc_time", type=np.int64,
-                   help="Description")
-    p.add_argument("--scat_opt", type=np.int32,
-                   help="Description")
-    p.add_argument("--fname", type=str,
+                   help="Time of the localization in Fermi mission elapsed seconds")
+    p.add_argument("--scat_opt", type=np.int32, default=1,
+                   help="Apply atmospheric scattering effects when set to 1")
+    p.add_argument("--fname", type=str, default="",
                    help="Output file name")
     p.add_argument("--dir", type=str, default="",
                    help="Output directory")

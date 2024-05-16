@@ -29,7 +29,7 @@ from pathlib import Path
 # "ImportError: No module named..." when one is missing
 import numpy as np
 
-__all__ = ["legacy_functions", "legacy_dol", "__data_dir__"]
+__all__ = ["legacy_spectral_models", "legacy_functions", "legacy_dol", "__data_dir__"]
 __author__ = ("Fermi GBM Team")
 __version__ = "4.15a0"
 __maintainer__ = "Josh Wood"
