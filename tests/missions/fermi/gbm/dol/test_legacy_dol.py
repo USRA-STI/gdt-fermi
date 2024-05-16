@@ -35,7 +35,6 @@ import numpy as np
 from gdt.core.coords import Quaternion
 from gdt.missions.fermi.time import Time
 from gdt.missions.fermi.frame import FermiFrame
-from gdt.missions.fermi.gbm.localization.dol.legacy_dol import legacy_DoL
 from astropy.coordinates.representation import CartesianRepresentation
 
 from . import __test_ref_dir__, __test_args_dir__
@@ -248,6 +247,8 @@ class TestLegacyDol(unittest.TestCase):
 
         args_path = os.path.join(__test_args_dir__, "576160056.977.npy")
         args = args = np.load(args_path, allow_pickle=True, encoding='bytes').item()
+
+        from gdt.missions.fermi.gbm.localization.dol.legacy_dol import legacy_DoL
 
         dol = legacy_DoL()
         loc = dol.eval(
