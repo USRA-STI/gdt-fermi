@@ -237,7 +237,7 @@ The full set of chi-square values are available with
     >>> loc["best"]["chi2"]
     [40.354504 37.616688 39.927006 ... 37.869972 37.898384 37.692604]
 
-However, it is better to convert these values to a healpix-formatted probability map stored as a :class:`~gdt.missions.fermi.gbm.localization.GbmHealpix` object with
+However, it is better to convert these values to a healpix-formatted probability map stored as a :class:`~gdt.missions.fermi.gbm.localization.GbmHealPix` object with
 
     >>> healpix = dol.to_GbmHealPix(loc, frame)
 
@@ -283,7 +283,7 @@ the 5-50 keV response file prepared only for the default soft spectrum.
     >>> from gdt.missions.fermi.gbm.localization.dol.legacy_dol import legacy_DoL
     >>> dol = legacy_DoL(spec=spec, locrates=rsp_files)
 
-The user will also need to provide detector counts to the :meth:`~gdt.missions.fermi.gbm.localization.dol.legacy_dol.legacy_Dol.eval` method calculated over the 5-50 keV energy range, typically given as energy bin indices [1, 2] for :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` files to avoid background
+The user will also need to provide detector counts to the :meth:`~gdt.missions.fermi.gbm.localization.dol.legacy_dol.legacy_DoL.eval` method calculated over the 5-50 keV energy range, typically given as energy bin indices [1, 2] for :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` files to avoid background
 instabilities in the lowest energy bin (index 0).
 
 References:

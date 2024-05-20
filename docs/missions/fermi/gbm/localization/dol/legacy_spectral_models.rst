@@ -69,7 +69,7 @@ file name:
     '/path/to/site-packages/gdt/missions/fermi/gbm/localization/dol/data/band_1deg_50_300_hard.npy'
 
 Each response file consists of the simulated response in all 14 GBM detectors over the specified
-energy range computed for source locations spanning the entire sky using a 1 degree grid.
+energy range computed for source locations spanning the entire sky using a 1-degree grid.
 The shape of the response matrix is (14, 41168).
 
 Users looking to work directly with the response grid can load it with

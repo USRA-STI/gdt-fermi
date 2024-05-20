@@ -29,97 +29,56 @@ import argparse
 import numpy as np
 
 from . import legacy_spectral_models, legacy_functions
-#from .legacy_functions import *
 from ... import localization
-#GbmHealPix, Chi2Grid
 
 legacy_dtorad = legacy_functions.legacy_dtorad
 
-class legacy_DoL(object):
+class legacy_DoL():
     r""" The legacy DoL localization code for Fermi GBM with float32 support
+    
+    Parameters:
+        spec (list):  List of spectrum definitions given as (name, spectrum).
+                      Example:
+                      
+                      .. code-block:: python
+                        
+                        spec = [("Hard", "comp,index=-0.25,epeak=1000.,amp=10.0"),
+                                ("Normal", "comp,index=-1.15,epeak=350.0,amp=10.0"),
+                                ("Soft", "comp,index=-1.95,epeak=50.0,amp=10.0")]
+        
+        locrates (list): List of paths to locrates file for each entry in ``spec``.
+                         Example:
 
-    Attributes:
-    -----------
-    ver_no : str
-        Version number of the routine
-    hard : str
-        Default hard spectrum definition
-    norm : str
-        Default normal spectrum definition
-    soft : str
-        Default soft spectrum definition
-    hard_50_300 : str
-        Default path to locrates file for hard spectrum, 50-300 keV
-    norm_50_300 : str
-        Default path to locrates file for normal spectrum, 50-300 keV
-    soft_50_300 : str
-        Default path to locrates file for soft spectrum, 50-300 keV
-    soft_5_50 : str
-        Default path to locrates file for soft spectrum, 5-50 keV
-    default_nen : int
-        Default number of energy bins for localization
-    default_ndet : int
-        Default total number of detectors
-    default_ldet : int
-        Default number of detectors for localization
-    spec : list
-        List of spectrum definitions given as (name, spectrum).
-    locrates : list
-        List of locrates tables for each spectrum
-    verbose : bool
-        Print things to screen when True
+                         .. code-block:: python
 
-    Public Methods:
-    ---------------
-    eval:
-        Evaluate DoL localization and write results to files
-    localize:
-        Perform the localization routine over all spectra
-    write_chi2grid:
-        Write out the chi2grid file
-    write_summary:
-        Write out the summary file with the best localization
-    stdout:
-        Print information about the best localization to screen
+                           locrates = ["locrates_1deg_50_300_hard_n.npy",
+                                       "locrates_1deg_50_300_normal_n.npy",
+                                       "locrates_1deg_50_300_soft_n.npy"]
+
+        usedet  (np.array, optional): A boolean array containing True (1) if 
+                                      the detector is to be included or False 
+                                      (0) if a detector is not to be included.  
+                                      If not set, then all detectors (including 
+                                      BGOs) are used
+        nen (int, optional): Number of energy bins. Default is 8.
+        ndet (int, optional): Total number of detectors. Default is 14.
+        ldet (int, optional): Max number of detectors for use in localization. 
+                              Default is 12.
     """
-
     ver_no = "4.15a"
+    """(str): Version number of the routine"""
 
     # default number of detectors and energy bins
     default_nen = 8
+    """(int): Default number of energy bins for localization"""
     default_ndet = 14
+    """(int): Default total number of detectors"""
     default_ldet = 12
+    """(int):  Default number of detectors for localization"""
 
     def __init__(self, spec=None, locrates=None, usedet=None,
                  nen=default_nen, ndet=default_ndet, ldet=default_ldet,
                  verbose=False):
-        r""" Constructor.
-
-        Parameters:
-        -----------
-        spec : list
-            List of spectrum definitions given as (name, spectrum).
-            Example:
-                spec = [("Hard", "comp,index=-0.25,epeak=1000.,amp=10.0"),
-                        ("Normal", "comp,index=-1.15,epeak=350.0,amp=10.0"),
-                        ("Soft", "comp,index=-1.95,epeak=50.0,amp=10.0")]
-        locrates : list
-            List of paths to locrates file for each entry in spec
-            Example:
-                locrates = ["locrates_1deg_50_300_hard_n.npy",
-                            "locrates_1deg_50_300_normal_n.npy",
-                            "locrates_1deg_50_300_soft_n.npy"]
-        usedet: np.array, optional
-            A boolean array containing True (1) if the detector is to be
-            included or False (0) if a detector is not to be included.  If not
-            set, then all detectors (including BGOs) are used
-        nen : int 
-            Number of energy bins
-        ndet : int
-            Total number of detectors
-        ldet : int
-            Max number of detectors for use in localization
-        """
         # use default spectra when none are provided
         if spec is None:
             spec = [("Hard: ", legacy_spectral_models.band_hard),
@@ -137,8 +96,11 @@ class legacy_DoL(object):
         self.ndet = ndet
         self.ldet = ldet
         self.spec = spec
+        """(list): List of spectrum definitions given as (name, spectrum)."""
         self.locrates = locrates
+        """(list): List of locrates tables for each spectrum"""
         self.verbose = verbose
+        """(bool): Print things to screen when True"""
 
         # detector selection
         if usedet is None:
@@ -163,45 +125,36 @@ class legacy_DoL(object):
     def eval(self, crange, mrates, brates, sduration, bgduration,
              sc_pos, sc_quat, energies, fra, fdec, sc_time,
              scat_opt, fname="", odir=""):
-        r""" Evaluate DoL localization and write results to files
+        r""" Evaluate DoL localization and write results to files.
 
-        Parameters
-        ----------
-        crange : np.ndarray(2, int32)
-            Array of energy channel IDs chosen for localization
-        mrates : np.ndarry(ndet * nen, int32)
-            Array of measured detector counts in each energy channel
-        brates : np.ndarry(ndet * nen, int32)
-            Array of estimated background counts in each energy channel
-        sduration : float32
-            Timescale of measured detector counts
-        bgduration : float32
-            Timescale of estimated background counts
-        sc_pos : np.ndarray(3, float32)
-            Spacecraft position x,y,z coordinates
-        sc_quat : np.ndarray(4, float64)
-            Quaternion of the space craft. Last element is the scalar field.
-        energies : np.ndarray(nen + 1, float32)
-            Array with end points of energy channel bins
-        fra : float32
-            Initial right ascension value for localization in degrees
-        fdec : float32
-            Initial declination value for localization in degrees
-        sc_time : int64
-            Spacecraft time in MET seconds
-        scat_opt : int32
-            Scattering option. 1 means include scattering when computing
-            the expected detector counts for a given spectrum. 0 means do
-            not include scattering when computing expected detector counts.
-        fname : str
-            Output file name string
-        odir : str
-            Directory path to output file
+        Args:
+            crange (np.ndarray(2, int32)): Array of energy channel IDs chosen 
+                                           for localization
+            mrates (np.ndarry(``ndet`` * ``nen``, int32)): Array of measured detector 
+                                                   counts in each energy channel
+            brates (np.ndarry(``ndet`` * ``nen``, int32)): Array of estimated background 
+                                                   counts in each energy channel
+            sduration (float32): Timescale of measured detector counts
+            bgduration (float32): Timescale of estimated background counts
+            sc_pos (np.ndarray(3, float32)): Spacecraft position x, y, z 
+                                             coordinates
+            sc_quat (np.ndarray(4, float64)): Quaternion of the space craft. 
+                                              Last element is the scalar field.
+            energies (np.ndarray(``nen`` + 1, float32)): Array with end points of 
+                                                     energy channel bins
+            fra (float32): Initial right ascension value for localization in 
+                           degrees
+            fdec (float32): Initial declination value for localization in degrees
+            sc_time (int64): Spacecraft time in MET seconds
+            scat_opt (int32): Scattering option. 1 means include scattering when 
+                              computing the expected detector counts for a given 
+                              spectrum. 0 means do not include scattering when 
+                              computing expected detector counts.
+            fname (str): Output file name string
+            odir (str): Directory path to output file
 
-        Returns
-        -------
-        loc : dict
-            Dictionary object with information about the best localization
+        Returns:
+            (dict): Dictionary object with information about the best localization
         """
         loc = self.localize(crange, mrates, brates, sduration, bgduration,
                             sc_pos, sc_quat, energies, sc_time, scat_opt)
@@ -263,37 +216,31 @@ class legacy_DoL(object):
 
     def localize(self, crange, mrates, brates, sduration, bgduration,
                  sc_pos, sc_quat, energies, sc_time, scat_opt):
-        r""" Perform the localization routine over all spectra
+        r""" Perform the localization routine over all spectra.
 
-        Parameters
-        ----------
-        crange : np.ndarray(2, int32)
-            Array of energy channel IDs chosen for localization
-        mrates : np.ndarry(ndet * nen, int32)
-            Array of measured detector counts in each energy channel
-        brates : np.ndarry(ndet * nen, int32)
-            Array of estimated background counts in each energy channel
-        sduration : float32
-            Timescale of measured detector counts
-        bgduration : float32
-            Timescale of estimated background counts
-        sc_pos : np.ndarray(float32)
-            Spacecraft position x,y,z coordinates
-        sc_quat : np.ndarray(4, float64)
-            Quaternion of the space craft. Last element is the scalar field.
-        energies : np.ndarray(nen + 1, float32)
-            Array with end points of energy channel bins
-        sc_time : int64
-            Spacecraft time in MET seconds
-        scat_opt : int32
-            Scattering option. 1 means include scattering when computing
-            the expected detector counts for a given spectrum. 0 means do
-            not include scattering when computing expected detector counts.
+        Args:
+            crange (np.ndarray(2, int32): Array of energy channel IDs chosen 
+                                          for localization
+            mrates (np.ndarry(``ndet`` * ``nen``, int32)):
+                Array of measured detector counts in each energy channel
+            brates (np.ndarry(``ndet`` * ``nen``, int32)):
+                Array of estimated background counts in each energy channel
+            sduration (float32): Timescale of measured detector counts
+            bgduration (float32): Timescale of estimated background counts
+            sc_pos (np.ndarray(float32)): Spacecraft position x, y, z 
+                                          coordinates
+            sc_quat (np.ndarray(4, float64)): Quaternion of the spacecraft. 
+                                              Last element is the scalar field.
+            energies (np.ndarray(``nen`` + 1, float32)): Array with end points 
+                                                         of energy channel bins
+            sc_time (int64): Spacecraft time in MET seconds
+            scat_opt (int32): Scattering option. 1 means include scattering when 
+                              computing the expected detector counts for a given 
+                              spectrum. 0 means do not include scattering when 
+                              computing expected detector counts.
 
-        Returns
-        -------
-        loc : dict
-            Dictionary object with information about best localization
+        Returns:
+            (dict): Dictionary object with information about best localization
         """
         # correct rates for detector deadtimes
         c_mrates, c_brates, cenergies, usedet, maxdet, signif, deadtime = \
@@ -382,22 +329,16 @@ class legacy_DoL(object):
     # END localize()
 
     def write_chi2grid(self, path, scx, scy, scz, sc_pos, chi2):
-        r""" Write grid of chi2 values on the sky to a text file
+        r"""Write grid of chi2 values on the sky to a text file.
 
-        Parameters
-        ----------
-        path : str
-            Path to output file
-        scx : np.ndarray(3, float64)
-            Vector along +x axis of spacecraft
-        scy : np.ndarray(3, float64)
-            Vector along +y axis of spacecraft
-        scz : np.ndarray(3, float64)
-            Vector along +z axis of spacecraft
-        sc_pos : np.ndarray(3, float64)
-            Spacecraft position
-        chi2 : np.ndarray(npoints, float32)
-            Grid of chi2 values on the sky
+        Args:
+            path (str): Path to output file
+            scx (np.ndarray(3, float64)): Vector along +x axis of spacecraft
+            scy (np.ndarray(3, float64)): Vector along +y axis of spacecraft
+            scz (np.ndarray(3, float64)): Vector along +z axis of spacecraft
+            sc_pos (np.ndarray(3, float64)): Spacecraft position
+            chi2 (np.ndarray(``npoints``, float32)): Grid of chi2 values on the 
+                                                     sky
         """
         # cartesian position vectors of every point on the sky
         pos = legacy_functions.ang_to_cart_zen(self.sky_grid[0], self.sky_grid[1])
@@ -422,14 +363,11 @@ class legacy_DoL(object):
     # END write_chi2grid()
 
     def write_summary(self, path, loc):
-        r""" Write summary text file with important info
+        r""" Write summary text file with important info.
 
-        Parameters
-        ----------
-        path : str
-            Path to output file
-        loc : dict
-            Dictionary with information about best localization
+        Args:
+            path (str): Path to output file
+            loc (dict): Dictionary with information about best localization
         """
         # gather the variables we'll need
         best, geo, sun = loc["best"], loc["geo"], loc["sun"]
@@ -463,7 +401,22 @@ class legacy_DoL(object):
     # END write_summary()
 
     def to_GbmHealPix(self, loc, frame, grid_nearest=True, **kwargs):
+        r""" Converts a DoL localization dictionary to a
+        :class:`~gdt.missions.fermi.gbm.localization.GbmHealPix` probability map
 
+        Args:
+            loc (dict): Dictionary containing a chi2 array returned by the
+                        :meth:`~gdt.missions.fermi.gbm.localization.dol.legacy_dol.legacy_DoL.eval` 
+                        method
+            frame (:class:`~gdt.missions.fermi.frame.FermiFrame`):
+                Frame object with spacecraft position and rotation
+            grid_nearest (bool): Perform approximate nearest pixel interpolation 
+                                 between chi2 grid and GbmHealPix map when True.
+
+        Returns:
+            (:class:`~gdt.missions.fermi.gbm.localization.GbmHealPix`):
+                GbmHealPix probability map describing the localization
+        """
         # get chi-squared values from best localization fit and spacecraft coord
         chi2 = loc["best"]["chi2"]
         az, zen = self.sky_grid
@@ -489,13 +442,7 @@ class legacy_DoL(object):
 
     @property
     def locrates(self):
-        r""" Function to return value of locrates property
-
-        Returns
-        -------
-        locrates : list
-            List containing the numpy tables for each spectral shape
-        """
+        r"""(list): List containing the numpy tables for each spectral shape"""
         return self._locrates
 
     # END locrates()
@@ -531,12 +478,10 @@ class legacy_DoL(object):
 
     def initialize_sky_grid(self, loctable):
         r""" Build grid of sky positions using grid_res resolution.
-        First find out how many points will fill grid = npoints
+        First find out how many points will fill grid = npoints.
 
-        Parameters
-        ----------
-        loctable : np.ndarray
-            Table from locrates file 
+        Args:
+            loctable (np.ndarray): Table from locrates file 
         """
         self.npoints = loctable.shape[1]
         self.sky_grid = loctable[0:2] / legacy_functions.legacy_arcmin2rad
@@ -545,12 +490,10 @@ class legacy_DoL(object):
     # END initialize_sky_grid()
 
     def stdout(self, loc):
-        r""" Routine to print standard output from DoL
+        r""" Routine to print standard output from DoL.
 
-        Parameters
-        ----------
-        loc : dict
-            Dictionary object from eval() with localization info
+        Args:
+            loc (dict): Dictionary object from eval() with localization info
         """
         # pick out some variables that we'll use frequently
         best, initial = loc["best"], loc["initial"]
@@ -620,12 +563,10 @@ class legacy_DoL(object):
     # END stdout()
 
     def display_nai_angles(self, ang):
-        r""" Function to show angles of NaI detectors relative to location
+        r""" Function to show angles of NaI detectors relative to location.
 
-        Parameters
-        ----------
-        ang : np.ndarray
-            array with detector angles
+        Args:
+            ang (np.ndarray): Array with detector angles
         """
         for j in range(self.nai_az.size):
             print("{0:9} {1:0<18.17} {2:0<10.9} {3:0<10.9}".format(
@@ -634,19 +575,14 @@ class legacy_DoL(object):
     # END display_nai_angles()
 
     def join_float(self, val, unit=None):
-        r""" Helper function to join float values into space separated str
+        r""" Helper function to join float values into space separated str.
             
-        Parameters
-        ----------
-        val : np.ndarray
-            Array of floating point values
-        unit : float32/64
-            Unit used for display string
+        Args:
+            val (np.ndarray): Array of floating point values
+            unit (float32/64): Unit used for display string
 
-        Returns
-        -------
-        s : str
-            String of values separated by spaces
+        Returns:
+            (str): String of values separated by spaces
         """
         if unit is None:
             return " ".join(["%8.4f" % i for i in val])

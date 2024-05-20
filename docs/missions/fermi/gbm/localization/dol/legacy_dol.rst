@@ -81,7 +81,9 @@ direct detector response to the provided spectrum. The :ref:`Legacy DoL Spectral
 provides summary of all available response files.
 
 
-Once initialized, localizations are performed using the ``eval()`` member function: 
+Once initialized, localizations are performed using the 
+:meth:`~gdt.missions.fermi.gbm.localization.dol.legacy_dol.legacy_DoL.eval` 
+method: 
 
     >>> loc = dol.eval(crange, src_counts, bg_counts,
     ...                avg_src_exposure, avg_bg_exposure,
@@ -204,12 +206,13 @@ While ``loc["best"]["err"]`` provides an approximate 68% containment error radiu
 it is often better to work with the full probability map computed from the ``chi2`` array given
 that GBM localizations can have asymmetries and long tails. This probability map is retrieved as a 
 :class:`~gdt.missions.fermi.gbm.localization.GbmHealPix` class by supplying the ``loc`` object 
-and a :class:`~gdt.missions.fermi.frame.FermiFrame` class to the ``to_GbmHealPix()`` member function
+and a :class:`~gdt.missions.fermi.frame.FermiFrame` class to the 
+:meth:`~gdt.missions.fermi.gbm.localization.dol.legacy_dol.legacy_DoL.to_GbmHealPix` method. 
 
     >>> healpix = dol.to_GbmHealPix(loc, frame)
 
-By default, the conversion performs a projection between the 1 degree sky grid
-used for the detector responses onto an NSIDE 64 healpix map. The healpix map is then upscaled
+By default, the conversion performs a projection between the 1-degree sky grid
+used for the detector responses onto an NSIDE 64 HEALPix map. The HEALPix map is then upscaled
 to NSIDE 128 in the final output. The projection is done using an approximate grid nearest
 technique but users can also specify the use of the exact nearest pixel with
 
@@ -296,7 +299,7 @@ positional arguments given in the same order as shown above instead of
 option flags.
 
 References:
-"""""""""""
+===========
 
 .. [1] `Band, D. L. et al. 1993, ApJ 413 281 <https://ui.adsabs.harvard.edu/abs/1993ApJ...413..281B>`_
 
