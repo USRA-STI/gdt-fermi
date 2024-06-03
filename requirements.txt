@@ -2,7 +2,7 @@ astro-gdt
 pyproj>=1.9.6
 numpy>=1.17.3
 scipy>=1.1.0
-matplotlib
+matplotlib==3.8.4
 astropy>=5.1
 healpy>=1.12.4
 pytest
