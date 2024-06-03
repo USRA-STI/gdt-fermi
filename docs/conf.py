@@ -48,6 +48,7 @@ napoleon_use_ivar = False
 napoleon_use_rtype = False
 numpydoc_show_class_members = False
 
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 mathjax_path="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"

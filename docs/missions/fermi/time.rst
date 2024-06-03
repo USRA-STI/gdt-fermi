@@ -56,5 +56,3 @@ Reference/API
 
 .. automodapi:: gdt.missions.fermi.time
    :inherited-members:
-
-
