@@ -37,37 +37,38 @@ from astropy.time.utils import day_frac
 
 __all__ = ['FermiSecTime', 'GbmBurstNumber', 'Time']
 
+
 class FermiSecTime(TimeFromEpoch):
     """Represents the number of seconds elapsed since Jan 1, 2001, 00:00:00 UTC,
     including leap seconds
     """
     name = 'fermi'
     """(str): Name of the mission"""
-    
-    unit = 1.0 / 86400 
+
+    unit = 1.0 / 86400
     """(float): unit in days"""
-    
+
     epoch_val = '2001-01-01 00:01:04.184'
     """(str): The epoch in Terrestrial Time"""
-    
+
     epoch_val2 = None
-    
+
     epoch_scale = 'tt'
     """(str): The scale of :attr:`epoch_val`"""
-    
+
     epoch_format = 'iso'
     """(str): Format of :attr:`epoch_val`"""
 
 
 class GbmBurstNumber(TimeUnique):
     """Represent date as Fermi GBM burst number"""
-    
+
     name = 'gbm_bn'
     """(str): The name of the time format"""
-    
-    bn_pattern = re.compile(r'^(?P<year>\d\d)(?P<month>\d\d)(?P<day>\d\d)(?P<frac>\d\d\d)$', re.I | re.S)
 
-    second_corrections = [
+    _bn_pattern = re.compile(r'^(?P<year>\d\d)(?P<month>\d\d)(?P<day>\d\d)(?P<frac>\d\d\d)$', re.I | re.S)
+
+    _second_corrections = [
         # 2008-01-01 00:00:00.000 UTC < x < 2009-01-01 00:00:00.000 UTC adjust seconds by 1
         (datetime.datetime(2008, 1, 1), datetime.datetime(2009, 1, 1), 1),
         # 2009-01-01 00:00:00.000 UTC < met <= 2009-01-13 00:00:00.000 UTC adjust seconds by 2
@@ -75,7 +76,7 @@ class GbmBurstNumber(TimeUnique):
     ]
 
     def _check_val_type(self, val1, val2):
-        if not all(self.bn_pattern.match(val) is not None for val in val1.flat):
+        if not all(self._bn_pattern.match(val) is not None for val in val1.flat):
             raise TypeError('Input values for {} class must be '
                             'burst numbers'.format(self.name))
         if val2 is not None:
@@ -84,14 +85,14 @@ class GbmBurstNumber(TimeUnique):
         return val1, None
 
     def set_jds(self, val1, val2):
-        """Convert burst numbers contained in val1 to jd1, jd2"""
+        """Convert burst number contained in val1 to jd1, jd2"""
         # Iterate through the datetime objects, getting year, month, etc.
         iterator = np.nditer([val1, None, None, None, None, None, None],
                              flags=['refs_ok', 'zerosize_ok'],
                              op_dtypes=[None] + 5 * [np.intc] + [np.double])
 
         for val, iy, im, iday, ihr, imin, dsec in iterator:
-            m = self.bn_pattern.match(str(val))
+            m = self._bn_pattern.match(str(val))
             if not m:
                 raise ValueError('burst number was not the correct format.')
 
@@ -112,7 +113,7 @@ class GbmBurstNumber(TimeUnique):
         self.jd1, self.jd2 = day_frac(jd1, jd2)
 
     def to_value(self, parent=None, out_subfmt=None):
-        """Convert to burst number"""
+        """Convert to string representation of GBM burst number"""
         if out_subfmt is not None:
             # Out_subfmt not allowed for this format, so raise the standard
             # exception by trying to validate the value.
@@ -150,13 +151,13 @@ class GbmBurstNumber(TimeUnique):
 
             # Adjust results to match the burst numbers issued early in the mission
             dt = datetime.datetime(iy, im, iday, ihr, imin, isec)
-            for beg_dt, end_dt, adj_secs in self.second_corrections:
+            for beg_dt, end_dt, adj_secs in self._second_corrections:
                 if beg_dt < dt <= end_dt:
                     # print(f'{beg_dt} < {dt} <= {end_dt}')
                     day_secs += adj_secs
             frac = min(int(round(day_secs / 86400 * 1000)), 999)
             out[...] = f'{iy - 2000:02d}{im:02d}{iday:02d}{frac:03d}'
 
-        return self.mask_if_needed(iterator.operands[-1])
+        return iterator.operands[-1]
 
     value = property(to_value)
