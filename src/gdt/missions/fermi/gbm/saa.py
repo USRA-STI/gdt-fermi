@@ -45,7 +45,6 @@ class GbmSaa(SouthAtlanticAnomaly):
                                       of SAA points in latitude/longitude
         """
         self.update(time)
-        super().__init__()
 
     def update(self, time: Time):
         """Update the SAA polygon points to the version used
@@ -75,3 +74,5 @@ class GbmSaa(SouthAtlanticAnomaly):
                 -90.300, -88.738, -84.000, -65.000, -45.000, -38.400,
                 -30.605, -11.999457706441582, 22.000]
 
+        # re-run init from base SAA class for sanity checks, array conversion
+        super().__init__()
