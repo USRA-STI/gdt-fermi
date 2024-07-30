@@ -28,51 +28,62 @@
 #
 from ..time import Time
 from gdt.core.geomagnetic import SouthAtlanticAnomaly
+from gdt.core.data_primitives import Range
 
-__all__ = ['GbmSaa']
+__all__ = ['GbmSaaPolygon1', 'GbmSaaPolygon2', 'GbmSaa', 'GbmSaaCollection']
 
-class GbmSaa(SouthAtlanticAnomaly):
-    """The coordinates of the GBM SAA boundary in latitude and East longitude.
-    Note that the boundary was updated on July 23, 2024 to support slightly
-    more GRB detections during O4b.
+class GbmSaaPolygon1(SouthAtlanticAnomaly):
+    """The coordinates of the GBM SAA boundary in latitude and East longitude
+     used from launch (0 seconds) until 19:15 UTC on July 23, 2024.
     """
+    _latitude = [-30.000, -19.867, -9.733, 0.400, 2.000, 2.000, -1.000,
+                 -6.155, -8.880, -14.220, -18.404, -30.000, -30.000]
+    _longitude = [33.900, 12.398, -9.103, -30.605, -38.400, -45.000, -65.000,
+                  -84.000, -89.200, -94.300, -94.300, -86.100, 33.900]
 
-    def __init__(self, time: Time):
-        """Constructor
+    time_range = Range(Time(0, format='fermi'),
+                       Time(743454905, format='fermi'))
+
+class GbmSaaPolygon2(SouthAtlanticAnomaly):
+    """The coordinates of the GBM SAA boundary in latitude and East longitude
+    used from 19:15 UTC on July 23, 2024 until mission end which uses a
+    placeholder value of Jan 1, 2050 for now.
+    """
+    _latitude = [-24.395, -30.000, -30.000, -30.000, -30.000, -24.060,
+                 -16.220, -8.638, -6.155, -1.000, 2.000, 2.000,
+                 -3.400, -19.570802973653127, -24.395]
+    _longitude = [22.000, 22.000, 0.000, -2.000, -86.100, -90.300,
+                  -90.300, -88.738, -84.000, -65.000, -45.000, -38.400,
+                  -30.605, -11.999457706441582, 22.000]
+
+    time_range = Range(Time(743454905, format='fermi'),
+                       Time(1546300805, format='fermi'))
+
+class GbmSaa(GbmSaaPolygon1):
+    """Class providing backwards compatibility for code written prior to v2.1.1
+    where the GbmSaa class defined GbmSaaPolygon1"""
+    pass
+
+class GbmSaaCollection():
+    """Collection of SAA boundary definitions"""
+    def __init__(self):
+        """Constructor"""
+        self.polygons = [GbmSaaPolygon1(), GbmSaaPolygon2()]
+        # Note: add sanity check for overlap of time ranges
+
+    def at(self, time: Time):
+        """Return the active SAA polygon for a given time.
 
         Args:
             time (astropy.time.Time): time for determining the set
                                       of SAA points in latitude/longitude
+
+        Returns:
+            :class:
         """
-        self.update(time)
+        for polygon in self.polygons:
+            if polygon.time_range.contains(time):
+                # return the first polygon that contains this time
+                return polygon
 
-    def update(self, time: Time):
-        """Update the SAA polygon points to the version used
-        at the given time.
-
-        Args:
-            time (astropy.time.Time): time for determining the set
-                                      of SAA points in latitude/longitude
-        """
-        if time < Time(743454905, format='fermi'):
-            # original SAA region used for the first 16 years of the mission
-            self._latitude = [
-                -30.000, -19.867, -9.733, 0.400, 2.000, 2.000, -1.000,
-                -6.155, -8.880, -14.220, -18.404, -30.000, -30.000]
-            self._longitude = [
-                33.900, 12.398, -9.103, -30.605, -38.400, -45.000, -65.000,
-                -84.000, -89.200, -94.300, -94.300, -86.100, 33.900]
-        else:
-            # SAA region made smaller on 2024-07-23T19:15:00 UTC to slightly
-            # increase the number of GRB detections per year
-            self._latitude = [
-                -24.395, -30.000, -30.000, -30.000, -30.000, -24.060,
-                -16.220, -8.638, -6.155, -1.000, 2.000, 2.000,
-                -3.400, -19.570802973653127, -24.395]
-            self._longitude = [
-                22.000, 22.000, 0.000, -2.000, -86.100, -90.300,
-                -90.300, -88.738, -84.000, -65.000, -45.000, -38.400,
-                -30.605, -11.999457706441582, 22.000]
-
-        # re-run init from base SAA class for sanity checks, array conversion
-        super().__init__()
+        raise ValueError(f"This collection of SAA polygons does not contain time {time}")
