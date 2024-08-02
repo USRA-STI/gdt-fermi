@@ -74,7 +74,7 @@ class GbmSaaCollection():
 
     def __init__(self):
         """Constructor"""
-        self.polygons = [GbmSaaPolygon1(), GbmSaaPolygon2()]
+        self._polygons = [GbmSaaPolygon1(), GbmSaaPolygon2()]
         self.sort()
 
     def at(self, time: Time):
@@ -103,6 +103,15 @@ class GbmSaaCollection():
         """
         return len(self.polygons)
 
+    @property
+    def polygons(self):
+        """Returns a list of polygons included in the collection
+
+        Returns:
+            (list)
+        """
+        return self._polygons
+
     def sort(self):
         """Sorts SAA polygons according to time periods"""
         high = [p._time_range._high for p in self.polygons]
@@ -122,4 +131,4 @@ class GbmSaaCollection():
 
             sorted_polygons.append(self.polygons[i])
 
-        self.polygons = sorted_polygons
+        self._polygons = sorted_polygons
