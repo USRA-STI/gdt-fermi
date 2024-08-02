@@ -28,9 +28,11 @@
 #
 
 import os
+import copy
 import numpy as np
 import unittest
 
+from astropy.time import TimeDelta
 from gdt.missions.fermi.time import Time
 from gdt.missions.fermi.gbm.saa import *
 
@@ -85,9 +87,41 @@ class TestGbmSaa(unittest.TestCase):
             self.assertListEqual(saa_collection.at(t).latitude.tolist(), poly.latitude.tolist())
             self.assertListEqual(saa_collection.at(t).longitude.tolist(), poly.longitude.tolist())
 
-   #def test_collection_sort(self):
+    def test_collection_sort(self):
 
-       
+        saa_collection = GbmSaaCollection()
 
+        # create copies of existing time ranges before modification
+        time_range0 = copy.deepcopy(saa_collection.polygons[0]._time_range)
+        time_range1 = copy.deepcopy(saa_collection.polygons[1]._time_range)
 
+        # check that polygons are sorted
+        for i in range(saa_collection.num_polygons - 1):
+            this_poly = saa_collection.polygons[i]
+            next_poly = saa_collection.polygons[i + 1]
+            self.assertTrue(next_poly._time_range._low > this_poly._time_range._low)
+            self.assertTrue(next_poly._time_range._high > this_poly._time_range._high)
 
+        # ensure we fail on duplicate time range
+        saa_collection.polygons[0]._time_range = time_range1
+        with self.assertRaises(ValueError):
+            saa_collection.sort()
+
+        # ensure we fail on overlapping low range
+        saa_collection.polygons[0]._time_range = time_range0
+        saa_collection.polygons[1]._time_range._low = time_range0._low
+        with self.assertRaises(ValueError):
+            saa_collection.sort()
+
+        # ensure we fail on overlapping high range
+        saa_collection.polygons[0]._time_range._high = time_range1._high
+        saa_collection.polygons[1]._time_range = time_range1
+        with self.assertRaises(ValueError):
+            saa_collection.sort()
+
+        # ensure we fail on overlapping mid range
+        delta = 0.5 * (time_range1._high.value - time_range1._low.value)
+        saa_collection.polygons[0]._time_range._high = time_range1._low + TimeDelta(delta, format='sec')
+        saa_collection.polygons[1]._time_range = time_range1
+        with self.assertRaises(ValueError):
+            saa_collection.sort()
