@@ -87,6 +87,11 @@ class TestGbmSaa(unittest.TestCase):
             self.assertListEqual(saa_collection.at(t).latitude.tolist(), poly.latitude.tolist())
             self.assertListEqual(saa_collection.at(t).longitude.tolist(), poly.longitude.tolist())
 
+        # ensure we fail at out-of-bounds time
+        bad_time = Time(-1, format='fermi')
+        with self.assertRaises(ValueError):
+            saa_collection.at(bad_time)
+
     def test_collection_sort(self):
 
         saa_collection = GbmSaaCollection()
