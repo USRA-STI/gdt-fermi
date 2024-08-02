@@ -26,6 +26,8 @@
 # implied. See the License for the specific language governing permissions and limitations under the
 # License.
 #
+import numpy as np
+
 from ..time import Time
 from gdt.core.geomagnetic import SouthAtlanticAnomaly
 from gdt.core.data_primitives import Range
@@ -69,7 +71,7 @@ class GbmSaaCollection():
     def __init__(self):
         """Constructor"""
         self.polygons = [GbmSaaPolygon1(), GbmSaaPolygon2()]
-        # Note: add sanity check for overlap of time ranges
+        self.polygons = self.sorted()
 
     def at(self, time: Time):
         """Return the active SAA polygon for a given time.
@@ -87,3 +89,39 @@ class GbmSaaCollection():
                 return polygon
 
         raise ValueError(f"This collection of SAA polygons does not contain time {time}")
+
+    @property
+    def num_polygons(self):
+        """Number of polygons included in the collection
+
+        Returns:
+            (int)
+        """
+        return len(self.polygons)
+
+    def sorted(self):
+        """Sorts SAA according to time periods
+
+        Returns:
+            (list)
+        """
+        high = [p.time_range._high for p in self.polygons]
+
+        sorted_polygons = []
+        for i in np.argsort(high):
+            low, high = self.polygons[i].time_range.as_tuple()
+
+            # sanity check to ensure the time range of this polygon
+            # does not overlap with another polygon. Note that the
+            # low end of the time range can equal the high end of
+            # the previous time range
+            for p in sorted_polygons:
+                if (p.time_range.contains(low) and low != p.time_range._high) \
+                    or p.time_range.contains(high):
+                    raise ValueError("Polygon time ranges overlap.")
+
+            sorted_polygons.append(self.polygons[i])
+
+
+        return sorted_polygons
+
