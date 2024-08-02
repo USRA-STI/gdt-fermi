@@ -125,3 +125,7 @@ class TestGbmSaa(unittest.TestCase):
         saa_collection.polygons[1]._time_range = time_range1
         with self.assertRaises(ValueError):
             saa_collection.sort()
+
+    def test_gbmsaa(self):
+        self.assertListEqual(GbmSaa().latitude.tolist(), GbmSaaPolygon1().latitude.tolist())
+        self.assertListEqual(GbmSaa().longitude.tolist(), GbmSaaPolygon1().longitude.tolist())
