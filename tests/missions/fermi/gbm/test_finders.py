@@ -106,6 +106,10 @@ class TestContinuousFinder(unittest.TestCase):
         finder = ContinuousFinder()
         self.finder.cd(Time(604741251.0, format='fermi'))
 
+
+@unittest.skipIf(
+    os.environ.get('SKIP_HEASARC_FTP_TESTS', False), 'Skipping HEASARC FTP tests'
+)
 class TestFtpFinders(unittest.TestCase):
     def test_trigger(self):
         finder = TriggerFtp()
