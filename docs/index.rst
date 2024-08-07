@@ -57,51 +57,29 @@ Getting Started
 Jupyter Notebook Tutorials
 ==========================
 
-* |Fermi GBM PHAII Data Tutorial:| PHAII data is one of the primary types of science data provided by GBM, and is temporally pre-binned. The two types of PHAII data are CSPEC and CTIME, where CSPEC has 128 energy channels and CTIME has 8 energy channels. Learn how to plot the lightcurves and count spectra of gamma-ray bursts using CSPEC and CTIME data.
+Jupyter notebooks can be found in the /notebooks directory.
 
-* |Fermi GBM TTE Data Tutorial:| TTE (Time-Tagged Event) data is one of the primary types of science data provided by GBM, and is temporally unbinned. Learn how to plot the lightcurves and count spectra of gamma-ray bursts using TTE data.
+* **Fermi GBM PHAII Data Tutorial:** PHAII data is one of the primary types of science data provided by GBM, and is temporally pre-binned. The two types of PHAII data are CSPEC and CTIME, where CSPEC has 128 energy channels and CTIME has 8 energy channels. Learn how to plot the lightcurves and count spectra of gamma-ray bursts using CSPEC and CTIME data.
 
-* |Fermi GBM Detector Responses Tutorial:| Detector response files allow you to compare a theoretical photon spectrum to an observed count spectrum. The two types of detector response files are rsp and rsp2 files, where rsp contain a single DRM (Detector Response Matrix), and rsp2 contain more than one DRM. Learn how to read, manipulate, and plot detector response 'rsp2' data.
+* **Fermi GBM TTE Data Tutorial:** TTE (Time-Tagged Event) data is one of the primary types of science data provided by GBM, and is temporally unbinned. Learn how to plot the lightcurves and count spectra of gamma-ray bursts using TTE data.
 
-* |Fermi GBM Position History Data Tutorial:| Position history (POSHIST) data contains the spacecraft location in orbit and pointing information for an entire day. Learn how to open, read, and plot position history data.
+* **Fermi GBM Detector Responses Tutorial:** Detector response files allow you to compare a theoretical photon spectrum to an observed count spectrum. The two types of detector response files are rsp and rsp2 files, where rsp contain a single DRM (Detector Response Matrix), and rsp2 contain more than one DRM. Learn how to read, manipulate, and plot detector response 'rsp2' data.
 
-* |Fermi GBM Trigger Data Tutorial:| Trigger data (TRIGDAT) was designed to contain the minimum amount of data required for rapid on-ground characterization and localization of triggers. It contains pre-binned lightcurve data for each detector along with spacecraft position and attitude information. Learn how to plot the lightcurves of gamma-ray bursts and the positional data of the Fermi instrument using trigger data.
+* **Fermi GBM Position History Data Tutorial:** Position history (POSHIST) data contains the spacecraft location in orbit and pointing information for an entire day. Learn how to open, read, and plot position history data.
 
-* |Fermi GBM Localizations and Skymaps Tutorial:| GBM produces localizations for GRBs that contain the best-modeled systematic uncertainty in the localization, individual detector pointings, and the geocenter location as observed by Fermi. Localization information is contained in HEALPix FITS files. Learn how to access localizations for gamma-ray bursts and to plot skymaps, both of the localizations and of other known points, using HEALPix files.
+* **Fermi GBM Trigger Data Tutorial:** Trigger data (TRIGDAT) was designed to contain the minimum amount of data required for rapid on-ground characterization and localization of triggers. It contains pre-binned lightcurve data for each detector along with spacecraft position and attitude information. Learn how to plot the lightcurves of gamma-ray bursts and the positional data of the Fermi instrument using trigger data.
 
-* |Finding GBM Data Tutorial:| GBM Data is hosted publicly on the HEASARC FTP server via the Fermi Science Support Center, and is stored in a consistent directory structure. Learn how to earch the HEASARC FTP server for trigger data and continuous data, as well as how to search the GBM catalogs.
+* **Fermi GBM Localizations and Skymaps Tutorial:** GBM produces localizations for GRBs that contain the best-modeled systematic uncertainty in the localization, individual detector pointings, and the geocenter location as observed by Fermi. Localization information is contained in HEALPix FITS files. Learn how to access localizations for gamma-ray bursts and to plot skymaps, both of the localizations and of other known points, using HEALPix files.
 
-* |Reduction and Export Tutorial:| Often, we would like to reduce GBM data and model the background so that we can examine the source spectrum. The following workflow will show you how you can do this and export the relevant data. Learn how to plot a lightcurve, complete a background fit, and write and export the results.
+* **Finding GBM Data Tutorial:** GBM Data is hosted publicly on the HEASARC FTP server via the Fermi Science Support Center, and is stored in a consistent directory structure. Learn how to earch the HEASARC FTP server for trigger data and continuous data, as well as how to search the GBM catalogs.
 
-* |Spectral Analysis Tutorial:| Often, one would like to perform a spectral fit on GBM data. The following workflow will guide you through a simple example of this process. Learn how to fit GBM spectral data.
+* **Reduction and Export Tutorial:** Often, we would like to reduce GBM data and model the background so that we can examine the source spectrum. The following workflow will show you how you can do this and export the relevant data. Learn how to plot a lightcurve, complete a background fit, and write and export the results.
 
-* |Fermi GBM Spectral Catalog Data Tutorial:| GBM provides standard spectral fits for each GRB triggered on-board, which are hosted as Spectral Catalog (SCat) files that contain data such as fit parameters, uncertainties, fluxes/fluences, fit statistic, and covariance. Learn how to download, access, and manipulate SCat data.
+* **Spectral Analysis Tutorial:** Often, one would like to perform a spectral fit on GBM data. The following workflow will guide you through a simple example of this process. Learn how to fit GBM spectral data.
 
-* |Data Primitives Tutorial:| Data primitives are the data classes that define the datatypes within the GDT at the most basic level. They handle the properties and manipulation of the fundamental types of data that GBM produces. Learn how to understand and manipulate the data primitives used in the Fermi Gamma-Ray Tools (GDT) toolkit.
+* **Fermi GBM Spectral Catalog Data Tutorial:** GBM provides standard spectral fits for each GRB triggered on-board, which are hosted as Spectral Catalog (SCat) files that contain data such as fit parameters, uncertainties, fluxes/fluences, fit statistic, and covariance. Learn how to download, access, and manipulate SCat data.
 
-
-.. |Fermi GBM PHAII Data Tutorial:| replace::
-   :download:`Fermi GBM PHAII Data Tutorial: <../notebooks/Fermi_GBM_PHAII_Data_Tutorial.ipynb>`
-.. |Fermi GBM TTE Data Tutorial:| replace::
-   :download:`Fermi GBM TTE Data Tutorial: <../notebooks/Fermi_GBM_TTE_Data_Tutorial.ipynb>`
-.. |Fermi GBM Detector Responses Tutorial:| replace::
-   :download:`Fermi GBM Detector Responses Tutorial: <../notebooks/Fermi_GBM_Detector_Responses_Tutorial.ipynb>`
-.. |Fermi GBM Position History Data Tutorial:| replace::
-   :download:`Fermi GBM Position History Data Tutorial: <../notebooks/Fermi_GBM_Position_History_Data_Tutorial.ipynb>`
-.. |Fermi GBM Trigger Data Tutorial:| replace::
-   :download:`Fermi GBM Trigger Data Tutorial: <../notebooks/Fermi_GBM_Trigger_Data_Tutorial.ipynb>`
-.. |Fermi GBM Localizations and Skymaps Tutorial:| replace::
-   :download:`Fermi GBM Localizations and Skymaps Tutorial: <../notebooks/Fermi_GBM_Localizations_and_Skymaps_Tutorial.ipynb>`
-.. |Finding GBM Data Tutorial:| replace::
-   :download:`Finding GBM Data Tutorial: <../notebooks/Finding_GBM_Data_Tutorial.ipynb>`
-.. |Reduction and Export Tutorial:| replace::
-   :download:`Reduction and Export Tutorial: <../notebooks/Reduction_and_Export_Tutorial.ipynb>`
-.. |Spectral Analysis Tutorial:| replace::
-   :download:`Spectral Analysis Tutorial: <../notebooks/Spectral_Analysis_Tutorial.ipynb>`
-.. |Fermi GBM Spectral Catalog Data Tutorial:| replace::
-   :download:`Fermi GBM Spectral Catalog Data Tutorial: <../notebooks/Fermi_GBM_Spectral_Catalog_Data_Tutorial.ipynb>`
-.. |Data Primitives Tutorial:| replace::
-   :download:`Data Primitives Tutorial: <../notebooks/Data_Primitives_Tutorial.ipynb>`
+* **Data Primitives Tutorial:** Data primitives are the data classes that define the datatypes within the GDT at the most basic level. They handle the properties and manipulation of the fundamental types of data that GBM produces. Learn how to understand and manipulate the data primitives used in the Fermi Gamma-Ray Tools (GDT) toolkit.
 
 ******************
 User Documentation
