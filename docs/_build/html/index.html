@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Welcome to Fermi Gamma-ray Data Tools Documentation! &#8212; The Gamma-ray Data Tools 2.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-astropy.css?v=cfc02a30" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" href="_static/override.css" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=841abef3"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+    <link rel="icon" href="_static/gdt_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+
+  </head><body>
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="#"><span id="logotext1">gdt</span><span id="logotext2">-fermi</span><span id="logotext3">:docs</span></a>
+  <ul>
+    
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="genindex.html">Index</a></li>
+    <li><a title="Module Index" href="py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="install.html" title="Installation">
+	  next &raquo;
+	</a>
+      </li>
+      <li>
+	<a href="#">The Gamma-ray Data Tools 2.1.1 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="welcome-to-fermi-gamma-ray-data-tools-documentation">
+<span id="gdt-fermi"></span><h1>Welcome to Fermi Gamma-ray Data Tools Documentation!<a class="headerlink" href="#welcome-to-fermi-gamma-ray-data-tools-documentation" title="Link to this heading">¶</a></h1>
+<figure class="align-default">
+<img alt="_images/gdt-fermi_logo.png" src="_images/gdt-fermi_logo.png" />
+</figure>
+<p>The Fermi Gamma-ray Data Tools (GDT) is a toolkit for Fermi data built on the
+<a class="reference external" href="https://astro-gdt.readthedocs.io/en/latest/index.html#gdt-core" title="(in The Gamma-ray Data Tools v2.0.4)"><span class="xref std std-ref">GDT Core Package</span></a> and is the next iteration of the
+<a class="reference external" href="https://fermi.gsfc.nasa.gov/ssc/data/analysis/gbm/gbm_data_tools/gdt-docs">Fermi GBM Data Tools</a>.</p>
+<p>The Fermi Gamma-ray Space Telescope was launched on June 11, 2008 and contains
+two intruments: the Large Area Telescope (LAT) surveying the sky in the
+~20 MeV–300 GeV energy range, and the Gamma-ray Burst Monitor (GBM) observing
+the full unocculted sky with 14 individual detectors from ~8 keV–40 MeV.
+Currently the toolkit services all Fermi GBM public data, and a future version
+will incorporate support for some Fermi LAT data.</p>
+<p class="rubric">Citing</p>
+<p>If you use the Fermi Gamma-ray Data Tools in your research and publications,
+we would definitely appreciate an appropriate acknowledgment and citation! We
+suggest the following BibTex:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@misc</span><span class="p">{</span><span class="n">GDT</span><span class="o">-</span><span class="n">Fermi</span><span class="p">,</span>
+      <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Adam</span> <span class="n">Goldstein</span> <span class="ow">and</span> <span class="n">William</span> <span class="n">H</span><span class="o">.</span> <span class="n">Cleveland</span> <span class="ow">and</span> <span class="n">Daniel</span> <span class="n">Kocevski</span><span class="p">},</span>
+      <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Fermi</span> <span class="n">Gamma</span><span class="o">-</span><span class="n">ray</span> <span class="n">Data</span> <span class="n">Tools</span><span class="p">:</span> <span class="n">v2</span><span class="mf">.0.0</span><span class="p">},</span>
+      <span class="n">year</span> <span class="o">=</span> <span class="mi">2023</span><span class="p">,</span>
+      <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">USRA</span><span class="o">-</span><span class="n">STI</span><span class="o">/</span><span class="n">gdt</span><span class="o">-</span><span class="n">fermi</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p class="rubric">Additional Resources</p>
+<p>The Fermi Science Support Center is a fantastic resource for all things Fermi.
+Specifically, for GBM, a lot of useful information about the data products can
+be found <a class="reference external" href="https://fermi.gsfc.nasa.gov/ssc/data/access/gbm/">here</a>.  For
+questions, bug reports, and comments, please visit the
+<a class="reference external" href="https://fermi.gsfc.nasa.gov/ssc/help/">Fermi Help Desk</a>.</p>
+<p class="rubric">Acknowledgments</p>
+<p>The Fermi Gamma-ray Data Tools were partially funded by the Fermi Guest Investigator
+program (NNH18ZDA001N) and by Cooperative Agreement 80MSFC17M0022.</p>
+</section>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+</ul>
+</div>
+<section id="jupyter-notebook-tutorials">
+<h2>Jupyter Notebook Tutorials<a class="headerlink" href="#jupyter-notebook-tutorials" title="Link to this heading">¶</a></h2>
+<p>Jupyter notebooks can be found in the /notebooks directory.</p>
+<ul class="simple">
+<li><p><strong>Fermi GBM PHAII Data Tutorial:</strong> PHAII data is one of the primary types of science data provided by GBM, and is temporally pre-binned. The two types of PHAII data are CSPEC and CTIME, where CSPEC has 128 energy channels and CTIME has 8 energy channels. Learn how to plot the lightcurves and count spectra of gamma-ray bursts using CSPEC and CTIME data.</p></li>
+<li><p><strong>Fermi GBM TTE Data Tutorial:</strong> TTE (Time-Tagged Event) data is one of the primary types of science data provided by GBM, and is temporally unbinned. Learn how to plot the lightcurves and count spectra of gamma-ray bursts using TTE data.</p></li>
+<li><p><strong>Fermi GBM Detector Responses Tutorial:</strong> Detector response files allow you to compare a theoretical photon spectrum to an observed count spectrum. The two types of detector response files are rsp and rsp2 files, where rsp contain a single DRM (Detector Response Matrix), and rsp2 contain more than one DRM. Learn how to read, manipulate, and plot detector response ‘rsp2’ data.</p></li>
+<li><p><strong>Fermi GBM Position History Data Tutorial:</strong> Position history (POSHIST) data contains the spacecraft location in orbit and pointing information for an entire day. Learn how to open, read, and plot position history data.</p></li>
+<li><p><strong>Fermi GBM Trigger Data Tutorial:</strong> Trigger data (TRIGDAT) was designed to contain the minimum amount of data required for rapid on-ground characterization and localization of triggers. It contains pre-binned lightcurve data for each detector along with spacecraft position and attitude information. Learn how to plot the lightcurves of gamma-ray bursts and the positional data of the Fermi instrument using trigger data.</p></li>
+<li><p><strong>Fermi GBM Localizations and Skymaps Tutorial:</strong> GBM produces localizations for GRBs that contain the best-modeled systematic uncertainty in the localization, individual detector pointings, and the geocenter location as observed by Fermi. Localization information is contained in HEALPix FITS files. Learn how to access localizations for gamma-ray bursts and to plot skymaps, both of the localizations and of other known points, using HEALPix files.</p></li>
+<li><p><strong>Finding GBM Data Tutorial:</strong> GBM Data is hosted publicly on the HEASARC FTP server via the Fermi Science Support Center, and is stored in a consistent directory structure. Learn how to earch the HEASARC FTP server for trigger data and continuous data, as well as how to search the GBM catalogs.</p></li>
+<li><p><strong>Reduction and Export Tutorial:</strong> Often, we would like to reduce GBM data and model the background so that we can examine the source spectrum. The following workflow will show you how you can do this and export the relevant data. Learn how to plot a lightcurve, complete a background fit, and write and export the results.</p></li>
+<li><p><strong>Spectral Analysis Tutorial:</strong> Often, one would like to perform a spectral fit on GBM data. The following workflow will guide you through a simple example of this process. Learn how to fit GBM spectral data.</p></li>
+<li><p><strong>Fermi GBM Spectral Catalog Data Tutorial:</strong> GBM provides standard spectral fits for each GRB triggered on-board, which are hosted as Spectral Catalog (SCat) files that contain data such as fit parameters, uncertainties, fluxes/fluences, fit statistic, and covariance. Learn how to download, access, and manipulate SCat data.</p></li>
+<li><p><strong>Data Primitives Tutorial:</strong> Data primitives are the data classes that define the datatypes within the GDT at the most basic level. They handle the properties and manipulation of the fundamental types of data that GBM produces. Learn how to understand and manipulate the data primitives used in the Fermi Gamma-Ray Tools (GDT) toolkit.</p></li>
+</ul>
+</section>
+</section>
+<section id="user-documentation">
+<h1>User Documentation<a class="headerlink" href="#user-documentation" title="Link to this heading">¶</a></h1>
+<section id="fermi-definitions">
+<h2>Fermi Definitions<a class="headerlink" href="#fermi-definitions" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/time.html">Fermi Mission Epoch  (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.time</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/frame.html">Fermi Spacecraft Frame (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.frame</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/mcilwainl.html">McIlwain L Parameter for Fermi (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.mcilwainl</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/plot.html">Fermi-specific Plot Classes (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.plot</span></code>)</a></li>
+</ul>
+</div>
+</section>
+<section id="fermi-gbm">
+<h2>Fermi GBM<a class="headerlink" href="#fermi-gbm" title="Link to this heading">¶</a></h2>
+<section id="instrument-definitions">
+<h3>Instrument Definitions<a class="headerlink" href="#instrument-definitions" title="Link to this heading">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/detectors.html">Fermi GBM Detector Definitions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.detectors</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/collection.html">Fermi GBM Data Collections (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.collections</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/saa.html">Fermi GBM SAA Boundary Definition (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.saa</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/headers.html">Fermi GBM FITS Headers (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.headers</span></code>)</a></li>
+</ul>
+</div>
+</section>
+<section id="data-types">
+<h3>Data Types<a class="headerlink" href="#data-types" title="Link to this heading">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/phaii.html">Fermi GBM PHAII Data (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.phaii</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/tte.html">Fermi GBM TTE Data (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.tte</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/response.html">Fermi GBM Detector Responses (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.response</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/localization/localization.html">Fermi GBM Localizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/localization/dol/dol.html">Fermi GBM Localizations using the DoL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/trigdat.html">Fermi GBM Trigger Data (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.trigdat</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/poshist.html">Fermi GBM Position/Attitude History Data (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.poshist</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/scat.html">Fermi GBM Spectral Fits Data (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.scat</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/tcat.html">Fermi GBM Trigger Catalog Data (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.tcat</span></code>)</a></li>
+</ul>
+</div>
+</section>
+<section id="data-finders-and-catalogs">
+<h3>Data Finders and Catalogs<a class="headerlink" href="#data-finders-and-catalogs" title="Link to this heading">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/finders.html">Fermi GBM Data Finders (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.finders</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="missions/fermi/gbm/catalogs.html">Fermi GBM Catalogs (<code class="xref py py-mod docutils literal notranslate"><span class="pre">gdt.missions.fermi.gbm.catalogs</span></code>)</a></li>
+</ul>
+</div>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="license">
+<h1>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
+</ul>
+</div>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Welcome to Fermi Gamma-ray Data Tools Documentation!</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li><a class="reference internal" href="#jupyter-notebook-tutorials">Jupyter Notebook Tutorials</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#user-documentation">User Documentation</a><ul>
+<li><a class="reference internal" href="#fermi-definitions">Fermi Definitions</a></li>
+<li><a class="reference internal" href="#fermi-gbm">Fermi GBM</a><ul>
+<li><a class="reference internal" href="#instrument-definitions">Instrument Definitions</a></li>
+<li><a class="reference internal" href="#data-types">Data Types</a></li>
+<li><a class="reference internal" href="#data-finders-and-catalogs">Data Finders and Catalogs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#license">License</a><ul>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="install.html"
+                          title="next chapter">Installation</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="_sources/index.rst.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright .<br/>
+    Created using <a href="http://www.sphinx-doc.org/en/stable/">Sphinx</a> 7.4.7. &nbsp;
+  </p>
+</footer>
+  </body>
+</html>
