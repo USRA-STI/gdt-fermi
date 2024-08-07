@@ -35,8 +35,8 @@ directory using the :class:`~gdt.missions.fermi.gbm.finders.TriggerFinder` class
 GBM burst number 170817529, which corresponds to GRB 170817A.
 
     >>> from gdt.missions.fermi.gbm.finders import TriggerFinder
-    >>> ftp = TriggerFinder("170817529")
-    >>> ftp.get_trigdat(".")
+    >>> finder = TriggerFinder("170817529")
+    >>> finder.get_trigdat(".")
 
 Next we open the ``glg_trigdat_all_bn170817529_v01.fit`` file using the :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` class
 
