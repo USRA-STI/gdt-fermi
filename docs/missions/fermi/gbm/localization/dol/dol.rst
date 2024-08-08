@@ -31,12 +31,12 @@ and :class:`~gdt.missions.fermi.gbm.poshist.GbmPosHist` combination will work as
 are binned into the same energy bins as the :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` files.
 
 We begin data preparation by downloading the trigdat file ``glg_trigdat_all_bn170817529_v01.fit`` to our local 
-directory using the :class:`~gdt.missions.fermi.gbm.finders.TriggerFtp` class initialized with
+directory using the :class:`~gdt.missions.fermi.gbm.finders.TriggerFinder` class initialized with
 GBM burst number 170817529, which corresponds to GRB 170817A.
 
-    >>> from gdt.missions.fermi.gbm.finders import TriggerFtp
-    >>> ftp = TriggerFtp("170817529")
-    >>> ftp.get_trigdat(".")
+    >>> from gdt.missions.fermi.gbm.finders import TriggerFinder
+    >>> finder = TriggerFinder("170817529")
+    >>> finder.get_trigdat(".")
 
 Next we open the ``glg_trigdat_all_bn170817529_v01.fit`` file using the :class:`~gdt.missions.fermi.gbm.trigdat.Trigdat` class
 

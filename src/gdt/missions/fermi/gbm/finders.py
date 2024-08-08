@@ -27,12 +27,12 @@
 # License.
 #
 import os
-from gdt.core.heasarc import FtpFinder
+from gdt.core.heasarc import BaseFinder
 
-__all__ = ['TriggerFtp', 'ContinuousFtp']
+__all__ = ['TriggerFinder', 'ContinuousFinder', 'TriggerFtp', 'ContinuousFtp']
 
-class GbmFinder(FtpFinder):
-    """Subclassing FtpFinder to enable _file_filter() to take a list of
+class GbmFinder(BaseFinder):
+    """Subclassing BaseFinder to enable _file_filter() to take a list of
     GBM detectors.
     """    
     def _file_filter(self, file_list, filetype, extension, dets=None):
@@ -59,16 +59,17 @@ class GbmFinder(FtpFinder):
         return files
     
 
-class TriggerFtp(GbmFinder):
-    """A class that interfaces with the HEASARC FTP trigger directories.
+class TriggerFinder(GbmFinder):
+    """A class that interfaces with the HEASARC trigger directories.
     An instance of this class will represent the available files associated
     with a single trigger.
     
     An instance can be created without a trigger number, however a trigger
     number will need to be set by :meth:`cd(tnum) <cd>` to query and download files.
     An instance can also be changed from one trigger number to another without
-    having to create a new instance.  If multiple instances are created and
-    exist simultaneously, they will all use a single FTP connection.
+    having to create a new instance.  If multiple instances are created with
+    the keyword protocol='FTP' and exist simultaneously, they will all use a
+    single FTP connection.
         
     Parameters:
         tnum (str, optional): A valid trigger number
@@ -338,13 +339,13 @@ class TriggerFtp(GbmFinder):
         return self._file_filter(self.files, 'tte', 'fit')
 
     def _construct_path(self, str_trigger_num):
-        """Constructs the FTP path for a trigger
+        """Constructs the path for a trigger
         
         Args:
             str_trigger_num (str): The trigger number
 
         Returns:
-            str: The path of the FTP directory for the trigger
+            str: The path of the directory for the trigger
         """
         year = '20' + str_trigger_num[0:2]
         path = os.path.join(self._root, year, 'bn' + str_trigger_num,
@@ -352,16 +353,29 @@ class TriggerFtp(GbmFinder):
         return path
 
 
-class ContinuousFtp(GbmFinder):
-    """A class that interfaces with the HEASARC FTP continuous daily data
+class TriggerFtp(TriggerFinder):
+    """Class providing backwards compatibility for code written prior to v2.0.5
+    where the TriggerFtp handled interactions with triggered data.
+
+    Parameters:
+        args: The set of parameters needed to define the data path
+        **kwargs: Options passed to :class:`TriggerFinder` class
+    """
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        super().__init__(*args, protocol='FTP', **kwargs)
+
+
+class ContinuousFinder(GbmFinder):
+    """A class that interfaces with the HEASARC continuous daily data
     directories. An instance of this class will represent the available files 
     associated with a single day.
     
     An instance can be created without a time, however a time will need to be 
     set by :meth:`cd(time) <cd>` to query and download files. An instance can also be 
     changed from one time to another without having to create a new instance.  
-    If multiple instances are created and exist simultaneously, they will all 
-    use a single FTP connection.
+    If multiple instances are created with the keyword protocol='FTP' and exist 
+    simultaneously, they will all use a single FTP connection.
     
  
     Parameters:
@@ -524,13 +538,13 @@ class ContinuousFtp(GbmFinder):
         return files
 
     def _construct_path(self, met_obj):
-        """Constructs the FTP path for antime
+        """Constructs the path for a time
         
         Args:
             met_obj (:class:`.time.Met`): The MET time object
 
         Returns:
-            str: The path of the FTP directory for the time
+            str: The path of the directory for the time
         """
         path = os.path.join(self._root, met_obj.datetime.strftime('%Y/%m/%d'),
                             'current')
@@ -549,3 +563,16 @@ class ContinuousFtp(GbmFinder):
         id = self._args[0].strftime('%Y%m%d_%Hz')[2:]
         files = [f for f in files if id in f]
         return files
+
+
+class ContinuousFtp(ContinuousFinder):
+    """Class providing backwards compatibility for code written prior to v2.0.5
+    where the ContinuousFtp handled interactions with continuous data.
+
+    Parameters:
+        args: The set of parameters needed to define the data path
+        **kwargs: Options passed to :class:`ContinuousFinder` class
+    """
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        super().__init__(*args, protocol='FTP', **kwargs)

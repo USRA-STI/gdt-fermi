@@ -1,15 +1,17 @@
 .. _gbm-finders:
 .. |TriggerFtp| replace:: :class:`~gdt.missions.fermi.gbm.finders.TriggerFtp`
 .. |ContinuousFtp| replace:: :class:`~gdt.missions.fermi.gbm.finders.ContinuousFtp`
+.. |TriggerFinder| replace:: :class:`~gdt.missions.fermi.gbm.finders.TriggerFinder`
+.. |ContinuousFinder| replace:: :class:`~gdt.missions.fermi.gbm.finders.ContinuousFinder`
 
 **************************************************************
 Fermi GBM Data Finders (:mod:`gdt.missions.fermi.gbm.finders`)
 **************************************************************
 A natural question may be: "Where do I find the data I need?" Well, you're in 
 luck, because this will show you how to find the data you seek. GBM Data is 
-hosted publicly on the HEASARC FTP server via the Fermi Science Support Center, 
+hosted publicly on the HEASARC servers via the Fermi Science Support Center,
 and the data are stored in a consistent directory structure. But instead of 
-having to navigate a winding maze of FTP directories, we provide a couple of 
+having to navigate a winding maze of HTTPS and FTP directories, we provide a couple of
 classes built to retrieve the data you want. First, you need to decide if you 
 want trigger data (say, from a GRB) or continuous data. 
 
@@ -19,9 +21,10 @@ Finding Triggered GBM Data
 Let's start with trigger data, and assume you know the trigger number you're 
 interested in (190114873):
 
-    >>> from gdt.missions.fermi.gbm.finders import TriggerFtp
-    >>> trig_finder = TriggerFtp('190114873')
-    <TriggerFtp: 190114873>
+    >>> from gdt.missions.fermi.gbm.finders import TriggerFinder
+    >>> trig_finder = TriggerFinder('190114873')
+    >>> trig_finder
+    <TriggerFinder: 190114873>
     >>> trig_finder.num_files
     122
 
@@ -65,11 +68,11 @@ CSPEC data?
      'glg_cspec_nb_bn190114873_v02.rsp']
 
 What if we want to move on to another trigger? You don't have to create a new 
-|TriggerFTP| object, you can just used ``cd()``:
+|TriggerFinder| object, you can just used ``cd()``:
 
     >>> trig_finder.cd('170817529')
     >>> trig_finder
-    <TriggerFtp: 170817529>
+    <TriggerFinder: 170817529>
     >>> trig_finder.num_files
     128
 
@@ -94,15 +97,15 @@ Finding Continuous GBM Data
 Now we want some continuous data. There aren't any trigger numbers for 
 continuous data. Continuous CTIME and CSPEC are available in files that cover 
 a whole day (in UTC) and TTE are offered in hourly files. To find the data you 
-need, instead of a trigger number, you need to create a |ContinuousFtp|
+need, instead of a trigger number, you need to create a |ContinuousFinder|
 object by specifying a time using Astropy Time:
 
-    >>> from gdt.missions.fermi.gbm.finders import ContinuousFtp
+    >>> from gdt.missions.fermi.gbm.finders import ContinuousFinder
     >>> from gdt.missions.fermi.time import Time
     >>> time = Time(587683338.0, format='fermi')
-    >>> cont_finder = ContinuousFtp(time)
+    >>> cont_finder = ContinuousFinder(time)
     >>> cont_finder
-    <ContinuousFtp: 587683338.0>
+    <ContinuousFinder: 587683338.0>
     >>> cont_finder.num_files
     379
 
@@ -156,8 +159,38 @@ Now how about downloading the position history file for this time:
     glg_poshist_all_170817_v01.fit [==============================] 100.00%
 
 
-See :external:ref:`The FtpFinder Class<core-heasarc-finder>` for more details 
+See :external:ref:`The BaseFinder Class<core-heasarc-finder>` for more details
 on using data finders.
+
+Backwards Compatibility
+=======================
+
+The |TriggerFtp| and |ContinuousFtp| classes inherit from the |TriggerFinder|
+and |ContinuousFinder| classes, respectively, to define identical FTP support
+as the original TriggerFtp and ContinuousFtp classes from API version 2.1.1
+and earlier. Existing code that depends on these classes will still work as
+intended, but we recommend migrating to the new finder classes given their
+support for HTTPS file transfers. HTTPS has wider support across secure
+networks and HEASARC's HTTPS servers have higher reliability.
+
+Examples:
+
+    >>> from gdt.missions.fermi.gbm.finders import TriggerFtp
+    >>> trig_finder = TriggerFtp('190114873')
+    >>> trig_finder
+    <TriggerFtp: 190114873>
+    >>> trig_finder.num_files
+    122
+
+    >>> from gdt.missions.fermi.gbm.finders import ContinuousFtp
+    >>> from gdt.missions.fermi.time import Time
+    >>> time = Time(587683338.0, format='fermi')
+    >>> cont_finder = ContinuousFtp(time)
+    >>> cont_finder
+    <ContinuousFtp: 587683338.0>
+    >>> cont_finder.num_files
+    379
+
 
 Reference/API
 =============
