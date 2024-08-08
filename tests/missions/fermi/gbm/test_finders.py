@@ -37,10 +37,10 @@ from gdt.missions.fermi.gbm.finders import *
 download_dir = data_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-class TestTriggerFtp(unittest.TestCase):
+class TestTriggerFinder(unittest.TestCase):
     
     def setUp(self):
-        self.finder = TriggerFtp()
+        self.finder = TriggerFinder()
     
     def test_set_trigger(self):
         self.finder.cd('080916009')
@@ -71,9 +71,9 @@ class TestTriggerFtp(unittest.TestCase):
         [os.remove(os.path.join(download_dir, file)) for file in cat_files]
 
 
-class TestContinuousFtp(unittest.TestCase):
+class TestContinuousFinder(unittest.TestCase):
     def setUp(self):
-        self.finder = ContinuousFtp()
+        self.finder = ContinuousFinder()
     
     def test_set_time(self):
         self.finder.cd(Time(604741251.0, format='fermi'))
@@ -102,7 +102,23 @@ class TestContinuousFtp(unittest.TestCase):
                 pass
     
     def test_reconnect(self):
-        finder = ContinuousFtp()
-        finder = ContinuousFtp()
+        finder = ContinuousFinder()
+        finder = ContinuousFinder()
         self.finder.cd(Time(604741251.0, format='fermi'))
 
+
+@unittest.skipIf(
+    os.environ.get('SKIP_HEASARC_FTP_TESTS', False), 'Skipping HEASARC FTP tests'
+)
+class TestFtpFinders(unittest.TestCase):
+    def test_trigger(self):
+        finder = TriggerFtp()
+        finder.cd('080916009')
+        self.assertEqual(finder.num_files, 109)
+        finder.cd('170817529')
+        self.assertEqual(finder.num_files, 128)
+
+    def test_continuous(self):
+        finder = ContinuousFtp()
+        finder.cd(Time(604741251.0, format='fermi'))
+        self.assertEqual(finder.num_files, 379)
