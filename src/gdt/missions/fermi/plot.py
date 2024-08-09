@@ -253,7 +253,7 @@ class McIlwainL(PlotElement):
     def _make_colorbar(self, ax, artist):
         cb = plt.colorbar(artist, label='McIlwain L', ax=ax, shrink=0.6,
                           pad=0.2, orientation='horizontal')
-        cb.draw_all()
+        cb._draw_all()
         return cb
 
     def __repr__(self):
