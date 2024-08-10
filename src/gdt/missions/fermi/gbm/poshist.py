@@ -45,23 +45,29 @@ FERMI_TO_UNIX_OFFSET = 978307200.0
 class GbmPosHist(SpacecraftFrameModelMixin, SpacecraftStatesModelMixin, FitsFileContextManager):
     """Class for reading a GBM Position history file.
     """
+    def _reorder_bytes(self, arr):
+        """Method to reorder bytes according to old and new numpy API"""
+        if np.__version__ >= '2.0.0':
+            return arr.view(arr.dtype.newbyteorder()).byteswap()
+        return arr.byteswap().newbyteorder()
+
     def get_spacecraft_frame(self) -> SpacecraftFrame:
         sc_frame = SpacecraftFrame(
             obsgeoloc=r.CartesianRepresentation(
-                x=self.column(1, 'POS_X').byteswap().newbyteorder(),
-                y=self.column(1, 'POS_Y').byteswap().newbyteorder(),
-                z=self.column(1, 'POS_Z').byteswap().newbyteorder(),
+                x=self._reorder_bytes(self.column(1, 'POS_X')),
+                y=self._reorder_bytes(self.column(1, 'POS_Y')),
+                z=self._reorder_bytes(self.column(1, 'POS_Z')),
                 unit=u.m
             ),
             obsgeovel=r.CartesianRepresentation(
-                x=self.column(1, 'VEL_X').byteswap().newbyteorder() * u.m / u.s,
-                y=self.column(1, 'VEL_Y').byteswap().newbyteorder() * u.m / u.s,
-                z=self.column(1, 'VEL_Z').byteswap().newbyteorder() * u.m / u.s,
+                x=self._reorder_bytes(self.column(1, 'VEL_X')) * u.m / u.s,
+                y=self._reorder_bytes(self.column(1, 'VEL_Y')) * u.m / u.s,
+                z=self._reorder_bytes(self.column(1, 'VEL_Z')) * u.m / u.s,
                 unit=u.m / u.s
             ),
             quaternion=Quaternion(
-                self.columns_as_array(1, ['QSJ_1', 'QSJ_2', 'QSJ_3', 'QSJ_4'])
-                .byteswap().newbyteorder()),
+                self._reorder_bytes(
+                    self.columns_as_array(1, ['QSJ_1', 'QSJ_2', 'QSJ_3', 'QSJ_4']))),
             obstime=Time(self.column(1, 'SCLK_UTC'), format='fermi'),
             detectors=GbmDetectors
         )
