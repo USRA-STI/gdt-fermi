@@ -880,7 +880,7 @@ def all_idx(idx, axis=0):
     grid: tuple
         The multidimensional index mask
     """
-    grid = np.ogrid[tuple(map(slice, idx.shape))]
+    grid = list(np.ogrid[tuple(map(slice, idx.shape))])
     grid.insert(axis, idx)
     return tuple(grid)
 
