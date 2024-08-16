@@ -7,7 +7,7 @@ astropy>=5.1
 healpy>=1.12.4
 pytest
 
-Sphinx
+Sphinx==5.0.2
 astropy-sphinx-theme
 nbsphinx
 ipython
