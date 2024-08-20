@@ -78,7 +78,7 @@ if __name__ == '__main__':
         include_package_data=True,
         python_requires='>=3.8',
         install_requires=[
-            'astro-gdt>=2.0.0',
+            'astro-gdt>=2.1.0',
             'pyproj>=1.9.6',
             'numpy>=1.17.3',
             'scipy>=1.14.0',
