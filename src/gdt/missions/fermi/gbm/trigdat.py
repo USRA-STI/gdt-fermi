@@ -113,7 +113,7 @@ class Trigdat(FitsFileContextManager):
         """(list of str): The detectors that were triggered"""
         try:
             detmask = self.headers['PRIMARY']['DET_MASK']
-            detmask = np.array(list(detmask)).astype(bool)
+            detmask = np.array(list(detmask)).astype(int) == 1
         except:
             return None
         
@@ -1299,4 +1299,4 @@ class FswLocation:
             s += ' RA={0:.1f}, Dec={1:.1f}, err={2:.1f}>'.format(*self.location) 
         except:
             s += ' RA=None, Dec=None, err=None>'
-        return s      
+        return s

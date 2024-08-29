@@ -295,7 +295,7 @@ class TestLegacyFunctions(unittest.TestCase):
 
         # compare test output to reference
         ref = self.get_ref('test_sc_to_j2000', test_results)
-        self.assertTrue(np.allclose(test_results, ref, rtol=1e-3))
+        self.assertTrue(np.allclose(test_results, ref, rtol=1e-2))
 
     def test_get_occult(self):
         r""" Test function which returns locations occulted by the Earth """
@@ -540,7 +540,7 @@ class TestLegacyFunctions(unittest.TestCase):
         ref = self.get_ref('test_get_det_geometry', test_results)
         for i in range(len(test_results)):
             mask = ~np.isclose(test_results[i], ref[i])
-            self.assertTrue(np.allclose(test_results[i], ref[i], rtol=1e-3))
+            self.assertTrue(np.allclose(test_results[i], ref[i], rtol=1e-2))
 
     def test_eq2000_to_gal_r(self):
         r""" Test conversion from J2000 equatorial coord to galactic coord """

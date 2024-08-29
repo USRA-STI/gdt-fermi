@@ -204,7 +204,7 @@ class McIlwainL(PlotElement):
         [artist.set_alpha(alpha) for artist in self._artists[0].collections]
         if len(self._artists) == 2:
             self._artists[1].set_alpha(alpha)
-            self._artists[1].draw_all()
+            self._artists[1]._draw_all()
         self._alpha = alpha
 
     @property
@@ -253,7 +253,7 @@ class McIlwainL(PlotElement):
     def _make_colorbar(self, ax, artist):
         cb = plt.colorbar(artist, label='McIlwain L', ax=ax, shrink=0.6,
                           pad=0.2, orientation='horizontal')
-        cb.draw_all()
+        cb._draw_all()
         return cb
 
     def __repr__(self):
