@@ -122,7 +122,7 @@ class GbmSaaPolygon5(SouthAtlanticAnomaly):
 
 class GbmSaaPolygon6(SouthAtlanticAnomaly):
     """The coordinates of the GBM SAA boundary in latitude and East longitude
-    used from 14:20:00 UTC on June 7, 2022 until 19:35:00 UTC on June 10, 2022.
+    used from 14:20:00 UTC on June 7, 2022 until 19:35:00 UTC on June 9, 2022.
 
     Note: Several day test of a new, smaller area polygon proposed by
     Michael Briggs.
@@ -138,7 +138,7 @@ class GbmSaaPolygon6(SouthAtlanticAnomaly):
 
 class GbmSaaPolygon7(GbmSaaPolygon5):
     """The coordinates of the GBM SAA boundary in latitude and East longitude
-    used from 19:35:00 UTC on June 10, 2022 until 18:10:45 UTC on August 3, 2022.
+    used from 19:35:00 UTC on June 9, 2022 until 18:10:45 UTC on August 3, 2022.
 
     Note: Reversion to the same shape as GbmSaaPolygon5 following
     the test of GbmSaaPolygon6.
