@@ -32,11 +32,12 @@ from ..time import Time
 from gdt.core.geomagnetic import SouthAtlanticAnomaly
 from gdt.core.data_primitives import Range
 
-__all__ = ['GbmSaaPolygon1', 'GbmSaaPolygon2', 'GbmSaaPolgyon3',
-           'GbmSaaPolygon4', 'GbmSaaPolygon5', 'GbmSaaPolgyon6',
-           'GbmSaaPolygon7', 'GbmSaaPolygon8', 'GbmSaaPolgyon9',
-           'GbmSaaPolygon10', 'GbmSaaPolygon11', 'GbmSaaPolgyon12',
-           'GbmSaaPolygon14', 'GbmSaa', 'GbmSaaCollection']
+__all__ = ['GbmSaaPolygon1', 'GbmSaaPolygon2', 'GbmSaaPolygon3',
+           'GbmSaaPolygon4', 'GbmSaaPolygon5', 'GbmSaaPolygon6',
+           'GbmSaaPolygon7', 'GbmSaaPolygon8', 'GbmSaaPolygon9',
+           'GbmSaaPolygon10', 'GbmSaaPolygon11', 'GbmSaaPolygon12',
+           'GbmSaaPolygon13', 'GbmSaaPolygon14', 'GbmSaa',
+           'GbmSaaCollection']
 
 
 class GbmSaaPolygon1(SouthAtlanticAnomaly):
@@ -180,12 +181,12 @@ class GbmSaaPolygon10(SouthAtlanticAnomaly):
     Note: Several day test of a new, smaller area polygon proposed by
     Michael Briggs.
     """
-    _latitude = [-24.395, -30.000, -30.000, -30.000, -30.000, -30.000,
-                 -30.000, -24.060, -16.220, -8.638, -6.155, -1.000,
-                 2.000, 2.000, -3.400, -19.570802973653127, -24.395]
-    _longitude = [22.000, 22.000, 0.000, -2.000, -40.000, -60.000,
-                  -86.100, -90.300, -90.300, -88.738, -84.000, -65.000,
-                  -45.000, -38.400, -30.605, -11.999457706441582, 22.000]
+    _latitude = [-24.395, -30.000, -30.000, -30.000, -30.000, -24.060,
+                 -16.220, -8.638, -6.155, -1.000, 2.000, 2.000,
+                 -3.400, -19.570802973653127, -24.395]
+    _longitude = [22.000, 22.000, 0.000, -2.000, -86.100, -90.300,
+                  -90.300, -88.738, -84.000, -65.000, -45.000, -38.400,
+                  -30.605, -11.999457706441582, 22.000]
 
     _time_range = Range(Time(721759805, format='fermi'),
                         Time(721938425, format='fermi'))
