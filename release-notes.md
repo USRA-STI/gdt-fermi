@@ -27,3 +27,16 @@ This release included the following updates from pull requests:
 ## Version 2.0.0 (Released Apr 12, 2023)
 
 Initial release of this library.
+
+We started the version at 2.0.0 to indicate that this is our major API update from GBM Data Tools which is version 1.1.1
+
+Changes from GBM Data Tools include:
+
+- Making the library more generalized so that it can be used for other gamma-ray observatories besides GBM.
+- Functions that is common to all gamma-ray observatories is released as Gamma-ray Data Tools: Core
+- Functions that is specific to Fermi-GBM is released as Gamma-ray Data Tools: Fermi
+- Mission Elapsed Time is stored within AstroPy Time which handles the conversion to other time systems.
+- Spacecraft coordinates is now using Astropy Coordinate Frames.
+- Quaternions use Numpy to vectorize operations and SciPy Rotation to translate between Quaternions and Direction Cosine Matrixes.
+- Fits files are now support context management and perform header verification.
+
