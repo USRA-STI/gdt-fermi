@@ -225,8 +225,6 @@ class GtiHeader(GbmHeader):
                 _date_end_card, _timesys_card, _timeunit_card, _mjdrefi_card,
                 _mjdreff_card, _tstart_card, _tstop_card, _hduclass_card,
                 ('HDUCLAS1', 'GTI', 'Indicates good time intervals'),
-                ('TZERO1', 0.0, '[s] Offset, equal to TRIGTIME'),
-                ('TZERO2', 0.0, '[s] Offset, equal to TRIGTIME'),
                 _hduvers_card, _extver_card]
 
 
@@ -234,8 +232,6 @@ class GtiTriggerHeader(GbmHeader):
     name = 'GTI'
     keywords = GtiHeader.keywords + [_trigtime_card, _object_card, 
                _radecsys_card, _equinox_card, _ra_obj_card, _dec_obj_card,
-                ('TZERO1', 0.0, '[s] Offset, equal to TRIGTIME'),
-                ('TZERO2', 0.0, '[s] Offset, equal to TRIGTIME'),
                _err_rad_card]
 
 
