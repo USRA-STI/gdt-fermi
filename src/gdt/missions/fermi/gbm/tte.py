@@ -192,7 +192,8 @@ class GbmTte(PhotonList):
                                             header=self.headers['EVENTS'])
         for key, val in self.headers['EVENTS'].items():
             hdu.header[key] = val
-        hdu.header.comments['TZERO1'] = 'Offset, equal to TRIGTIME'
+        if self.trigtime is not None:
+            hdu.header.comments['TZERO1'] = 'Offset, equal to TRIGTIME'
         return hdu
 
     def _gti_table(self):
@@ -211,6 +212,7 @@ class GbmTte(PhotonList):
 
         for key, val in self.headers['GTI'].items():
             hdu.header[key] = val        
-        hdu.header.comments['TZERO1'] = 'Offset, equal to TRIGTIME'
-        hdu.header.comments['TZERO2'] = 'Offset, equal to TRIGTIME'
+        if self.trigtime is not None:
+            hdu.header.comments['TZERO1'] = 'Offset, equal to TRIGTIME'
+            hdu.header.comments['TZERO2'] = 'Offset, equal to TRIGTIME'
         return hdu
