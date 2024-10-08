@@ -36,8 +36,8 @@ __all__ = ['GbmSaaPolygon1', 'GbmSaaPolygon2', 'GbmSaaPolygon3',
            'GbmSaaPolygon4', 'GbmSaaPolygon5', 'GbmSaaPolygon6',
            'GbmSaaPolygon7', 'GbmSaaPolygon8', 'GbmSaaPolygon9',
            'GbmSaaPolygon10', 'GbmSaaPolygon11', 'GbmSaaPolygon12',
-           'GbmSaaPolygon13', 'GbmSaaPolygon14', 'GbmSaa',
-           'GbmSaaCollection']
+           'GbmSaaPolygon13', 'GbmSaaPolygon14', 'GbmSaaPolygon15',
+           'GbmSaa', 'GbmSaaCollection']
 
 
 class GbmSaaPolygon1(SouthAtlanticAnomaly):
