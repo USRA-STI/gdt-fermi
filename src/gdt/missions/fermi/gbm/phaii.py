@@ -186,8 +186,9 @@ class GbmPhaii(Phaii):
             hdu.header[key] = val
         hdu.header.comments['TZERO1'] = 'offset for unsigned integers'
         hdu.header.comments['TSCAL1'] = 'data are not scaled'
-        hdu.header.comments['TZERO4'] = 'Offset, equal to TRIGTIME'
-        hdu.header.comments['TZERO5'] = 'Offset, equal to TRIGTIME'
+        if self.trigtime is not None:
+            hdu.header.comments['TZERO4'] = 'Offset, equal to TRIGTIME'
+            hdu.header.comments['TZERO5'] = 'Offset, equal to TRIGTIME'
         return hdu
 
     def _gti_table(self):
@@ -206,8 +207,9 @@ class GbmPhaii(Phaii):
         
         for key, val in self.headers['GTI'].items():
             hdu.header[key] = val        
-        hdu.header.comments['TZERO1'] = 'Offset, equal to TRIGTIME'
-        hdu.header.comments['TZERO2'] = 'Offset, equal to TRIGTIME'
+        if self.trigtime is not None:
+            hdu.header.comments['TZERO1'] = 'Offset, equal to TRIGTIME'
+            hdu.header.comments['TZERO2'] = 'Offset, equal to TRIGTIME'
         return hdu
         
 

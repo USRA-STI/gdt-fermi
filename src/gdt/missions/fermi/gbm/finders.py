@@ -91,12 +91,15 @@ class TriggerFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = []
         files.extend(self._file_filter(self.files, 'bcat', 'fit'))
         files.extend(self._file_filter(self.files, 'scat', 'fit'))
         files.extend(self._file_filter(self.files, 'tcat', 'fit'))
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_cspec(self, download_dir, dets=None, **kwargs):
         """Download the CSPEC files for the trigger.
@@ -107,9 +110,12 @@ class TriggerFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'cspec', 'pha', dets=dets)
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_ctime(self, download_dir, dets=None, **kwargs):
         """Download the CTIME files for the trigger.
@@ -120,9 +126,12 @@ class TriggerFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'ctime', 'pha', dets=dets)
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_healpix(self, download_dir, **kwargs):
         """Download the healpix localization file for the trigger.
@@ -131,9 +140,12 @@ class TriggerFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'healpix', 'fit')
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_localization(self, download_dir, **kwargs):
         """Download all localization files for the trigger.
@@ -142,6 +154,9 @@ class TriggerFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = []
         files.extend(self._file_filter(self.files, 'healpix', 'fit'))
@@ -149,7 +164,7 @@ class TriggerFinder(GbmFinder):
         files.extend(self._file_filter(self.files, 'loclist', 'txt'))
         files.extend(self._file_filter(self.files, 'locprob', 'fit'))
         files.extend(self._file_filter(self.files, 'locplot', 'png'))
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_lightcurve(self, download_dir, **kwargs):
         """Download the lightcurve plots for the trigger.
@@ -158,9 +173,12 @@ class TriggerFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'lc', 'pdf')
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_rsp(self, download_dir, ctime=True, cspec=True, dets=None,
                 **kwargs):
@@ -176,6 +194,9 @@ class TriggerFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = []
         if cspec:
@@ -184,7 +205,7 @@ class TriggerFinder(GbmFinder):
         if ctime:
             files.extend(
                 self._file_filter(self.files, 'ctime', 'rsp', dets=dets))
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_rsp2(self, download_dir, ctime=True, cspec=True, dets=None,
                  **kwargs):
@@ -200,6 +221,9 @@ class TriggerFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = []
         if cspec:
@@ -208,7 +232,7 @@ class TriggerFinder(GbmFinder):
         if ctime:
             files.extend(
                 self._file_filter(self.files, 'ctime', 'rsp2', dets=dets))
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_trigdat(self, download_dir, **kwargs):
         """Download the trigger data (trigdat) file for the trigger.
@@ -217,9 +241,12 @@ class TriggerFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'trigdat', 'fit')
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_tte(self, download_dir, dets=None, **kwargs):
         """Download the TTE files for the trigger.
@@ -230,9 +257,12 @@ class TriggerFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'tte', 'fit', dets=dets)
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def ls_cat_files(self):
         """List all catalog files for the trigger.
@@ -403,8 +433,11 @@ class ContinuousFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
-        self.get(download_dir, self._file_list, **kwargs)
+        return self.get(download_dir, self._file_list, **kwargs)
 
     def get_cspec(self, download_dir, dets=None, **kwargs):
         """Download the CSPEC files.
@@ -415,9 +448,12 @@ class ContinuousFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'cspec', 'pha', dets=dets)
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_ctime(self, download_dir, dets=None, **kwargs):
         """Download the CTIME files.
@@ -428,9 +464,12 @@ class ContinuousFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'ctime', 'pha', dets=dets)
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_poshist(self, download_dir, **kwargs):
         """Download the poshist file.
@@ -439,9 +478,12 @@ class ContinuousFinder(GbmFinder):
             download_dir (str): The download directory
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self.ls_poshist()
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_spechist(self, download_dir, dets=None, **kwargs):
         """Download the spechist files.
@@ -452,9 +494,12 @@ class ContinuousFinder(GbmFinder):
                                    If omitted, will download all.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = self._file_filter(self.files, 'spechist', 'fit', dets=dets)
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def get_tte(self, download_dir, dets=None, full_day=False, **kwargs):
         """Download all TTE files associated with a time.
@@ -474,6 +519,9 @@ class ContinuousFinder(GbmFinder):
                 Default is False.
             verbose (bool, optional): If True, will output the download status. 
                                       Default is True.
+
+        Returns:
+            (list of Path)
         """
         files = []
         files.extend(self._file_filter(self.files, 'tte', 'fit.gz', dets=dets))
@@ -482,7 +530,7 @@ class ContinuousFinder(GbmFinder):
         if not full_day:
             files = self._filter_tte(files)
 
-        self.get(download_dir, files, **kwargs)
+        return self.get(download_dir, files, **kwargs)
 
     def ls_cspec(self):
         """List all CSPEC files.
