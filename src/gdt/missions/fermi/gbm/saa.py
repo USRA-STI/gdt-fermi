@@ -36,8 +36,8 @@ __all__ = ['GbmSaaPolygon1', 'GbmSaaPolygon2', 'GbmSaaPolygon3',
            'GbmSaaPolygon4', 'GbmSaaPolygon5', 'GbmSaaPolygon6',
            'GbmSaaPolygon7', 'GbmSaaPolygon8', 'GbmSaaPolygon9',
            'GbmSaaPolygon10', 'GbmSaaPolygon11', 'GbmSaaPolygon12',
-           'GbmSaaPolygon13', 'GbmSaaPolygon14', 'GbmSaa',
-           'GbmSaaCollection']
+           'GbmSaaPolygon13', 'GbmSaaPolygon14', 'GbmSaaPolygon15',
+           'GbmSaa', 'GbmSaaCollection']
 
 
 class GbmSaaPolygon1(SouthAtlanticAnomaly):
@@ -234,8 +234,7 @@ class GbmSaaPolygon13(SouthAtlanticAnomaly):
 
 class GbmSaaPolygon14(SouthAtlanticAnomaly):
     """The coordinates of the GBM SAA boundary in latitude and East longitude
-    used from 00:00:00 UTC on August 8, 2024 until mission end which uses a
-    placeholder value of Jan 1, 2050 for now.
+    used from 00:00:00 UTC on August 8, 2024 until 19:20:45 UTC on September 30, 2024.
 
     Note: Minor adjustment to GbmSaaPolygon13 which reduces the number of local
     particle triggers occurring during SAA exit (eastern side of polygon).
@@ -248,6 +247,18 @@ class GbmSaaPolygon14(SouthAtlanticAnomaly):
                   -45.000, -38.400, -30.605, -11.123461787369832, 22.000]
 
     _time_range = Range(Time(744768005, format='fermi'),
+                        Time(749416625, format='fermi'))
+
+
+class GbmSaaPolygon15(GbmSaaPolygon5):
+    """The coordinates of the GBM SAA boundary in latitude and East longitude
+    used from 19:20:45 UTC on September 30, 2024 until mission end which uses a
+    placeholder value of Jan 1, 2050 for now.
+
+    Note: Reversion to the same shape as GbmSaaPolygon5 due to too many
+    local particle triggers.
+    """
+    _time_range = Range(Time(749416850, format='fermi'),
                         Time(1546300805, format='fermi'))
 
 
@@ -267,7 +278,7 @@ class GbmSaaCollection():
             GbmSaaPolygon4(), GbmSaaPolygon5(), GbmSaaPolygon6(),
             GbmSaaPolygon7(), GbmSaaPolygon8(), GbmSaaPolygon9(),
             GbmSaaPolygon10(), GbmSaaPolygon11(), GbmSaaPolygon12(),
-            GbmSaaPolygon13(), GbmSaaPolygon14()]
+            GbmSaaPolygon13(), GbmSaaPolygon14(), GbmSaaPolygon15()]
         self.sort()
 
     def at(self, time: Time):
