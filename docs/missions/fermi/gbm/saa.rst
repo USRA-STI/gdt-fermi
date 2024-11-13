@@ -14,6 +14,7 @@
 .. |GbmSaaPolygon12| replace:: :class:`~gdt.missions.fermi.gbm.saa.GbmSaaPolygon12`
 .. |GbmSaaPolygon13| replace:: :class:`~gdt.missions.fermi.gbm.saa.GbmSaaPolygon13`
 .. |GbmSaaPolygon14| replace:: :class:`~gdt.missions.fermi.gbm.saa.GbmSaaPolygon14`
+.. |GbmSaaPolygon15| replace:: :class:`~gdt.missions.fermi.gbm.saa.GbmSaaPolygon15`
 .. |GbmSaaCollection| replace:: :class:`~gdt.missions.fermi.gbm.saa.GbmSaaCollection`
 .. |FermiEarthPlot| replace:: :class:`~gdt.missions.fermi.plot.FermiEarthPlot`
 
@@ -64,9 +65,12 @@ used over the course of the mission:
 * |GbmSaaPolygon13| **(August 6, 2024 - August 8, 2024):** Minor modification
   to GbmSaaPolygon12 to reduce local particle triggers occurring
   on the western edge of the SAA boundary.
-* |GbmSaaPolygon14| **(August 8, 2024 - Present):** Minor modification
+* |GbmSaaPolygon14| **(August 8, 2024 - September 30, 2024):** Minor modification
   to GbmSaaPolygon13 to reduce local particle triggers occurring
   on the eastern edge of the SAA boundary.
+* |GbmSaaPolygon15| **(September 30, 2024 - Present):** Reversion
+  to GbmSaaPolygon5 shape to handle high particle flux due to solar
+  activity. 
 
 .. image:: saa_figs/all_polygons.png
 
