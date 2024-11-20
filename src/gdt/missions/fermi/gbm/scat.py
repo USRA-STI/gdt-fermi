@@ -111,11 +111,11 @@ class GbmModelFit(ModelFit):
         cols.append(fits.Column(name='PHTFLUXB', format='3E',
                                 array=[
                                     self.photon_flux_50_300.to_fits_value()]))
+        cols.append(fits.Column(name='DURFLNC', format='3E',
+                                array=[self.duration_fluence.to_fits_value()]))
         cols.append(fits.Column(name='NRGFLNCB', format='3E',
                                 array=[
                                     self.energy_fluence_50_300.to_fits_value()]))
-        cols.append(fits.Column(name='DURFLNC', format='3E',
-                                array=[self.duration_fluence.to_fits_value()]))
         cols.append(fits.Column(name='REDCHSQ', format='2E',
                                 array=[[self.stat_value / self.dof] * 2]))
         cols.append(fits.Column(name='CHSQDOF', format='1I', array=[self.dof]))
@@ -517,14 +517,14 @@ class Scat(FitsFileContextManager):
         model_hdu.header.comments[ttypes[3]] = \
             'Energy Fluence (erg/cm^2) std energy ' + g_range
         model_hdu.header.comments[ttypes[4]] = \
-            'Reduced Chi^2 (1) and fitting statistic (2)'
-        model_hdu.header.comments[ttypes[5]] = 'Degrees of Freedom'
-        model_hdu.header.comments[ttypes[6]] = \
             'Photon Flux (ph/s-cm^2) BATSE energy ' + b_range
-        model_hdu.header.comments[ttypes[7]] = \
-            'Photon Fluence (ph/cm^2) for durations (user)'
-        model_hdu.header.comments[ttypes[8]] = \
+        model_hdu.header.comments[ttypes[5]] = \
+            'Photon Fluence (ph/cm^2) BATSE energy ' + b_range
+        model_hdu.header.comments[ttypes[6]] = \
             'Energy Fluence (erg/cm^2) BATSE energy ' + b_range
+        model_hdu.header.comments[ttypes[7]] = \
+            'Reduced Chi^2 (1) and fitting statistic (2)'
+        model_hdu.header.comments[ttypes[8]] = 'Degrees of Freedom'
         model_hdu.header.comments[ttypes[9]] = \
             'Covariance matrix for the fir (N_PARAM^2)'
 
