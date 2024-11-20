@@ -94,7 +94,7 @@ _trigtime_card = ('TRIGTIME', 0.0, 'Trigger time relative to MJDREF, double prec
 class GbmHeader(Header):
 
     def __setitem__(self, key, val):
-        if not isinstance(key, tuple):
+        if not isinstance(key, tuple) and not isinstance(val, tuple):
             if key.upper() == 'TSTART':
                 self['DATE-OBS'] = Time(val, format='fermi').isot
             elif key.upper() == 'TSTOP':
