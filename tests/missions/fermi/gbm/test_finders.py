@@ -66,9 +66,8 @@ class TestTriggerFinder(unittest.TestCase):
             
     def test_get(self):
         self.finder.cd('170817529')
-        self.finder.get_cat_files(download_dir)
-        cat_files = self.finder.ls_cat_files()
-        [os.remove(os.path.join(download_dir, file)) for file in cat_files]
+        cat_files = self.finder.get_cat_files(download_dir)
+        [os.remove(file) for file in cat_files]
 
 
 class TestContinuousFinder(unittest.TestCase):
@@ -90,14 +89,12 @@ class TestContinuousFinder(unittest.TestCase):
 
     def test_get(self):
         self.finder.cd(Time(604741251.0, format='fermi'))
-        self.finder.get_poshist(download_dir)
-        self.finder.get_ctime(download_dir, dets=('n0', 'n1', 'n2'))
+        files = self.finder.get_poshist(download_dir)
+        files += self.finder.get_ctime(download_dir, dets=('n0', 'n1', 'n2'))
         
-        files = self.finder.ls_poshist()
-        files.extend(self.finder.ls_ctime())
         for file in files:
             try:
-                os.remove(os.path.join(download_dir, file))
+                os.remove(file)
             except:
                 pass
     

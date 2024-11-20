@@ -38,7 +38,7 @@ from gdt.core.binning.unbinned import bin_by_time
 tte_file = data_path / 'fermi-gbm/glg_tte_n9_bn090131090_v01.fit'
 
 
-@unittest.skipIf(not tte_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not tte_file.exists(), "test files aren't downloaded. run `gdt-data download fermi-gbm`.")
 class TestGbmTte(unittest.TestCase):
     
     def setUp(self):
