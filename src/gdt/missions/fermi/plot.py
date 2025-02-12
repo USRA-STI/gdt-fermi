@@ -201,7 +201,7 @@ class McIlwainL(PlotElement):
         return self._alpha
     @alpha.setter
     def alpha(self, alpha):
-        [artist.set_alpha(alpha) for artist in self._artists[0].collections]
+        self._artists[0].set_alpha(alpha)
         if len(self._artists) == 2:
             self._artists[1].set_alpha(alpha)
             self._artists[1]._draw_all()
