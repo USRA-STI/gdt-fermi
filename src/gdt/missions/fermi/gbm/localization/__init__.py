@@ -61,6 +61,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         self._quat = None
         self._scpos = None
         self._sun_loc = None
+        self._trigtime = None
 
     @property
     def frame(self):
@@ -194,7 +195,7 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
             quaternion (:class:`~gdt.core.coords.Quaternion`, optional):
                 The associated spacecraft quaternion used to determine the
                 detector pointings in equatorial coordinates
-            scpos (np.array, optional):
+            scpos (astropy.coordinates.representation.CartesianRepresentation, optional):
                 The associated spacecraft position in Earth inertial coordinates
                 used to determine the geocenter location in equatorial
                 coordinates
@@ -214,42 +215,49 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         if quaternion is not None:
             if not isinstance(quaternion, Quaternion):
                 raise TypeError('quaternion must be a Quaternion object')
+            obj._quat = quaternion
 
         if scpos is not None:
             if not isinstance(scpos, CartesianRepresentation):
                 raise TypeError('scpos must be a CartesianRepresentation object')
-
+            obj._scpos = scpos
+            
         # if we have a trigtime, calculate sun position
         if trigtime is not None:
-            obj._sun_loc = get_sun(Time(trigtime, format='fermi'))
+            trigtime = Time(trigtime, format='fermi')
+            obj._sun_loc = get_sun(trigtime)
         elif obj._headers[1]['SUN_RA'] is not None:
             obj._sun_loc = SkyCoord(obj._headers[1]['SUN_RA'],
                                     obj._headers[1]['SUN_DEC'], unit='deg',
                                     frame='gcrs')
         else:
             obj._sun_loc = None
-
-        if (trigtime is not None) and (scpos is not None) and \
-                (quaternion is not None):
-            obj._scpos = scpos
-            obj._quat = quaternion
-
-            obj._frame = FermiFrame(obstime=Time(trigtime, format='fermi'),
-                                    quaternion=obj._quat, obsgeoloc=scpos,
-                                    detectors=GbmDetectors)
-
+        
+        # create the spacecraft frame with the info that we have at hand
+        obj._frame = FermiFrame(obstime=trigtime,
+                                quaternion=obj._quat, obsgeoloc=obj._scpos,
+                                detectors=GbmDetectors)
+        
+        # if have scpos, create geocenter location and earth radius
+        # if not, then try to pull from header
+        if obj._scpos is not None:
             obj._geo_loc = obj._frame.geocenter
             obj._geo_rad = obj._frame.earth_angular_radius
-            for det in obj._frame.detectors:
-                pointing = (det.azimuth, det.elevation)
-                det_coord = SkyCoord(*pointing, frame=obj._frame).gcrs[0]
-                setattr(obj, det.name.lower() + '_pointing', det_coord)
         elif obj._headers[1]['GEO_RA'] is not None:
-
             obj._geo_loc = SkyCoord(obj._headers[1]['GEO_RA'],
                                     obj._headers[1]['GEO_DEC'], unit='deg',
                                     frame='gcrs')
             obj._geo_rad = Quantity(obj._headers[1]['GEO_RAD'], unit='deg')
+
+        # if have trigtime and quaternion, create detector pointings
+        # if not, then try to pull from header
+        if (trigtime is not None) and (quaternion is not None):
+            
+            for det in obj._frame.detectors:
+                pointing = (det.azimuth, det.elevation)
+                det_coord = SkyCoord(*pointing, frame=obj._frame).gcrs[0]
+                setattr(obj, det.name.lower() + '_pointing', det_coord)
+        elif obj._headers[1]['N0_RA'] is not None:
 
             for det in GbmDetectors:
                 ra_key = det.name.upper() + '_RA'
@@ -258,7 +266,8 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
                                      obj._headers[1][dec_key], unit='deg',
                                      frame='gcrs')
                 setattr(obj, det.name.lower() + '_pointing', det_coord)
-
+        
+        # build headers
         obj._headers = obj._build_headers(obj.trigtime, obj.nside)
 
         return obj
