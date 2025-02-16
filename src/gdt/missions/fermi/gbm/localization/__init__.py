@@ -63,6 +63,31 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         self._sun_loc = None
         self._trigtime = None
 
+    def convolve(self, model, *args, **kwargs):
+        """Convolve the map with a model kernel.  The model can be a Gaussian
+        kernel or any mixture of Gaussian kernels. Uses `healpy.smoothing 
+        <https://healpy.readthedocs.io/en/latest/generated/healpy.sphtfunc.smoothing.html>`_.
+        
+        An example of a model kernel with a 50%/50% mixture of two Gaussians,
+        one with a 1-deg width, and the other with a 3-deg width::
+            
+            def gauss_mix_example():
+                sigma1 = np.deg2rad(1.0)
+                sigma2 = np.deg2rad(3.0)
+                frac1 = 0.50
+                return ([sigma1, sigma2], [frac1])
+        
+        Args: 
+            model (<function>): The function representing the model kernel
+            *args: Arguments to be passed to the model kernel function
+        
+        Returns:
+            (:class:`GbmHealPix`)
+        """
+        return super().convolve(model, *args, headers=self.headers, 
+                                quaternion=self.quaternion, scpos=self.scpos, 
+                                **kwargs)
+        
     @property
     def frame(self):
         """(:class:`~gdt.core.coords.SpacecraftFrame`): The spacecraft frame at
