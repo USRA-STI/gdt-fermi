@@ -36,7 +36,7 @@ from gdt.missions.fermi.gbm.tcat import *
 tcat_file = data_path / 'fermi-gbm/glg_tcat_all_bn190222537_v01.fit'
 
 
-@unittest.skipIf(not tcat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not tcat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestTcat(unittest.TestCase):
     
     def setUp(self):

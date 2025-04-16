@@ -38,7 +38,7 @@ rsp_file = data_path / 'fermi-gbm/glg_cspec_n9_bn090131090_v01.rsp'
 rsp2_file = data_path / 'fermi-gbm/glg_cspec_n9_bn090131090_v00.rsp2'
 
 
-@unittest.skipIf(not rsp_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not rsp_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmRsp(unittest.TestCase):
 
     def setUp(self):
@@ -99,7 +99,7 @@ class TestGbmRsp(unittest.TestCase):
             rsp.close()
 
 
-@unittest.skipIf(not rsp2_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not rsp2_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmRsp2(unittest.TestCase):
 
     def setUp(self):

@@ -40,7 +40,7 @@ def test_file():
 
 def test_get_spacecraft_frame(test_file):
     if not test_file.exists():
-        pytest.skip("test files aren't downloaded. run gdt-download-data.")
+        pytest.skip("test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 
     with GbmPosHist.open(test_file) as poshist:
         frame = poshist.get_spacecraft_frame()
@@ -75,7 +75,7 @@ def test_get_spacecraft_frame(test_file):
 
 def test_get_spacecraft_states(test_file):
     if not test_file.exists():
-        pytest.skip("test files aren't downloaded. run gdt-download-data.")
+        pytest.skip("test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 
     with GbmPosHist.open(test_file) as poshist:
         states = poshist.get_spacecraft_states()
