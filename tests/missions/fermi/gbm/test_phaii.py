@@ -37,7 +37,7 @@ ctime_file = data_path / 'fermi-gbm/glg_ctime_nb_bn120415958_v00.pha'
 cspec_file = data_path / 'fermi-gbm/glg_cspec_b0_bn120415958_v00.pha'
 
 
-@unittest.skipIf(not ctime_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not ctime_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmPhaii(unittest.TestCase):
     
     def setUp(self):
@@ -127,7 +127,7 @@ class TestGbmPhaii(unittest.TestCase):
             phaii.close()
 
 
-@unittest.skipIf(not cspec_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not cspec_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestCspec(unittest.TestCase):
     
     def test_load_from_phaii(self):
@@ -139,7 +139,7 @@ class TestCspec(unittest.TestCase):
         self.assertIsInstance(cspec, Cspec)
 
 
-@unittest.skipIf(not ctime_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not ctime_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestCtime(unittest.TestCase):
     
     def test_load_from_phaii(self):

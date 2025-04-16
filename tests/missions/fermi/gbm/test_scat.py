@@ -38,7 +38,7 @@ from gdt.missions.fermi.gbm.scat import *
 scat_file = data_path / 'fermi-gbm/glg_scat_all_bn170817529_flnc_comp_v00.fit'
 
 
-@unittest.skipIf(not scat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not scat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmModelFit(unittest.TestCase):
 
     def setUp(self):
@@ -113,7 +113,7 @@ class TestGbmModelFit(unittest.TestCase):
         self.assertAlmostEqual(self.fit.time_range[1], 0.064, places=3)
 
 
-@unittest.skipIf(not scat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not scat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmDetectorData(unittest.TestCase):
 
     def setUp(self):
@@ -176,7 +176,7 @@ class TestGbmDetectorData(unittest.TestCase):
         self.assertAlmostEqual(self.det.time_range[1], 0.064, places=3)
 
 
-@unittest.skipIf(not scat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not scat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestScat(unittest.TestCase):
 
     def setUp(self):
