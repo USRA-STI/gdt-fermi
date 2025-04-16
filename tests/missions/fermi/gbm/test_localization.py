@@ -54,7 +54,7 @@ medium_consistent_loc = HealPixLocalization.from_gaussian(48.0, 4.0, 5.0)
 
 large_consistent_loc = HealPixLocalization.from_gaussian(48.0, 4.0, 10.0)
 
-@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixFromFile(unittest.TestCase):
     
     def setUp(self):
@@ -315,7 +315,7 @@ class TestGbmHealPixFromFile(unittest.TestCase):
             hpx.close()
 
 
-@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixNoFrame(unittest.TestCase):
     
     def setUp(self):
@@ -411,7 +411,7 @@ class TestGbmHealPixNoFrame(unittest.TestCase):
         self.assertGreaterEqual(prob, 0.99)      
 
 
-@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixNoHeaders(unittest.TestCase):
     
     def setUp(self):
