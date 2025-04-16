@@ -6,6 +6,8 @@ The GDT-Fermi is an extension to Gamma-ray Data Tools that adds functions specif
 
 The full documentation can be found `here <https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/>`_.
 
+This software is not subject to EAR.
+
 Normal Installation
 -------------------
 
