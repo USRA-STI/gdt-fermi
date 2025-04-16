@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astro-gdt-fermi"
+authors = [
+    { name = "William Cleveland" },
+    { name = "Adam Goldstein" },
+    { name = "Daniel Kocevski" },
+    { email = "STI-Software@usra.edu" }
+]
+description = "Gamma-ray Data Tools: Fermi Mission"
+readme = "PYPI-README.rst"
+license = "Apache-2.0"
+license-files = ["license.txt"]
+keywords = ['astronomy', 'gammaray', 'gamma-ray', 'usra']
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Software Development :: Libraries",
+]
+requires-python = ">=3.11"
+dependencies = [
+    'astro-gdt>=2.2.0',
+    'pyproj>=1.9.6',
+    'numpy~=2.2.3',
+    'scipy~=1.15.2',
+    'matplotlib~=3.10.0',
+    'astropy~=7.0.0',
+    'healpy~=1.18.0',
+    'cartopy>=0.21.1',
+    'rich>=13.3.3'
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+docs = ["Sphinx==5.0.2", "astropy-sphinx-theme", "nbsphinx", "sphinx-automodapi"]
+
+[tool.setuptools]
+include-package-data = true
+script-files = ['scripts/dol4.exe', 'scripts/dol_source_angles.py']
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"gdt.missions.fermi" = ['data/McIlwainL_Coeffs.npy']
+"gdt.data" = ['fermi-gbm.urls']
+"gdt.missions.fermi.gbm.localization.dol.data" = [
+    'alocdat_comp.npy',
+    'band_1deg_5_50_soft.npy',
+    'band_1deg_50_300_hard.npy',
+    'band_1deg_50_300_norm.npy',
+    'band_1deg_50_300_soft.npy',
+    'comp_1deg_50_300_hard.npy',
+    'comp_1deg_50_300_norm.npy',
+    'comp_1deg_50_300_soft.npy',
+    'earth_points.npy',
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "gdt.missions.fermi.__version__" }
+
+[project.urls]
+Documentation = 'https://astro-gdt-fermi.readthedocs.io/en/latest/'
+Repository = 'https://github.com/USRA-STI/gdt-fermi'
+Issues = 'https://github.com/USRA-STI/gdt-fermi/issues'
+

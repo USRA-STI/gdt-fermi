@@ -4,6 +4,8 @@ GDT-Fermi
 
 The GDT-Fermi is an extension to Gamma-ray Data Tools that adds functions specific to the Fermi mission (GBM and LAT).
 
+This software is not subject to EAR.
+
 Normal Installation
 -------------------
 

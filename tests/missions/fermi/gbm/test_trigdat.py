@@ -40,7 +40,7 @@ from gdt.core.coords import SpacecraftFrame
 trigdat_file = data_path / 'fermi-gbm/glg_trigdat_all_bn170101116_v01.fit'
 
 
-@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestTrigdat(unittest.TestCase):
 
     def setUp(self):
@@ -260,7 +260,7 @@ class TestTrigdat(unittest.TestCase):
             Trigdat.from_data(phaiis, poshist, trigtime, headers=1)
 
 
-@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestMaxRates(unittest.TestCase):
 
     def setUp(self):
@@ -360,7 +360,7 @@ class TestMaxRates(unittest.TestCase):
             trigdat.close()
 
 
-@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestBackRates(unittest.TestCase):
 
     def setUp(self):
@@ -439,7 +439,7 @@ class TestBackRates(unittest.TestCase):
             trigdat.close()
 
 
-@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not trigdat_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestFswLocation(unittest.TestCase):
 
     def setUp(self):
