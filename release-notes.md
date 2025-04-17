@@ -1,5 +1,5 @@
 # Release Notes for Gamma-ray Data Tools: Fermi
-## Version 2.2.0 (Released TBD)
+## Version 2.2.0 (Released Apr 17, 2025)
 
 This release included the following updates from pull requests:  
 
