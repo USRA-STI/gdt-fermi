@@ -1,4 +1,16 @@
 # Release Notes for Gamma-ray Data Tools: Fermi
+## Version 2.2.0 (Released TBD)
+
+This release included the following updates from pull requests:  
+
+- Added full SAA polygon history for GBM mission. [#45](https://github.com/USRA-STI/gdt-fermi/pull/45)
+- Updated the GBM SAA polygon. [#49](https://github.com/USRA-STI/gdt-fermi/pull/49)
+- Updated SCAT FIT PARAMS headers and columns. [#54](https://github.com/USRA-STI/gdt-fermi/pull/54)
+- Updated data finders to return paths of downloaded files. [#48](https://github.com/USRA-STI/gdt-fermi/pull/48)
+- Fixed for deprecated collection in FermiEarthPlot. [#57](https://github.com/USRA-STI/gdt-fermi/pull/57)
+- Fixed propagation of 'scpos' and 'quaternion' in GbmHealPix. [#59](https://github.com/USRA-STI/gdt-fermi/pull/59)
+- Added modules that perform trigger detection, classification, and localization. [#62](https://github.com/USRA-STI/gdt-fermi/pull/62)
+
 ## Version 2.1.1 (Released Aug 16, 2024)  
 
 This release included the following updates from pull requests:  
