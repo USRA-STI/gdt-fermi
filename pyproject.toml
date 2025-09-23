@@ -27,14 +27,6 @@ classifiers = [
 requires-python = ">=3.11"
 dependencies = [
     'astro-gdt>=2.2.0',
-    'pyproj>=1.9.6',
-    'numpy~=2.2.3',
-    'scipy~=1.15.2',
-    'matplotlib~=3.10.0',
-    'astropy~=7.0.0',
-    'healpy~=1.18.0',
-    'cartopy>=0.21.1',
-    'rich>=13.3.3'
 ]
 dynamic = ["version"]
 
@@ -72,3 +64,5 @@ Documentation = 'https://astro-gdt-fermi.readthedocs.io/en/latest/'
 Repository = 'https://github.com/USRA-STI/gdt-fermi'
 Issues = 'https://github.com/USRA-STI/gdt-fermi/issues'
 
+[tool.uv.sources]
+astro-gdt = { git = "ssh://git@github.com/USRA-STI/gdt-core.git", rev = "2.2.1-dependency" }
