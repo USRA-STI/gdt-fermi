@@ -1,4 +1,10 @@
 # Release Notes for Gamma-ray Data Tools: Fermi
+## Version 2.2.1 (Released Nov 19, 2025)
+
+This release included the following updates from pull requests:  
+
+- Removed dependencies provided by astro-gdt (core) to prevent issues with PIP.
+
 ## Version 2.2.0 (Released Apr 17, 2025)
 
 This release included the following updates from pull requests:  
