@@ -1,8 +1,10 @@
 # Release Notes for Gamma-ray Data Tools: Fermi
 ## Version 2.2.2 (Released Jan 6, 2026)
 
+This release included the following updates from pull requests:
+
 - Removed redundant instruction from README.rst that used a nonexistent requirements.txt file.
-- Updated the Spectral Analysis Tutorial by removing arguments from plt.show()
+- Updated the Spectral Analysis Tutorial by removing arguments from plt.show() [#72](https://github.com/USRA-STI/gdt-fermi/pull/72)
 
 ## Version 2.2.1 (Released Nov 19, 2025)
 
