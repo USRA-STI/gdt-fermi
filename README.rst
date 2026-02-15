@@ -39,10 +39,8 @@ development environment:
    git clone git@github.com:USRA-STI/gdt-core.git
    git clone git@github.com:USRA-STI/gdt-fermi.git
    pip install -e gdt-core/
-   pip install -r gdt-core/requirements.txt
    gdt-data init
    pip install -e gdt-fermi/
-   pip install -r gdt-fermi/requirements.txt
 
 This should result in git-devel having the following directory structure::
 
