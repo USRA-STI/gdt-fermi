@@ -27,13 +27,15 @@
 # License.
 #
 import numpy as np
-import astropy.units as u
-from astropy.timeseries import TimeSeries
 import astropy.coordinates.representation as r
+import astropy.io.fits as fits
+import astropy.table as table
+from astropy.timeseries import TimeSeries
+import astropy.units as u
 from gdt.core.coords import Quaternion
 from gdt.core.file import FitsFileContextManager
 from gdt.core.coords.spacecraft import SpacecraftFrameModelMixin, SpacecraftStatesModelMixin
-from gdt.core.coords.spacecraft import SpacecraftFrame
+from ..frame import FermiFrame
 from gdt.missions.fermi.time import Time
 from gdt.missions.fermi.gbm.headers import PosHistHeaders
 from .detectors import GbmDetectors
@@ -43,7 +45,9 @@ __all__ = ['GbmPosHist']
 FERMI_TO_UNIX_OFFSET = 978307200.0
 
 class GbmPosHist(SpacecraftFrameModelMixin, SpacecraftStatesModelMixin, FitsFileContextManager):
-    """Class for reading a GBM Position history file.
+    """Class for reading a GBM Position history file, which contains the 
+    spacecraft position, attitude (orientation), velocity, and various state
+    information.
     """
     def _reorder_bytes(self, arr):
         """Method to reorder bytes according to old and new numpy API"""
@@ -51,8 +55,14 @@ class GbmPosHist(SpacecraftFrameModelMixin, SpacecraftStatesModelMixin, FitsFile
             return arr.view(arr.dtype.newbyteorder()).byteswap()
         return arr.byteswap().newbyteorder()
 
-    def get_spacecraft_frame(self) -> SpacecraftFrame:
-        sc_frame = SpacecraftFrame(
+    def get_spacecraft_frame(self) -> FermiFrame:
+        """Retrieve the spacecraft frame information (position, attitude, and
+           velocity).
+        
+        Returns:        
+            (:class:`FermiFrame`)
+        """
+        sc_frame = FermiFrame(
             obsgeoloc=r.CartesianRepresentation(
                 x=self._reorder_bytes(self.column(1, 'POS_X')),
                 y=self._reorder_bytes(self.column(1, 'POS_Y')),
@@ -74,6 +84,15 @@ class GbmPosHist(SpacecraftFrameModelMixin, SpacecraftStatesModelMixin, FitsFile
         return sc_frame
 
     def get_spacecraft_states(self) -> TimeSeries:
+        """Retrieve the spacecraft state information:
+          *  `sun`: True if the sun is visible (not behind Earth)
+          *  `saa`: True if Fermi is inside the GBM definition of the SAA
+          *  `good`: True if spacecraft is in a good time interval.  For GBM, this
+                     is essentially the opposite of the `saa` flag. 
+        
+        Returns:        
+            (:class:`astropy.timeseries.TimeSeries`)
+        """
         saa = self._in_saa(self.column(1, 'FLAGS'))
         series = TimeSeries(
             time=Time(self.column(1, 'SCLK_UTC'), format='fermi'),
@@ -84,6 +103,69 @@ class GbmPosHist(SpacecraftFrameModelMixin, SpacecraftStatesModelMixin, FitsFile
             }
         )
         return series
+
+    @classmethod
+    def merge(cls, poshist1, poshist2):
+        """Merge two GbmPosHist objects into a single object. The typical use
+        case is to merge two consecutive objects into one.  The order of input
+        for the files does not matter, and any duplicate time entries will be
+        removed.
+        
+        Args:
+            poshist1 (:class:`GbmPosHist`): The first position history object
+            poshist2 (:class:`GbmPosHist`): The second position history object
+        
+        Returns:        
+            (:class:`GbmPosHist`)
+        """
+        # convert FITS_rec object to tables so to merge
+        table1 = table.Table(poshist1._hdulist[1].data)
+        table2 = table.Table(poshist2._hdulist[1].data)
+        
+        # determine which is the reference based on the start time
+        # and merge data
+        if poshist1.headers[0]['TSTART'] < poshist2.headers[0]['TSTART']:
+            new_table = table.vstack([table1, table2])
+            ref_obj = poshist1
+            other_obj = poshist2
+        else:
+            new_table = table.vstack([table2, table1])
+            ref_obj = poshist2
+            other_obj = poshist1
+        
+        # remove duplicate time entries
+        new_table = table.unique(new_table, keys='SCLK_UTC')
+        
+        # update the primary header with the date/time range info
+        prihdr = ref_obj._hdulist[0].header.copy()
+        prihdr['DATE-END'] = other_obj._hdulist[0].header['DATE-END']
+        prihdr['TSTOP'] = other_obj._hdulist[0].header['TSTOP']
+        prihdr['FILENAME'] = ''
+        
+        last_infile = list(prihdr['INFILE*'].keys())[-1]
+        last_infile = int(last_infile.split('INFILE')[1])
+        other_infiles = list(other_obj._hdulist[0].header['INFILE*'].values())
+        num_infiles = len(other_infiles)
+        for i, infile in enumerate(other_infiles):
+            prihdr[f'INFILE{last_infile + 1 + i:02}'] = infile
+        
+        # update the table header with the date/time range info
+        tblhdr = ref_obj._hdulist[1].header.copy()
+        tblhdr['DATE-END'] = other_obj._hdulist[0].header['DATE-END']
+        tblhdr['TSTOP'] = other_obj._hdulist[0].header['TSTOP']
+        
+        # create the merged data HDU list
+        hdulist = fits.HDUList()
+        primary_hdu = fits.PrimaryHDU(header=prihdr)
+        hdulist.append(primary_hdu)
+        hdulist.append(fits.BinTableHDU(data=new_table, header=tblhdr))
+        
+        # create the new object
+        obj = cls()
+        obj._hdulist = hdulist
+        obj._headers = PosHistHeaders.from_headers([hdu.header \
+                                                    for hdu in obj.hdulist])
+        return obj            
 
     @classmethod
     def open(cls, file_path, **kwargs):

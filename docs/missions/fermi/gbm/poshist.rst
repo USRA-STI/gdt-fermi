@@ -158,7 +158,7 @@ see :external:ref:`Spacecraft Attitude, Position, and Coordinates<core-coords>`.
 Now all of this great, but we can also make a sky plot at a given time.  We
 can plot in either the Equatorial frame:
     
-    >>> from matplotlib.pyplot as plt
+    >>> import matplotlib.pyplot as plt
     >>> from gdt.core.plot.sky import EquatorialPlot
     >>> eqplot = EquatorialPlot()
     >>> eqplot.add_frame(one_frame)

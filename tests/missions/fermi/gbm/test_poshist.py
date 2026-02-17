@@ -36,6 +36,10 @@ from gdt.missions.fermi.gbm.poshist import GbmPosHist
 @pytest.fixture
 def test_file():
     return data_path / 'fermi-gbm/glg_poshist_all_170101_v01.fit'
+    
+@pytest.fixture
+def test_file2():
+    return data_path / 'fermi-gbm/glg_poshist_all_170102_v01.fit'
 
 
 def test_get_spacecraft_frame(test_file):
@@ -112,3 +116,46 @@ def test_get_spacecraft_states(test_file):
         state = states[2929]
         assert state['saa'] == True
         assert state['sun'] == True
+
+
+def test_merge_poshist(test_file, test_file2):
+    if not test_file.exists() or not test_file2.exists():
+        pytest.skip("test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
+
+    poshist1 = GbmPosHist.open(test_file)
+    poshist2 = GbmPosHist.open(test_file2)
+ 
+    def assert_merge(merged_poshist):
+        # each file contains 24 hours + 2 min, sampled at 1 s -> 86520 rows
+        # since the files are merged and overlapping rows are discarded, and
+        # the overlap is 2 minutes (120 s), the merged table should have
+        # 2 * 86520 - 120 = 172920 rows
+        assert merged_poshist.hdulist[1].data.size == 172920
+        
+        # make sure the data is merged in the correct order
+        assert merged_poshist.hdulist[1].data['SCLK_UTC'][10] \
+               == poshist1.hdulist[1].data['SCLK_UTC'][10]
+        assert merged_poshist.hdulist[1].data['SCLK_UTC'][-10] \
+               == poshist2.hdulist[1].data['SCLK_UTC'][-10]
+        
+        # check that the time metadata are updated
+        assert merged_poshist.headers[0]['DATE-OBS'] == poshist1.headers[0]['DATE-OBS']
+        assert merged_poshist.headers[0]['DATE-END'] == poshist2.headers[0]['DATE-END']
+        assert merged_poshist.headers[0]['TSTART'] == poshist1.headers[0]['TSTART']
+        assert merged_poshist.headers[0]['TSTOP'] == poshist2.headers[0]['TSTOP']
+        assert merged_poshist.headers[1]['DATE-OBS'] == poshist1.headers[1]['DATE-OBS']
+        assert merged_poshist.headers[1]['DATE-END'] == poshist2.headers[1]['DATE-END']
+        
+        # 16 infiles in poshist1 and 18 in poshist2 = 34 total
+        assert len(merged_poshist.hdulist[0].header['INFILE*']) == 34
+
+        
+    poshist3 = GbmPosHist.merge(poshist1, poshist2)
+    assert_merge(poshist3)
+    
+    # now reverse the order of the objects in the merge
+    poshist4 = GbmPosHist.merge(poshist2, poshist1)
+    assert_merge(poshist4)
+    
+    
+    
