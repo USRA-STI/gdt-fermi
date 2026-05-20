@@ -93,7 +93,39 @@ class GbmHealPix(HealPixLocalization, FitsFileContextManager):
         """(:class:`~gdt.core.coords.SpacecraftFrame`): The spacecraft frame at
         the time of the localization"""
         return self._frame
-
+    
+    @frame.setter
+    def frame(self, sc_frame):
+        """Associate a spacecraft frame with the localization.
+        
+        Note:
+            This requires `sc_frame` to contain a single frame.  A 
+            multi-frame object will raise an exception.
+        
+        Args:
+            sc_frame (:class:`~gdt.missions.fermi.frame.FermiFrame`):
+                The Fermi spacecraft frame containing the attitude quaternion
+                and position information.
+        """
+        assert isinstance(sc_frame, FermiFrame)
+        
+        if not sc_frame.isscalar:
+            raise ValueError('sc_frame contains multiple frames. Choose a ' \
+                             'single frame to set')
+        
+        self._frame = sc_frame
+        self._geo_loc = sc_frame.geocenter
+        self._geo_rad = sc_frame.earth_angular_radius
+        self._quat = sc_frame.quaternion
+        self._scpos = sc_frame.obsgeoloc
+        self._sun_loc = get_sun(sc_frame.obstime)
+        self._trigtime = sc_frame.obstime
+        
+        for det in sc_frame.detectors:
+            pointing = (det.azimuth, det.elevation)
+            det_coord = SkyCoord(*pointing, frame=sc_frame).gcrs[0]
+            setattr(self, det.name.lower() + '_pointing', det_coord)
+        
     @property
     def geo_location(self):
         """(astropy.coordinates.SkyCoord): The geocenter location at
