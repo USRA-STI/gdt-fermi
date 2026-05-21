@@ -35,6 +35,7 @@ from pathlib import Path
 
 from gdt.core import data_path
 from gdt.missions.fermi.gbm.localization import *
+from gdt.missions.fermi.gbm.trigdat import *
 from gdt.core.healpix import HealPixLocalization
 
 chi2grid_file = Path(__file__).parent / 'data/chi2grid_bn190531568_v00.dat'
@@ -318,10 +319,13 @@ class TestGbmHealPixFromFile(unittest.TestCase):
 @unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixNoFrame(unittest.TestCase):
     
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         hpx = GbmHealPix.open(hpx_file)
-        self.hpx = GbmHealPix.from_data(hpx.prob, headers=hpx.headers,
+        cls.frame = hpx.frame
+        cls.hpx = GbmHealPix.from_data(hpx.prob, headers=hpx.headers,
                                         filename=hpx.filename)
+        cls.orig_hpx = hpx
     
     def test_detectors(self):
         n0 = self.hpx.n0_pointing
@@ -410,6 +414,39 @@ class TestGbmHealPixNoFrame(unittest.TestCase):
         prob = self.hpx.source_probability(48.0, 4.0)  
         self.assertGreaterEqual(prob, 0.99)      
 
+    def test_set_frame(self):
+        self.hpx.frame = self.frame
+        assert self.hpx.frame == self.orig_hpx.frame
+        assert self.hpx.geo_location == self.orig_hpx.geo_location
+        assert self.hpx.geo_probability == self.orig_hpx.geo_probability
+        assert self.hpx.geo_radius == self.orig_hpx.geo_radius
+        assert self.hpx.quaternion == self.orig_hpx.quaternion
+        assert self.hpx.scpos == self.orig_hpx.scpos
+        assert self.hpx.sun_location == self.orig_hpx.sun_location
+        assert self.hpx.n0_pointing == self.orig_hpx.n0_pointing
+        assert self.hpx.n1_pointing == self.orig_hpx.n1_pointing
+        assert self.hpx.n2_pointing == self.orig_hpx.n2_pointing
+        assert self.hpx.n3_pointing == self.orig_hpx.n3_pointing
+        assert self.hpx.n4_pointing == self.orig_hpx.n4_pointing
+        assert self.hpx.n5_pointing == self.orig_hpx.n5_pointing
+        assert self.hpx.n6_pointing == self.orig_hpx.n6_pointing
+        assert self.hpx.n7_pointing == self.orig_hpx.n7_pointing
+        assert self.hpx.n8_pointing == self.orig_hpx.n8_pointing
+        assert self.hpx.n9_pointing == self.orig_hpx.n9_pointing
+        assert self.hpx.na_pointing == self.orig_hpx.na_pointing
+        assert self.hpx.nb_pointing == self.orig_hpx.nb_pointing
+        assert self.hpx.b0_pointing == self.orig_hpx.b0_pointing
+        assert self.hpx.b1_pointing == self.orig_hpx.b1_pointing
+
+    def test_set_frame_errors(self):
+        with self.assertRaises(AssertionError):
+            self.hpx.frame = 1.0
+            
+        trigdat_file = data_path / 'fermi-gbm/glg_trigdat_all_bn170101116_v01.fit'
+        trigdat = Trigdat.open(trigdat_file)
+        with self.assertRaises(ValueError):
+            self.hpx.frame = trigdat.poshist
+        
 
 @unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixNoHeaders(unittest.TestCase):
@@ -470,7 +507,7 @@ class TestGbmHealPixFromChi2Grid(unittest.TestCase):
         chi2grid.scpos = [-5039500., 4254000., -2067500.]
         chi2grid.trigtime = 581002688
         self.hpx = GbmHealPix.from_chi2grid(chi2grid)
-
+    
     def test_centroid(self):
         ra, dec = self.hpx.centroid
         self.assertAlmostEqual(ra, 275.98, places=2) 
