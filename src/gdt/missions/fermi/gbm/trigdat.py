@@ -33,11 +33,11 @@ import astropy.coordinates.representation as r
 import numpy as np
 import warnings
 
+from ..frame import FermiFrame
 from ..time import *
 from .detectors import GbmDetectors
 from .headers import TrigdatHeaders, PhaiiTriggerHeaders
 from .phaii import GbmPhaii
-from gdt.core.coords.spacecraft import SpacecraftFrame
 from gdt.core.coords.quaternion import Quaternion
 from gdt.core.data_primitives import TimeEnergyBins, TimeRange, Gti
 from gdt.core.file import FitsFileContextManager
@@ -176,7 +176,7 @@ class Trigdat(FitsFileContextManager):
         eic = obj._data['EIC'][idx]
         quat = obj._data['SCATTITD'][idx]
         times = obj._data['TIME'][idx]
-        obj._poshist = SpacecraftFrame(
+        obj._poshist = FermiFrame(
             obsgeoloc=r.CartesianRepresentation(x=eic[:,0], y=eic[:,1], 
                                                 z=eic[:,2], unit=u.km),
             quaternion=Quaternion(quat),
@@ -196,7 +196,7 @@ class Trigdat(FitsFileContextManager):
                   trigrate=None, maxrates=None, backrates=None, 
                   fswlocations=None, filename=None, headers=None):
         """Create a Trigdat object from a list of GbmPhaii objects and a 
-        SpacecraftFrame object.
+        FermiFrame object.
         
         Note:
             The list of PHAIIs does not need to include every detector, as 
@@ -207,7 +207,7 @@ class Trigdat(FitsFileContextManager):
         Args:
             phaii_list (list of :class:`~.phaii.GbmPhaii`): A list of GbmPhaii 
                                                            objects
-            poshist (:class:`~gdt.core.coords.SpacecraftFrame`): 
+            poshist (:class:`~gdt.core.coords.FermiFrame`): 
                 The spacecraft frame
             trigtime (float): The trigger time
             time_range (tuple, optional): The time range of the Trigdat. If not
@@ -232,8 +232,8 @@ class Trigdat(FitsFileContextManager):
         
         # make sure the poshist is a PosHist object and desired time is 
         # contained within the file
-        if not isinstance(poshist, SpacecraftFrame):
-            raise TypeError('poshist must be a SpacecraftFrame object')
+        if not isinstance(poshist, FermiFrame):
+            raise TypeError('poshist must be a FermiFrame object')
         poshist_time_range = TimeRange(poshist.obstime[0].fermi, 
                                        poshist.obstime[-1].fermi)
         if not poshist_time_range.contains(trigtime):
