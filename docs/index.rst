@@ -83,6 +83,7 @@ Instrument Definitions
    missions/fermi/gbm/saa
    missions/fermi/gbm/headers
 
+
 Data Types
 ----------
 
@@ -93,12 +94,10 @@ Data Types
    missions/fermi/gbm/tte
    missions/fermi/gbm/response
    missions/fermi/gbm/localization/localization
-   missions/fermi/gbm/localization/dol/dol
    missions/fermi/gbm/trigdat
    missions/fermi/gbm/poshist
    missions/fermi/gbm/scat
    missions/fermi/gbm/tcat
-
 
 
 Data Finders and Catalogs
@@ -109,6 +108,19 @@ Data Finders and Catalogs
 
    missions/fermi/gbm/finders
    missions/fermi/gbm/catalogs
+
+
+Operations
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   missions/fermi/gbm/trigger
+   missions/fermi/gbm/classification
+   missions/fermi/gbm/localization/dol/dol
+
+
 
 ----
 
