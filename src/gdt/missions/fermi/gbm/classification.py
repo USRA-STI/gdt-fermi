@@ -184,7 +184,7 @@ class Classification:
         to GBM triggered data.
 
         Args:
-            trigdat (:class:`Trigdat`): The triggered data object
+            trigdat (:class:`~.trigdat.Trigdat`): The triggered data object
             use_loc (bool):    Use location info when True
             verbose (bool):    Display trigdat info to screen when True
 
@@ -229,7 +229,7 @@ class Classification:
 
         Args:
             trig_alg (int):          Trigger algorithm number
-            frame (:class:`~..FermiFrame`): Spacecraft frame at the trigger time
+            frame (:class:`~..frame.FermiFrame`): Spacecraft frame at the trigger time
             loc (tuple):             Best-fit source location given as
                                      (ra, dec) in degrees
             loc_total_error (float): Radius of 68% containment for
@@ -288,7 +288,7 @@ class Classification:
         """Computes bayesian probabilities for all source classes
 
         Args:
-            frame (:class:`~..FermiFrame`): Spacecraft frame at trigger time
+            frame (:class:`~..frame.FermiFrame`): Spacecraft frame at trigger time
             loc (tuple):                    Best-fit source location given as
                                             (ra, dec) in degrees
             loc_total_error (float):        68% containment (stat + sys) radius
